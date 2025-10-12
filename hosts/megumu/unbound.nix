@@ -1,17 +1,45 @@
 { ... }:
 {
+  services.blocky = {
+    enable = true;
+    settings = {
+      ports.dns = 53;
+      upstreams.groups.default = [
+        "127.0.0.1:5353"
+        "[::1]:5353"
+      ];
+      blocking = {
+        denylists = {
+          #Adblocking
+          ads = ["https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"];
+          #Another filter for blocking adult sites
+          adult = ["https://blocklistproject.github.io/Lists/porn.txt"];
+          #You can add additional categories
+        };
+        clientGroupsBlock = {
+          default = [ "ads" "adult" ];
+        };
+      };
+      # caching = {
+      #   minTime = "5m";
+      #   maxTime = "30m";
+      #   prefetching = true;
+      # };
+    };
+  };
+
   services.unbound = {
     enable = true;
     settings = {
       server = {
         interface = [
           "127.0.0.1"
-          "10.0.0.1"
+          "::1"
         ];
-        port = 53;
+        port = 5353;
         access-control = [
           "127.0.0.1/32 allow"
-          "10.0.0.0/24 allow"
+          "::1/128 allow"
         ];
         # Based on recommended settings in https://docs.pi-hole.net/guides/dns/unbound/#configure-unbound
         harden-glue = true;
