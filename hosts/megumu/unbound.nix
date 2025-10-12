@@ -1,30 +1,40 @@
 { ... }:
 {
+  networking.nameservers = [ "127.0.0.1" "::1" ];
+
   services.blocky = {
     enable = true;
+
     settings = {
-      ports.dns = 53;
+      ports.dns = 53; # Port for incoming DNS Queries.
       upstreams.groups.default = [
         "127.0.0.1:5353"
         "[::1]:5353"
       ];
+
+      # For initially solving DoH/DoT Requests when no system Resolver is available.
+      bootstrapDns = {
+        upstream = "https://dns.quad9.net/dns-query";
+        ips = [ "9.9.9.9" "149.112.112.112" ];
+      };
+
+      #Enable Blocking of certian domains.
       blocking = {
-        denylists = {
+        blockType = "zeroIP";
+
+        blackLists = {
           #Adblocking
           ads = ["https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"];
           #Another filter for blocking adult sites
           adult = ["https://blocklistproject.github.io/Lists/porn.txt"];
           #You can add additional categories
         };
-        clientGroupsBlock = {
-          default = [ "ads" "adult" ];
-        };
+
+        #Configure what block categories are used
+      	clientGroupsBlock = {
+        	default = [ "ads" "adult" ];
+      	};
       };
-      # caching = {
-      #   minTime = "5m";
-      #   maxTime = "30m";
-      #   prefetching = true;
-      # };
     };
   };
 
