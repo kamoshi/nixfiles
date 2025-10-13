@@ -12,28 +12,36 @@
         "[::1]:5353"
       ];
 
-      # For initially solving DoH/DoT Requests when no system Resolver is available.
+      # For initially solving DoH/DoT Requests when no system resolver is available.
       bootstrapDns = {
         upstream = "https://dns.quad9.net/dns-query";
         ips = [ "9.9.9.9" "149.112.112.112" ];
       };
 
-      #Enable Blocking of certian domains.
       blocking = {
         blockType = "zeroIP";
 
         blackLists = {
-          #Adblocking
-          ads = ["https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"];
-          #Another filter for blocking adult sites
-          adult = ["https://blocklistproject.github.io/Lists/porn.txt"];
-          #You can add additional categories
+          crap = [
+            "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+            "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/multi.txt"
+            "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/tif.txt"
+          ];
+          nsfw = [
+            "https://blocklistproject.github.io/Lists/porn.txt"
+            "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/nsfw.txt"
+          ];
         };
 
-        #Configure what block categories are used
       	clientGroupsBlock = {
-        	default = [ "ads" "adult" ];
+        	default = [ "crap" "nsfw" ];
       	};
+      };
+
+      caching = {
+        minTime = "5m";
+        maxTime = "30m";
+        prefetching = true;
       };
     };
   };
