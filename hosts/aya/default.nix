@@ -32,6 +32,7 @@ in {
       "dosbox-x"
       "pinentry-mac"
       "mupdf-tools"
+      "poppler"
     ];
     casks = [
       "vlc"
@@ -94,12 +95,9 @@ in {
           "/Applications/calibre.app"
           "/Applications/Obsidian.app"
           "/Applications/Firefox.app"
-          "/Applications/Discord.app"
-          "/Applications/Steam.app"
           "/Applications/Anki.app"
           "/Applications/Ghostty.app"
           "/Applications/Zed.app"
-          "/Applications/Spotify.app"
         ];
       };
     };

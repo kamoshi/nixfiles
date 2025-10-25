@@ -24,17 +24,20 @@
         blackLists = {
           crap = [
             "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
-            "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/multi.txt"
-            "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/tif.txt"
+            "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro.txt"
+            "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif.txt"
+            "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/nsfw.txt"
           ];
-          nsfw = [
-            "https://blocklistproject.github.io/Lists/porn.txt"
-            "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/nsfw.txt"
+          time = [
+            "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/social.txt"
           ];
         };
 
       	clientGroupsBlock = {
-        	default = [ "crap" "nsfw" ];
+        	default = [
+           "crap"
+           "time"
+           ];
       	};
       };
 
