@@ -33,6 +33,7 @@ in {
       "pinentry-mac"
       "mupdf-tools"
       "poppler"
+      "python"
     ];
     casks = [
       "vlc"
@@ -45,6 +46,8 @@ in {
       "krita"
       "calibre"
       "netnewswire"
+      "discord"
+      "spotify"
       # proton
       "protonvpn"
       "proton-mail"

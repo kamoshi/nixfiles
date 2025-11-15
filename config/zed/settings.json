@@ -30,6 +30,13 @@
       "settings": {
         "config_path": "<path>/biome.json"
       }
+    },
+    "rust-analyzer": {
+      "initialization_options": {
+        "check": {
+          "command": "clippy"
+        }
+      }
     }
   },
   "languages": {

@@ -8,6 +8,7 @@ in
     shellAliases = {
       ls = "ls --color=auto";
       grep = "grep --color=auto";
+      python = "python3";
     };
     bashrcExtra = ''
       # Haskell ghcup
@@ -28,6 +29,10 @@ in
 
   programs.fish = {
     enable = true;
+
+    shellAliases = {
+      python = "python3";
+    };
 
     shellInit = ''
       # BEGIN opam configuration
