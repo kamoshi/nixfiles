@@ -63,6 +63,9 @@
         { "code_action": "source.fixAll.biome" },
         { "code_action": "source.organizeImports.biome" }
       ]
+    },
+    "SCSS": {
+      "tab_size": 2
     }
   },
   "ssh_connections": [

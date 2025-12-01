@@ -140,7 +140,7 @@ in {
   };
 
   fileSystems."/data" = {
-    device = "u489674@u489674.your-storagebox.de:/home/megumu";
+    device = "u489674@u489674.your-storagebox.de:megumu";
     neededForBoot = false;
     fsType = "fuse.sshfs";
     options = [

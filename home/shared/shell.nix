@@ -64,5 +64,7 @@ in
   home.packages = with pkgs; [
     age
     nixd
+    # python
+    uv
   ];
 }

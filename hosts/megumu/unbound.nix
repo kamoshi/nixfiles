@@ -28,15 +28,39 @@
             "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif.txt"
             "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/nsfw.txt"
           ];
-          # time = [
-          #   "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/social.txt"
-          # ];
+          social = [
+            "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/social.txt"
+          ];
+        };
+
+        allowlists = {
+          social = [
+            # discord
+            ''
+              *.discord.com
+              *.discordapp.com
+              *.discordapp.net
+              *.discord.gg
+              *.discord.media
+              *.discordcdn.com
+              *.discordstatus.com
+              *.dis.gd
+            ''
+            # reddit
+            ''
+              *.reddit.com
+              *.redd.it
+              *.redditmail.com
+              *.redditmedia.com
+              *.redditstatic.com
+            ''
+          ];
         };
 
       	clientGroupsBlock = {
         	default = [
            "crap"
-           # "time"
+           "social"
           ];
       	};
       };
