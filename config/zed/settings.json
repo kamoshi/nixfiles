@@ -66,6 +66,9 @@
     },
     "SCSS": {
       "tab_size": 2
+    },
+    "Svelte": {
+      "tab_size": 2
     }
   },
   "ssh_connections": [

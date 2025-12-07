@@ -40,15 +40,16 @@ in
 
   programs.git = {
     enable = true;
-    userName  = "Maciej Jur";
-    userEmail = "maciej@kamoshi.org";
 
     signing = {
       key = "191CBFF5F72ECAFD";
       signByDefault = true;
     };
 
-    extraConfig = {
+    settings = {
+      user.name  = "Maciej Jur";
+      user.email = "maciej@kamoshi.org";
+
       init.defaultBranch = "main";
     };
   };

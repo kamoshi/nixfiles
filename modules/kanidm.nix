@@ -29,7 +29,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.kanidm = {
-      package = pkgs.kanidmWithSecretProvisioning_1_7;
+      package = pkgs.kanidmWithSecretProvisioning_1_8;
 
       enableServer = true;
       serverSettings = {
@@ -144,7 +144,10 @@ in {
     };
 
     systemd.services.kanidm = {
-      after = [ "acme-selfsigned-${cfg.domain}.target" ];
+      after = [
+        "acme-selfsigned-${cfg.domain}.target"
+        "acme-finished-${cfg.domain}.target"
+      ];
       serviceConfig = {
         SupplementaryGroups = [ certs.group ];
         BindReadOnlyPaths   = [ certs.directory ];

@@ -47,13 +47,13 @@
               *.dis.gd
             ''
             # reddit
-            ''
-              *.reddit.com
-              *.redd.it
-              *.redditmail.com
-              *.redditmedia.com
-              *.redditstatic.com
-            ''
+            # ''
+            #   *.reddit.com
+            #   *.redd.it
+            #   *.redditmail.com
+            #   *.redditmedia.com
+            #   *.redditstatic.com
+            # ''
           ];
         };
 

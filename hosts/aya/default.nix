@@ -47,8 +47,8 @@ in {
       "calibre"
       "netnewswire"
       "discord"
-      "spotify"
-      # proton
+      # "spotify"
+      # == proton ==
       "protonvpn"
       "proton-mail"
       "proton-pass"
