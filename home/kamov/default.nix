@@ -16,12 +16,15 @@ in
       then "/Users/${user}"
       else "/home/${user}";
 
-  # sops = {
-  #   age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
-  #   defaultSopsFile = ./.config.yaml;
-  # };
+  sops = {
+    age.keyFile =
+      if isDarwin
+        then "${config.home.homeDirectory}/Library/Application Support/sops/age/keys.txt"
+        else "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+    defaultSopsFile = ../../sops/kamov.yaml;
+  };
 
-  # sops.secrets."a" = {};
+  sops.secrets."syncthing/photos" = {};
 
   # home.file."a".text = config.sops.secrets."a".path;
 
@@ -34,7 +37,7 @@ in
         password = "kamov";
       };
 
-      inherit (mesh) devices folders;
+      inherit (mesh config) devices folders;
     };
   };
 
@@ -68,10 +71,13 @@ in
   # environment.
   home.packages = with pkgs; [
     nixd
+    vim
+    bat
+    sops
+    ncdu
+    dust
+    mupdf-headless
     gemini-cli
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the

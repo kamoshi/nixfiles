@@ -75,7 +75,7 @@ let
         };
       };
 
-  meshFor = devices: folders: key: {
+  meshFor = devices: folders: key: config: {
     devices =
       lib.pipe devices [
         (lib.filterAttrs (other: _: other != key))
@@ -84,10 +84,36 @@ let
     folders =
       lib.pipe folders [
         (lib.filterAttrs (_: folder: lib.hasAttr key folder.path))
-        (lib.mapAttrs (_: folder: folder // {
-          path = folder.path.${key};
-          devices = lib.filter (other: other != key) (lib.attrNames folder.path);
-        }))
+        (lib.mapAttrs (_: folder:
+          let
+            devices = folder.path;
+            myConfig = devices.${key};
+            peerNames = lib.filter (d: d != key) (lib.attrNames devices);
+
+            # list of names for all devices that require encryption
+            untrustedTargetNames = lib.filter
+              (name: devices.${name} ? "encrypted")
+              (lib.attrNames devices);
+
+            # am I one of the untrusted ones?
+            iAmUntrusted = lib.elem key untrustedTargetNames;
+
+            mkDeviceEntry = peerName:
+              # if I am trusted (host) AND the peer is untrusted...
+              if !iAmUntrusted && (lib.elem peerName untrustedTargetNames) then {
+                name = peerName;
+                # we grab the password file specifically for *this* peer
+                encryptionPasswordFile = config.sops.secrets.${devices.${peerName}.encrypted}.path;
+              } else
+                peerName;
+          in
+            folder
+              // {
+                path = if lib.isAttrs myConfig then myConfig.path else myConfig;
+                devices = map mkDeviceEntry peerNames;
+              }
+              // lib.optionalAttrs iAmUntrusted { type = "receiveencrypted"; }
+        ))
       ];
   };
 

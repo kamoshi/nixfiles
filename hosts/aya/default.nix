@@ -4,9 +4,8 @@ let
 in {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages =
-    [ pkgs.vim
-    ];
+  # environment.systemPackages = with pkgs; [
+  # ]
 
   # Enable alternative shell support in nix-darwin.
   programs.fish.enable = true;
@@ -26,13 +25,9 @@ in {
 
     taps = [];
     brews = [
-      "sops"
       "gpg"
-      "ncdu"
       "dosbox-x"
       "pinentry-mac"
-      "mupdf-tools"
-      "poppler"
       "python"
     ];
     casks = [
@@ -46,7 +41,7 @@ in {
       "krita"
       "calibre"
       "netnewswire"
-      "discord"
+      # "discord"
       # "spotify"
       # == proton ==
       "protonvpn"
@@ -82,6 +77,12 @@ in {
         InitialKeyRepeat = 15;
       };
 
+      finder = {
+        AppleShowAllExtensions = true;
+        ShowPathbar = true;
+        FXEnableExtensionChangeWarning = false;
+      };
+
       dock = {
         autohide = true;
         show-recents = true;
@@ -101,8 +102,8 @@ in {
           "/Applications/Anki.app"
           "/Applications/Ghostty.app"
           "/Applications/Zed.app"
-          "/Applications/Discord.app"
-          "/Applications/Spotify.app"
+          # "/Applications/Discord.app"
+          # "/Applications/Spotify.app"
         ];
       };
     };

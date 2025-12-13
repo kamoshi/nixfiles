@@ -1,0 +1,17 @@
+syncthing:
+    photos: ENC[AES256_GCM,data:sTtx+xPsPhe5w//1E9MAieAWq7/PtTg6,iv:vQH60+ZYkQKxFM+Mcrcb48x5Ni5IJ8KyNnTCGsQzYP4=,tag:gx8rdLPRc2p07kWew1Y+KA==,type:str]
+sops:
+    age:
+        - recipient: age1333pggxjytjnsw8zwd2d03suywxfexeydwlk8hfgs4j49lskcutqc7aze7
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBKNUlGZ0xMQ3B5VUZlSXhE
+            VUhJTkZQaEl3UGJPSHJrSU54Rk90d1ArUzA4CnNMZlJNWnVsc2tQWmJhSkMwT2Ex
+            Q3ZlTlFOOVU0aEZvVUN1bDNwL1JlTVUKLS0tIDlUaGttYTViUWlsVitZZWVqTFFH
+            S2JVcTdHcTRoK0gwUzFKWS9FM0R3UWcKWnuv4Yn0b6nUWboEgXHLZt21eFDXiZfn
+            bDo+gZlaFAUfKYZFO/ggtzfe79bSrnYEvKzQHYRv5mkSwPEb0OX/eg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-12-13T10:16:38Z"
+    mac: ENC[AES256_GCM,data:r8eTskeXjiNRZil8oz12k1NBYakrSoPDKW4A84UyKH3rCt4nn51GGpalTA/s/KPjeYQ8maXuYFOxdhO0rPxybvlqzu/rEhynnRSF1/TS5fKqh3hHy+VfllKG4xNvC3jkF2xVlv5DX2vsEGoYe2TPQeiNRTn8Rz+ZMNsubwnYdMc=,iv:KmCoSEoRuj6R/zdAt4rdlGGgcCdsMM/f5aZFGayQTkw=,tag:Ye2aNf5Hd7gKTORmWuX0Kg==,type:str]
+    unencrypted_suffix: _unencrypted
+    version: 3.11.0

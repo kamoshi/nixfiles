@@ -154,6 +154,10 @@
           aya = "~/Desktop/Photos";
           hatate = "~/DCIM";
           momiji = "~/Desktop/Photos";
+          megumu = {
+            path = "/data/sync/photos";
+            encrypted = "syncthing/photos";
+          };
         };
       };
     };
