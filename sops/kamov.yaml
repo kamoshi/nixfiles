@@ -1,4 +1,6 @@
 syncthing:
+    workspace: ENC[AES256_GCM,data:Ni6d2cwIkKs0zlHKCYvFlQV5B7mc94AO,iv:XpB9AvW/mCVPAUwY026IKP5YYNE3uJgYGyhMZzV2Hd8=,tag:DUwdbrv9T+wDTPmzrnu66Q==,type:str]
+    obsidian: ENC[AES256_GCM,data:FQEU7rOwdEY81eF0Dus6+Ccytog/0Ikw,iv:tMsGic+/lAk8W2cHmlt8emxrGgEvfNjgvGVzwQWP174=,tag:Wp/fZrQKkx70e7nWukjByA==,type:str]
     photos: ENC[AES256_GCM,data:sTtx+xPsPhe5w//1E9MAieAWq7/PtTg6,iv:vQH60+ZYkQKxFM+Mcrcb48x5Ni5IJ8KyNnTCGsQzYP4=,tag:gx8rdLPRc2p07kWew1Y+KA==,type:str]
 sops:
     age:
@@ -11,7 +13,7 @@ sops:
             S2JVcTdHcTRoK0gwUzFKWS9FM0R3UWcKWnuv4Yn0b6nUWboEgXHLZt21eFDXiZfn
             bDo+gZlaFAUfKYZFO/ggtzfe79bSrnYEvKzQHYRv5mkSwPEb0OX/eg==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-12-13T10:16:38Z"
-    mac: ENC[AES256_GCM,data:r8eTskeXjiNRZil8oz12k1NBYakrSoPDKW4A84UyKH3rCt4nn51GGpalTA/s/KPjeYQ8maXuYFOxdhO0rPxybvlqzu/rEhynnRSF1/TS5fKqh3hHy+VfllKG4xNvC3jkF2xVlv5DX2vsEGoYe2TPQeiNRTn8Rz+ZMNsubwnYdMc=,iv:KmCoSEoRuj6R/zdAt4rdlGGgcCdsMM/f5aZFGayQTkw=,tag:Ye2aNf5Hd7gKTORmWuX0Kg==,type:str]
+    lastmodified: "2025-12-13T13:11:06Z"
+    mac: ENC[AES256_GCM,data:Y3B8drFNLmRQMPxcR3O2aCrMnz/ElIpxKs6y/03J5gnsD1rz778Ews1TxiiINaznTJsm3uYH7T3YkmQbpJlTzL+WI523TKYL7dxfmX1BcfwXFBsEXi0coEqX+0zeVCogZTm1jy2wLo6Qeoy6mIEX1KXb9Qv/0z5XDrT9rg9U3ac=,iv:9S+ZZ5thoVVgF0GjakiSIiM6fBk7F0FEAfMoU9eV/n8=,tag:B6dphFFkXj/e1sy9wfQ81w==,type:str]
     unencrypted_suffix: _unencrypted
     version: 3.11.0

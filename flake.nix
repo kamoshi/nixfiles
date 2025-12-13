@@ -129,15 +129,6 @@
           nitori = "~/nix";
         };
       };
-      workspace = {
-        id = "workspace";
-        label = "Workspace";
-        path = {
-          aya = "~/Desktop/Workspace";
-          momiji = "~/Desktop/Workspace";
-          megumu = "/data/sync/workspace";
-        };
-      };
       calibre = {
         id = "calibre";
         label = "Calibre";
@@ -145,6 +136,31 @@
           aya = "~/calibre";
           momiji = "~/calibre";
           megumu = "/data/sync/calibre";
+        };
+      };
+      obsidian = {
+        id = "obsidian";
+        label = "Obsidian";
+        path = {
+          aya = "~/Desktop/Obsidian";
+          momiji = "~/Desktop/Obsidian";
+          nitori = "~/Desktop/Obsidian";
+          megumu = {
+            path = "/data/sync/obsidian";
+            encrypted = "syncthing/obsidian";
+          };
+        };
+      };
+      workspace = {
+        id = "workspace";
+        label = "Workspace";
+        path = {
+          aya = "~/Desktop/Workspace";
+          momiji = "~/Desktop/Workspace";
+          megumu = {
+            path = "/data/sync/workspace";
+            encrypted = "syncthing/workspace";
+          };
         };
       };
       photos = {

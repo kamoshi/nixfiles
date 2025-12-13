@@ -22,9 +22,13 @@ in
         then "${config.home.homeDirectory}/Library/Application Support/sops/age/keys.txt"
         else "${config.home.homeDirectory}/.config/sops/age/keys.txt";
     defaultSopsFile = ../../sops/kamov.yaml;
-  };
 
-  sops.secrets."syncthing/photos" = {};
+    secrets = {
+      "syncthing/workspace" = {};
+      "syncthing/obsidian" = {};
+      "syncthing/photos" = {};
+    };
+  };
 
   # home.file."a".text = config.sops.secrets."a".path;
 
