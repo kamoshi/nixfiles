@@ -75,11 +75,13 @@ in
   # environment.
   home.packages = with pkgs; [
     nixd
+    deno
     vim
     bat
     sops
     ncdu
     dust
+    ffmpeg-full
     mupdf-headless
     gemini-cli
 

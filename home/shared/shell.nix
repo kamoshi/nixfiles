@@ -42,6 +42,8 @@ in
       # This section can be safely removed at any time if needed.
       test -r '${home}/.opam/opam-init/init.fish' && source '${home}/.opam/opam-init/init.fish' > /dev/null 2> /dev/null; or true
       # END opam configuration
+
+      source ${./functions.fish}
     '';
   };
 

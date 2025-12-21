@@ -31,23 +31,20 @@ in {
       "python"
     ];
     casks = [
-      "vlc"
       "steam"
       "anki"
       "zed"
       "ghostty"
-      "spotify"
       "obsidian"
       "krita"
       "calibre"
       "netnewswire"
-      # "discord"
-      # "spotify"
+      "discord"
+      "spotify"
+      "transmission"
       # == proton ==
-      "protonvpn"
       "proton-mail"
       "proton-pass"
-      "proton-drive"
     ];
   };
 
@@ -81,6 +78,9 @@ in {
         AppleShowAllExtensions = true;
         ShowPathbar = true;
         FXEnableExtensionChangeWarning = false;
+        _FXShowPosixPathInTitle = true;  # Show full path in finder window title
+        AppleShowAllFiles = true;        # Always show hidden files
+        FXPreferredViewStyle = "Nlsv";   # Default to List View (much faster/organized)
       };
 
       dock = {
@@ -102,8 +102,8 @@ in {
           "/Applications/Anki.app"
           "/Applications/Ghostty.app"
           "/Applications/Zed.app"
-          # "/Applications/Discord.app"
-          # "/Applications/Spotify.app"
+          "/Applications/Discord.app"
+          "/Applications/Spotify.app"
         ];
       };
     };
