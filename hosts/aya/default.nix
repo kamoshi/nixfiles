@@ -39,8 +39,8 @@ in {
       "krita"
       "calibre"
       "netnewswire"
-      "discord"
-      "spotify"
+      # "discord"
+      # "spotify"
       "transmission"
       # == proton ==
       "proton-mail"
@@ -102,8 +102,8 @@ in {
           "/Applications/Anki.app"
           "/Applications/Ghostty.app"
           "/Applications/Zed.app"
-          "/Applications/Discord.app"
-          "/Applications/Spotify.app"
+          # "/Applications/Discord.app"
+          # "/Applications/Spotify.app"
         ];
       };
     };

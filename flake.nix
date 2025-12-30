@@ -21,9 +21,11 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
-  outputs = inputs@{ nixpkgs, sops-nix, ... }:
+  outputs = inputs@{ nixpkgs, sops-nix, nixpkgs-unstable, ... }:
   let
     util = import ./util inputs;
     lib = nixpkgs.lib;
