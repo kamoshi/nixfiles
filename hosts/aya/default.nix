@@ -42,7 +42,7 @@ in {
       "discord"
       "spotify"
       "transmission"
-      # == proton ==
+      # proton
       "proton-mail"
       "proton-pass"
     ];

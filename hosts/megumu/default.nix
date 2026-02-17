@@ -17,7 +17,8 @@ in {
     # Other
     ./nginx.nix
     ./unbound.nix
-    ./glance.nix
+    # ./glance.nix
+    ./jellyfin.nix
   ];
 
   # Use the GRUB 2 boot loader.

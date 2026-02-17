@@ -63,5 +63,28 @@ in {
 
     # Don't create default ~/Sync folder
     systemd.services.syncthing.environment.STNODEFAULTFOLDER = "true";
+
+    services.nginx = {
+      enable = true;
+
+      virtualHosts."syncthing.internal" = {
+        listen = [
+          { addr = "10.0.0.1"; port = 80; }
+          { addr = "127.0.0.1"; port = 80; }
+        ];
+
+        locations."/" = {
+          proxyPass = "http://${cfg.bind}:${toString cfg.port}";
+          proxyWebsockets = true;
+        };
+
+        forceSSL = false;
+        enableACME = false;
+      };
+    };
+
+    services.blocky = {
+      settings.customDNS.mapping."syncthing.internal" = "10.0.0.1";
+    };
   };
 }

@@ -13,6 +13,8 @@ in
     bashrcExtra = ''
       # Haskell ghcup
       [ -f "${home}/.ghcup/env" ] && . "${home}/.ghcup/env"
+      # Rust cargo
+      [ -d "${home}/.cargo/bin" ] && export PATH="${home}/.cargo/bin:$PATH"
     '';
     initExtra = ''
       PS1='\[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
@@ -43,6 +45,11 @@ in
       test -r '${home}/.opam/opam-init/init.fish' && source '${home}/.opam/opam-init/init.fish' > /dev/null 2> /dev/null; or true
       # END opam configuration
 
+      # Rust cargo
+      if test -d "${home}/.cargo/bin"
+        set -p fish_user_paths "${home}/.cargo/bin"
+      end
+
       source ${./functions.fish}
     '';
   };
@@ -69,5 +76,6 @@ in
     biome
     # python
     uv
+    typst
   ];
 }

@@ -117,6 +117,10 @@
         modules = [
           ./home/work
         ];
+        vpn = {
+          ip = "10.0.0.5";
+          pubkey = "h56pMAJImznBc9ir7lPrhm+H5ImY6Zu1vgLuhARmMVI=";
+        };
       };
     };
 
@@ -146,7 +150,6 @@
         path = {
           aya = "~/Desktop/Obsidian";
           momiji = "~/Desktop/Obsidian";
-          nitori = "~/Desktop/Obsidian";
           megumu = {
             path = "/data/sync/obsidian";
             encrypted = "syncthing/obsidian";

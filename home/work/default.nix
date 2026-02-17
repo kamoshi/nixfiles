@@ -1,4 +1,4 @@
-{ config, pkgs, mesh, device, utils, ... }:
+{ config, pkgs, mesh, device, utils, vpn, ... }:
 let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
 in
@@ -16,6 +16,8 @@ in
   };
 
   home.shell.enableFishIntegration = true;
+
+  home.file."wireguard/wg0.conf".text = vpn.text;
 
   programs.neovim = {
     enable = true;
@@ -36,7 +38,7 @@ in
         password = "kamov";
       };
 
-      inherit (mesh) devices folders;
+      inherit (mesh config) devices folders;
     };
   };
 
@@ -49,6 +51,7 @@ in
   # environment.
   home.packages = with pkgs; [
     nixd
+    wireguard-tools
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
