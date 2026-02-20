@@ -14,11 +14,14 @@ in {
     ../../modules
     # Host service settings
     ./services.nix
-    # Other
+
+    # http + dns
     ./nginx.nix
     ./unbound.nix
-    # ./glance.nix
-    ./jellyfin.nix
+
+    # services @ internal
+    ./services/jellyfin.nix
+    ./services/calibre.nix
   ];
 
   # Use the GRUB 2 boot loader.

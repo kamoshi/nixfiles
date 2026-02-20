@@ -1,6 +1,7 @@
 { ... }:
 let
-  port = 8096; # Jellyfin default port
+  domain = "jellyfin.internal";
+  port = 8096;
 in {
   services.jellyfin = {
     enable = true;
@@ -27,7 +28,7 @@ in {
   services.nginx = {
     enable = true;
 
-    virtualHosts."jellyfin.internal" = {
+    virtualHosts.${domain} = {
       listen = [
         { addr = "10.0.0.1"; port = 80; }
         { addr = "127.0.0.1"; port = 80; }
@@ -44,6 +45,6 @@ in {
   };
 
   services.blocky = {
-    settings.customDNS.mapping."jellyfin.internal" = "10.0.0.1";
+    settings.customDNS.mapping.${domain} = "10.0.0.1";
   };
 }

@@ -42,6 +42,7 @@ in {
       "discord"
       "spotify"
       "transmission"
+      "google-chrome"
       # proton
       "proton-mail"
       "proton-pass"
