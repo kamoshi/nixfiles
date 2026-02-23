@@ -11,6 +11,8 @@ in
       python = "python3";
     };
     bashrcExtra = ''
+      # Homebrew
+      [ -f "/opt/homebrew/bin/brew" ] && eval "$(/opt/homebrew/bin/brew shellenv)"
       # Haskell ghcup
       [ -f "${home}/.ghcup/env" ] && . "${home}/.ghcup/env"
       # Rust cargo
@@ -21,7 +23,8 @@ in
 
       # Run fish
       # https://wiki.archlinux.org/title/Fish#Modify_.bashrc_to_drop_into_fish
-      if [[ $(ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} && ''${SHLVL} == 1 ]]
+      # Adapted for both GNU and BSD ps
+      if [[ $(ps -p $PPID -o comm= | awk -F/ '{print $NF}' | tr -d '-') != "fish" && -z ''${BASH_EXECUTION_STRING} && ''${SHLVL} == 1 ]]
       then
         shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION='''
         exec fish $LOGIN_OPTION
@@ -37,6 +40,11 @@ in
     };
 
     shellInit = ''
+      # Homebrew
+      if test -f /opt/homebrew/bin/brew
+        eval (/opt/homebrew/bin/brew shellenv)
+      end
+
       # BEGIN opam configuration
       # This is useful if you're using opam as it adds:
       # - the correct directories to the PATH

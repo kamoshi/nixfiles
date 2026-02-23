@@ -29,6 +29,7 @@ in {
       "dosbox-x"
       "pinentry-mac"
       "python"
+      "mpv"
     ];
     casks = [
       "steam"
@@ -43,6 +44,8 @@ in {
       "spotify"
       "transmission"
       "google-chrome"
+      "vlc"
+      "the-unarchiver"
       # proton
       "proton-mail"
       "proton-pass"
