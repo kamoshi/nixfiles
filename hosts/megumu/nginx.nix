@@ -27,6 +27,7 @@
 
       virtualHosts."_" = {
         default = true;
+        rejectSSL = true;
 
         extraConfig = ''
           default_type text/html;
