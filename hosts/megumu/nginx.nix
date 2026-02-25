@@ -85,6 +85,23 @@
           { addr = "0.0.0.0"; port = 443; ssl = true; }
         ];
       };
+
+      virtualHosts."rsvp.kamoshi.org" = {
+        root = "/var/www/rsvp";
+        forceSSL = true;
+        enableACME = true;
+
+        locations."/" = {
+          tryFiles = "$uri $uri/ /index.html";
+        };
+
+        listen = [
+          { addr = "[::]";    port = 80; ssl = false; }
+          { addr = "0.0.0.0"; port = 80; ssl = false; }
+          { addr = "[::]";    port = 443; ssl = true; }
+          { addr = "0.0.0.0"; port = 443; ssl = true; }
+        ];
+      };
     };
   };
 }
