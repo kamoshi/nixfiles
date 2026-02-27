@@ -1,4 +1,4 @@
-.PHONY: aya momiji megumu megumu-up megumu-down update check
+.PHONY: aya momiji megumu megumu-up megumu-down megumu-remote update check
 
 aya:
 	sudo darwin-rebuild switch --flake .#aya
@@ -14,6 +14,9 @@ megumu-up:
 
 megumu-down:
 	rsync -avz --delete --progress megumu:~/nix/ .
+
+megumu-remote:
+	nix run nixpkgs#nixos-rebuild -- switch --flake .#megumu --target-host megumu --sudo --ask-sudo-password
 
 nitori:
 	home-manager switch --flake .#nitori
