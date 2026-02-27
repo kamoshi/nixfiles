@@ -22,10 +22,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    server = {
+      url = "github:/kamoshi/server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
-  outputs = inputs@{ nixpkgs, sops-nix, nixpkgs-unstable, ... }:
+  outputs = inputs@{ nixpkgs, sops-nix, nixpkgs-unstable, server, ... }:
   let
     util = import ./util inputs;
     lib = nixpkgs.lib;
@@ -95,6 +100,7 @@
         arch = "x86_64-linux";
         modules = [
           sops-nix.nixosModules.sops
+          server.nixosModules.default
           ./hosts/megumu
         ];
         home = {

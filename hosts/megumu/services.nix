@@ -12,14 +12,14 @@
 
   # Kotori
   # ======
-  sops.secrets.kotori = {
-    mode = "0400";
-  };
+  # sops.secrets.kotori = {
+  #   mode = "0400";
+  # };
 
-  kamov.kotori = {
-    enable = true;
-    envPath = config.sops.secrets.kotori.path;
-  };
+  # kamov.kotori = {
+  #   enable = true;
+  #   envPath = config.sops.secrets.kotori.path;
+  # };
 
   # Kanidm
   # ======

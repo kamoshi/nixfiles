@@ -71,6 +71,18 @@ in {
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "25.05"; # Did you read the comment?
 
+  nix.settings.trusted-users = [ "root" "@wheel" "kamov" ];
+
+  sops.secrets.kotori = {
+    mode = "0400";
+  };
+
+  services.rss-summarizer = {
+    enable = true;
+    port = 4321;
+    envFile = config.sops.secrets.kotori.path;
+  };
+
   # console = {
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
