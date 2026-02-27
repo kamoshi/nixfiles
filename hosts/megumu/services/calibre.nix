@@ -26,23 +26,13 @@ in {
     };
   };
 
-  services.nginx = {
+  services.caddy = {
     enable = true;
-
-    virtualHosts.${domain} = {
-      listen = [
-        { addr = "10.0.0.1"; port = 80; }
-        { addr = "127.0.0.1"; port = 80; }
-      ];
-
-      locations."/" = {
-        proxyPass = "http://${bind}:${toString port}";
-        proxyWebsockets = true;
-      };
-
-      forceSSL = false;
-      enableACME = false;
-    };
+    virtualHosts.${domain}.extraConfig = ''
+      bind 10.0.0.1
+      tls internal
+      reverse_proxy ${bind}:${toString port}
+    '';
   };
 
   services.blocky = {

@@ -25,23 +25,13 @@ in {
     after = [ "data.mount" "network-online.target" ];
   };
 
-  services.nginx = {
+  services.caddy = {
     enable = true;
-
-    virtualHosts.${domain} = {
-      listen = [
-        { addr = "10.0.0.1"; port = 80; }
-        { addr = "127.0.0.1"; port = 80; }
-      ];
-
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString port}";
-        proxyWebsockets = true;
-      };
-
-      forceSSL = false;
-      enableACME = false;
-    };
+    virtualHosts.${domain}.extraConfig = ''
+      bind 10.0.0.1
+      tls internal
+      reverse_proxy 127.0.0.1:${toString port}
+    '';
   };
 
   services.blocky = {

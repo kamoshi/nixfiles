@@ -20,6 +20,7 @@
   services = {
     nginx = {
       enable = true;
+      defaultListenAddresses = [ "94.130.182.219" ];
       recommendedTlsSettings = true;
       recommendedGzipSettings = true;
       recommendedOptimisation = true;
@@ -50,9 +51,9 @@
 
         listen = [
           { addr = "[::]";    port = 80; ssl = false; }
-          { addr = "0.0.0.0"; port = 80; ssl = false; }
+          { addr = "94.130.182.219"; port = 80; ssl = false; }
           { addr = "[::]";    port = 443; ssl = true; }
-          { addr = "0.0.0.0"; port = 443; ssl = true; }
+          { addr = "94.130.182.219"; port = 443; ssl = true; }
         ];
       };
 
@@ -63,9 +64,9 @@
 
         listen = [
           { addr = "[::]";    port = 80; ssl = false; }
-          { addr = "0.0.0.0"; port = 80; ssl = false; }
+          { addr = "94.130.182.219"; port = 80; ssl = false; }
           { addr = "[::]";    port = 443; ssl = true; }
-          { addr = "0.0.0.0"; port = 443; ssl = true; }
+          { addr = "94.130.182.219"; port = 443; ssl = true; }
         ];
       };
 
@@ -80,9 +81,9 @@
 
         listen = [
           { addr = "[::]";    port = 80; ssl = false; }
-          { addr = "0.0.0.0"; port = 80; ssl = false; }
+          { addr = "94.130.182.219"; port = 80; ssl = false; }
           { addr = "[::]";    port = 443; ssl = true; }
-          { addr = "0.0.0.0"; port = 443; ssl = true; }
+          { addr = "94.130.182.219"; port = 443; ssl = true; }
         ];
       };
 
@@ -97,9 +98,9 @@
 
         listen = [
           { addr = "[::]";    port = 80; ssl = false; }
-          { addr = "0.0.0.0"; port = 80; ssl = false; }
+          { addr = "94.130.182.219"; port = 80; ssl = false; }
           { addr = "[::]";    port = 443; ssl = true; }
-          { addr = "0.0.0.0"; port = 443; ssl = true; }
+          { addr = "94.130.182.219"; port = 443; ssl = true; }
         ];
       };
     };

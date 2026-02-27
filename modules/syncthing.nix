@@ -64,23 +64,13 @@ in {
     # Don't create default ~/Sync folder
     systemd.services.syncthing.environment.STNODEFAULTFOLDER = "true";
 
-    services.nginx = {
+    services.caddy = {
       enable = true;
-
-      virtualHosts."syncthing.internal" = {
-        listen = [
-          { addr = "10.0.0.1"; port = 80; }
-          { addr = "127.0.0.1"; port = 80; }
-        ];
-
-        locations."/" = {
-          proxyPass = "http://${cfg.bind}:${toString cfg.port}";
-          proxyWebsockets = true;
-        };
-
-        forceSSL = false;
-        enableACME = false;
-      };
+      virtualHosts."syncthing.internal".extraConfig = ''
+        bind 10.0.0.1
+        tls internal
+        reverse_proxy ${cfg.bind}:${toString cfg.port}
+      '';
     };
 
     services.blocky = {
