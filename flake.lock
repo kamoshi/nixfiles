@@ -186,11 +186,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772276211,
-        "narHash": "sha256-v8e+L1n4Jgj6V7gHF/cGIS8JgusNTFAH0ANwHViiiHg=",
+        "lastModified": 1772279106,
+        "narHash": "sha256-yi1nFTSAfIFyVYFfkfm9mvq8cmnjH1bFlv+IZWiAyrA=",
         "owner": "kamoshi",
         "repo": "server",
-        "rev": "258fe6bb6fc6b780aabe82897575ffbd6ce36c00",
+        "rev": "29aae01f573cdf08fdb5cab6bc00d3183d3beef8",
         "type": "github"
       },
       "original": {

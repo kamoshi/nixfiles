@@ -19,6 +19,9 @@ in {
     ./nginx.nix
     ./unbound.nix
 
+    # api
+    ./services/api.nix
+
     # services @ internal
     ./services/jellyfin.nix
     ./services/calibre.nix
@@ -72,16 +75,6 @@ in {
   system.stateVersion = "25.05"; # Did you read the comment?
 
   nix.settings.trusted-users = [ "root" "@wheel" "kamov" ];
-
-  sops.secrets.kotori = {
-    mode = "0400";
-  };
-
-  services.rss-summarizer = {
-    enable = true;
-    port = 4321;
-    envFile = config.sops.secrets.kotori.path;
-  };
 
   # console = {
   #   font = "Lat2-Terminus16";
