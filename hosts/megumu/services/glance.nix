@@ -24,6 +24,30 @@ in {
                 }
               ];
             }
+            # Sidebar Column (Right side)
+            {
+              size = "small";
+              widgets = [
+                {
+                  type = "weather";
+                  title = "Warszawa";
+                  location = "Warsaw";
+                  units = "metric";
+                }
+                {
+                  type = "weather";
+                  title = "Wrocław";
+                  location = "Wroclaw";
+                  units = "metric";
+                }
+                {
+                  type = "weather";
+                  title = "Leszno";
+                  location = "Leszno";
+                  units = "metric";
+                }
+              ];
+            }
           ];
         }
       ];
