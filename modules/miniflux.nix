@@ -54,7 +54,13 @@ in {
         CREATE_ADMIN = 0;
         CLEANUP_ARCHIVE_UNREAD_DAYS = "-1";
         CLEANUP_ARCHIVE_READ_DAYS = "-1";
-        POLLING_FREQUENCY = 480;
+
+        # pooling
+        POLLING_SCHEDULER = "entry_frequency";
+        POLLING_FREQUENCY = 30;
+        SCHEDULER_ENTRY_FREQUENCY_MIN_INTERVAL = 60;
+        SCHEDULER_ENTRY_FREQUENCY_MAX_INTERVAL = 24;
+        SCHEDULER_ENTRY_FREQUENCY_FACTOR = "0.5";
 
         # OIDC
         OAUTH2_PROVIDER = "oidc";

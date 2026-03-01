@@ -30,7 +30,10 @@ in {
     virtualHosts.${domain}.extraConfig = ''
       bind 10.0.0.1
       tls internal
-      reverse_proxy 127.0.0.1:${toString port}
+      encode zstd gzip
+      reverse_proxy 127.0.0.1:${toString port} {
+        flush_interval -1
+      }
     '';
   };
 
