@@ -12,8 +12,6 @@ in {
     ./hardware-configuration.nix
     # Custom module definitions
     ../../modules
-    # Host service settings
-    ./services.nix
 
     # http + dns
     ./nginx.nix
@@ -25,6 +23,10 @@ in {
     # services @ internal
     ./services/jellyfin.nix
     ./services/calibre.nix
+
+    # services
+    ./services.nix
+    ./services/glance.nix
   ];
 
   # Use the GRUB 2 boot loader.
