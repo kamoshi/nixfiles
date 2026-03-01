@@ -60,6 +60,10 @@ in
 
       source ${./functions.fish}
     '';
+
+    interactiveShellInit = ''
+      set -g fish_key_bindings fish_vi_key_bindings
+    '';
   };
 
   programs.direnv = {
@@ -82,7 +86,6 @@ in
     age
     nixd
     biome
-    # python
     uv
     typst
   ];
