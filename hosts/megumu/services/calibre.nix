@@ -26,6 +26,12 @@ in {
     };
   };
 
+  systemd.services.calibre-web = {
+    # Force Calibre to wait until /data is actually mounted
+    requires = [ "storagebox.service" ];
+    after = [ "storagebox.service" ];
+  };
+
   services.caddy = {
     enable = true;
     virtualHosts.${domain}.extraConfig = ''

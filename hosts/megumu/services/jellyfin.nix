@@ -18,11 +18,10 @@ in {
     };
   };
 
-  # Ensure Jellyfin can see the SSHFS mount
   systemd.services.jellyfin = {
     # Force Jellyfin to wait until /data is actually mounted
-    requires = [ "data.mount" ];
-    after = [ "data.mount" "network-online.target" ];
+    requires = [ "storagebox.service" ];
+    after = [ "storagebox.service" ];
   };
 
   services.caddy = {

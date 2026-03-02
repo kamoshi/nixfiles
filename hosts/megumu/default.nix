@@ -12,6 +12,7 @@ in {
     ./hardware-configuration.nix
     # Custom module definitions
     ../../modules
+    ./storagebox.nix
 
     # http + dns
     ./nginx.nix
@@ -148,25 +149,6 @@ in {
     enable = true;
     interval = "weekly";
     fileSystems = [ "/" ];
-  };
-
-  fileSystems."/data" = {
-    device = "u489674@u489674.your-storagebox.de:megumu";
-    neededForBoot = false;
-    fsType = "fuse.sshfs";
-    options = [
-      "_netdev"
-      "nodev"
-      "noatime"
-      "allow_other"
-      "reconnect"
-      "cache=yes"
-      "cache_timeout=300"
-      "IdentityFile=/root/.ssh/root@megumu"
-      "ServerAliveInterval=15"
-      "ServerAliveCountMax=3"
-      "port=23"
-    ];
   };
 
   # Define a user account. Don't forget to set a password with `passwd`.
