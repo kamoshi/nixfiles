@@ -76,7 +76,6 @@ in
   home.packages = with pkgs; [
     nixd
     deno
-    vim
     bat
     sops
     ncdu

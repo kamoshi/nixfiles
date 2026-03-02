@@ -41,7 +41,6 @@ in {
       "calibre"
       "netnewswire"
       "discord"
-      "spotify"
       "transmission"
       "google-chrome"
       "vlc"

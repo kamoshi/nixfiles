@@ -3,6 +3,17 @@ let
   home = config.home.homeDirectory;
 in
 {
+  home.shell.enableFishIntegration = true;
+
+  home.packages = with pkgs; [
+    age
+    biome
+    nixd
+    ripgrep
+    typst
+    uv
+  ];
+
   programs.bash = {
     enable = true;
     shellAliases = {
@@ -79,14 +90,4 @@ in
   programs.fzf = {
     enable = true;
   };
-
-  home.shell.enableFishIntegration = true;
-
-  home.packages = with pkgs; [
-    age
-    nixd
-    biome
-    uv
-    typst
-  ];
 }
