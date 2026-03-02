@@ -94,7 +94,7 @@ in {
     # -------
     networking.firewall = {
       enable = true;
-      interfaces.wg0.allowedTCPPorts = [ cfg.port ];
+      interfaces.gensokyo.allowedTCPPorts = [ cfg.port ];
     };
 
     services.nginx.virtualHosts."${cfg.domain}" = {

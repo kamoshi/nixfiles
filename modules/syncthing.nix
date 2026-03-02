@@ -58,7 +58,7 @@ in {
       enable = true;
       allowedTCPPorts = [ 22000 ];
       allowedUDPPorts = [ 22000 21027 ];
-      interfaces.wg0.allowedTCPPorts = [ cfg.port ];
+      interfaces.gensokyo.allowedTCPPorts = [ cfg.port ];
     };
 
     # Don't create default ~/Sync folder

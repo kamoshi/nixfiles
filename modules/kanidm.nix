@@ -29,7 +29,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.kanidm = {
-      package = pkgs.kanidmWithSecretProvisioning_1_8;
+      package = pkgs.kanidmWithSecretProvisioning_1_9;
 
       enableServer = true;
       serverSettings = {

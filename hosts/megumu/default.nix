@@ -140,7 +140,7 @@ in {
     firewall = {
       enable = true;
       allowedTCPPorts = [ 22 ssh ];
-      trustedInterfaces = [ "wg0" ];
+      trustedInterfaces = [ "gensokyo" ];
     };
   };
 
@@ -197,14 +197,14 @@ in {
   # enable NAT
   networking.nat.enable = true;
   networking.nat.externalInterface = "enp1s0";
-  networking.nat.internalInterfaces = [ "wg0" ];
+  networking.nat.internalInterfaces = [ "gensokyo" ];
   networking.firewall = {
     allowedUDPPorts = [ 42069 ];
   };
 
   networking.wireguard.enable = true;
   networking.wireguard.interfaces = {
-    wg0 = {
+    gensokyo = {
       # Path to the private key file.
       privateKeyFile = config.sops.secrets."wireguard".path;
 

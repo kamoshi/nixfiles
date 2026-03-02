@@ -13,7 +13,7 @@ in {
 
   networking.firewall = {
     # Open ONLY for WireGuard
-    interfaces."wg0" = {
+    interfaces."gensokyo" = {
       allowedTCPPorts = [ port ];
     };
   };
