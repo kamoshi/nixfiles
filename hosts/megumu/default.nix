@@ -24,6 +24,7 @@ in {
     # services @ internal
     ./services/jellyfin.nix
     ./services/calibre.nix
+    ./services/navidrome.nix
 
     # services
     ./services.nix

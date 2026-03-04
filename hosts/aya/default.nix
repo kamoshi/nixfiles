@@ -45,6 +45,7 @@ in {
       "google-chrome"
       "vlc"
       "the-unarchiver"
+      "musicbrainz-picard"
       # proton
       "proton-mail"
       "proton-pass"

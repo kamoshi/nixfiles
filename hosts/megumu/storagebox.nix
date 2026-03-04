@@ -48,14 +48,15 @@ in {
       "unbound.service"
     ];
 
-    path = [ pkgs.sshfs pkgs.fuse ];
-
     preStart = "mkdir -p /data";
 
     serviceConfig = {
+      # Use forking so systemd waits until the mount is fully established
+      # before considering the service started. This prevents race conditions
+      # with services like Navidrome that depend on this mount.
+      Type = "forking";
       ExecStart = ''
         ${pkgs.sshfs}/bin/sshfs u489674@u489674.your-storagebox.de:megumu /data \
-        -f \
         -o ${lib.concatStringsSep "," options}
       '';
       ExecStop = "${pkgs.fuse3}/bin/fusermount3 -u /data";
