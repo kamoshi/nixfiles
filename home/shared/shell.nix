@@ -51,6 +51,10 @@ in
     };
 
     shellInit = ''
+      if test -d "${home}/nix/config/bin"
+        fish_add_path ${home}/nix/config/bin
+      end
+
       # Homebrew
       if test -f /opt/homebrew/bin/brew
         eval (/opt/homebrew/bin/brew shellenv)

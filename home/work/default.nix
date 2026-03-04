@@ -1,6 +1,9 @@
 { config, pkgs, mesh, device, utils, vpn, ... }:
 let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  home = if isDarwin
+    then "/Users/${config.home.username}"
+    else "/home/${config.home.username}";
 in
 {
   # imports = [
@@ -10,18 +13,34 @@ in
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "maciej";
-  home.homeDirectory =
-    if isDarwin
-      then "/Users/${config.home.username}"
-      else "/home/${config.home.username}";
+  home.homeDirectory = home;
 
   programs.fish = {
     enable = true;
+    shellInit = ''
+      fish_add_path ${home}/nix/config/bin
+    '';
   };
 
   home.shell.enableFishIntegration = true;
 
-  home.file."wireguard/wg0.conf".text = vpn.text;
+  # Home Manager is pretty good at managing dotfiles. The primary way to manage
+  # plain files is through 'home.file'.
+  home.file = {
+    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
+    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
+    # # symlink to the Nix store copy.
+    # ".screenrc".source = dotfiles/screenrc;
+
+    # # You can also set the file content immediately.
+    # ".gradle/gradle.properties".text = ''
+    #   org.gradle.console=verbose
+    #   org.gradle.daemon.idletimeout=3600000
+    # '';
+    "wireguard/wg0.conf".text = vpn.text;
+  } // utils.home.symlink config [
+    ".XCompose"
+  ];
 
   programs.neovim = {
     enable = true;
@@ -73,21 +92,6 @@ in
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
-
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
-  home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
-  };
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. These will be explicitly sourced when using a
