@@ -58,7 +58,7 @@
           ./hosts/aya
         ];
         home = {
-          kamov = ./home/kamov;
+          kamov = ./home/roles/daily.nix;
         };
         vpn = {
           ip = "10.0.0.4";
@@ -74,7 +74,7 @@
         arch = "x86_64-linux";
         modules = [
           inputs.sops-nix.homeManagerModules.sops
-          ./home/kamov
+          ./home/roles/daily.nix
         ];
         vpn = {
           ip = "10.0.0.2";
@@ -104,7 +104,7 @@
           ./hosts/megumu
         ];
         home = {
-          kamov = ./home/server;
+          kamov = ./home/roles/server.nix;
         };
         vpn = {
           ip = "10.0.0.1";
@@ -121,7 +121,7 @@
         type = Type.Home;
         arch = "x86_64-linux";
         modules = [
-          ./home/work
+          ./home/roles/work.nix
         ];
         vpn = {
           ip = "10.0.0.5";

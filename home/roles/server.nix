@@ -1,28 +1,20 @@
-{ config, pkgs, mesh, ... }:
-let
-  user = "kamov";
-in
+{ ... }:
 {
   imports = [
-    ../shared/shell.nix
+    ../shared/core.nix
+    ../shared/bash.nix
+    ../shared/fish
+    ../shared/nvim.nix
   ];
 
-  # Home Manager needs a bit of information about you and the paths it should
-  # manage.
-  home.username = user;
-  home.homeDirectory = "/home/${user}";
+  home.username = "kamov";
 
-  home.sessionVariables = {
-    EDITOR = "nvim";
+  programs.fzf = {
+    enable = true;
   };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
-  programs.zed-editor = {
-    enable = true;
-    installRemoteServer = true;
-  };
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release

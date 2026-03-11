@@ -1,28 +1,37 @@
-{ config, pkgs, mesh, device, utils, vpn, ... }:
-let
-  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
-  home = if isDarwin
-    then "/Users/${config.home.username}"
-    else "/home/${config.home.username}";
-in
+{ config, pkgs, utils, ... }:
 {
-  # imports = [
-  #   ../shared/shell.nix
-  # ];
+  imports = [
+    ../shared/core.nix
+    ../shared/sops.nix
+    ../shared/bash.nix
+    ../shared/fish
+    ../shared/nvim.nix
+    ../shared/syncthing.nix
+  ];
 
-  # Home Manager needs a bit of information about you and the paths it should
-  # manage.
-  home.username = "maciej";
-  home.homeDirectory = home;
+  home.username = "kamov";
 
-  programs.fish = {
-    enable = true;
-    shellInit = ''
-      fish_add_path ${home}/nix/config/bin
-    '';
+  sops.secrets = {
+    "syncthing/workspace" = {};
+    "syncthing/obsidian" = {};
+    "syncthing/photos" = {};
   };
 
-  home.shell.enableFishIntegration = true;
+  programs.git = {
+    enable = true;
+
+    signing = {
+      key = "191CBFF5F72ECAFD";
+      signByDefault = true;
+    };
+
+    settings = {
+      user.name  = "Maciej Jur";
+      user.email = "maciej@kamoshi.org";
+
+      init.defaultBranch = "main";
+    };
+  };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -37,47 +46,32 @@ in
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
-    "wireguard/wg0.conf".text = vpn.text;
   } // utils.home.symlink config [
     ".XCompose"
   ];
 
-  programs.neovim = {
-    enable = true;
-    viAlias = true;
-    vimAlias = true;
-  };
-
-  programs.direnv = {
-    enable = true;
-  };
-
-  services.syncthing = {
-    enable = true;
-
-    settings = {
-      gui = {
-        user = "kamov";
-        password = "kamov";
-      };
-
-      inherit (mesh config) devices folders;
-    };
-  };
-
   xdg.configFile = utils.home.symlink config [
-    "zed"
-    "nvim"
+    # zed
+    "zed/settings.json"
   ];
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
+    age
+    bat
+    biome
+    deno
+    dust
+    ffmpeg-full
+    gemini-cli
+    mupdf-headless
+    ncdu
     nixd
-    wireguard-tools
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
+    ripgrep
+    sops
+    typst
+    uv
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
@@ -109,9 +103,7 @@ in
   #
   #  /etc/profiles/per-user/kamov/etc/profile.d/hm-session-vars.sh
   #
-  home.sessionVariables = {
-    EDITOR = "nvim";
-  };
+  # home.sessionVariables = {};
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

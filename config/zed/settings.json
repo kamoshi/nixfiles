@@ -7,78 +7,87 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Kanagawa Wave"
+    "dark": "Kanagawa Wave",
   },
   "icon_theme": "Catppuccin Frappé",
   "indent_guides": {
     "coloring": "indent_aware",
-    "active_line_width": 2
+    "active_line_width": 2,
   },
   "project_panel": {
-    "entry_spacing": "standard"
+    "entry_spacing": "standard",
   },
   "terminal": {
     "shell": {
       "with_arguments": {
         "program": "fish",
-        "args": ["--interactive"]
-      }
-    }
+        "args": ["--interactive"],
+      },
+    },
   },
   "lsp": {
     "biome": {
       "settings": {
-        "config_path": "<path>/biome.json"
-      }
+        "config_path": "<path>/biome.json",
+      },
     },
     "rust-analyzer": {
       "initialization_options": {
         "check": {
-          "command": "clippy"
-        }
-      }
-    }
+          "command": "clippy",
+        },
+      },
+    },
   },
   "languages": {
     "Nix": {
-      "tab_size": 2
+      "tab_size": 2,
     },
     "JavaScript": {
       "formatter": [
         { "language_server": { "name": "biome" } },
         { "code_action": "source.fixAll.biome" },
-        { "code_action": "source.organizeImports.biome" }
-      ]
+        { "code_action": "source.organizeImports.biome" },
+      ],
     },
     "TypeScript": {
       "formatter": [
         { "language_server": { "name": "biome" } },
         { "code_action": "source.fixAll.biome" },
-        { "code_action": "source.organizeImports.biome" }
-      ]
+        { "code_action": "source.organizeImports.biome" },
+      ],
     },
     "TSX": {
       "formatter": [
         { "language_server": { "name": "biome" } },
         { "code_action": "source.fixAll.biome" },
-        { "code_action": "source.organizeImports.biome" }
-      ]
+        { "code_action": "source.organizeImports.biome" },
+      ],
     },
     "SCSS": {
-      "tab_size": 2
+      "tab_size": 2,
     },
     "Svelte": {
-      "tab_size": 2
-    }
+      "tab_size": 2,
+    },
   },
   "ssh_connections": [
     {
       "host": "megumu",
       "projects": [
         {
-          "paths": ["/home/kamov/nix"]
-        }
-      ]
-    }
-  ]
+          "paths": ["/home/kamov/nix"],
+        },
+      ],
+    },
+  ],
+  "agent": {
+    "default_model": {
+      "provider": "ollama",
+      "model": "qwen3-coder:30b",
+      "enable_thinking": false,
+    },
+    "favorite_models": [],
+    "model_parameters": [],
+  },
 }

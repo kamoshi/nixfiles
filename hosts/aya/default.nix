@@ -46,6 +46,7 @@ in {
       "vlc"
       "the-unarchiver"
       "musicbrainz-picard"
+      "element"
       # proton
       "proton-mail"
       "proton-pass"
