@@ -1,4 +1,4 @@
-inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }:
+inputs@{ self, nixpkgs, nightly, nix-darwin, home-manager, ... }:
 # Functions that takes a system's name and its configuration,
 # and return the appropriate flake output.
 let
@@ -18,6 +18,8 @@ let
               inputs.sops-nix.homeManagerModules.sops
             ];
             extraSpecialArgs = {
+              nightly = nightly.legacyPackages.${device.arch};
+
               inherit device mesh vpn;
               utils = { home = utilsHome; };
             };
@@ -67,6 +69,8 @@ let
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
         extraSpecialArgs = {
+          nightly = nightly.legacyPackages.${device.arch};
+
           inherit device mesh vpn;
           utils = {
             inherit vpnFor;

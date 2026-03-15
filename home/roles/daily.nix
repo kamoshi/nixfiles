@@ -1,5 +1,7 @@
-{ config, pkgs, utils, ... }:
-{
+{ config, pkgs, nightly, utils, ... }:
+let
+  home = config.home.homeDirectory;
+in {
   imports = [
     ../shared/core.nix
     ../shared/sops.nix
@@ -64,7 +66,6 @@
     deno
     dust
     ffmpeg-full
-    gemini-cli
     mupdf-headless
     ncdu
     nixd
@@ -72,6 +73,9 @@
     sops
     typst
     uv
+
+    # unstable stuff
+    nightly.gemini-cli
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the

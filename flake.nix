@@ -4,6 +4,11 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
+    nightly = {
+      url = "github:nixos/nixpkgs/nixos-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # aarch64-darwin
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
@@ -26,11 +31,9 @@
       url = "github:/kamoshi/server";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
-  outputs = inputs@{ nixpkgs, sops-nix, nixpkgs-unstable, server, ... }:
+  outputs = inputs@{ nixpkgs, sops-nix, server, ... }:
   let
     util = import ./util inputs;
     lib = nixpkgs.lib;

@@ -1,4 +1,9 @@
 {
+  "agent_servers": {
+    "gemini": {
+      "type": "registry"
+    }
+  },
   "vim_mode": true,
   "ui_font_size": 16,
   "buffer_font_size": 14,
@@ -84,7 +89,7 @@
   "agent": {
     "default_model": {
       "provider": "ollama",
-      "model": "qwen3-coder:30b",
+      "model": "lfm2:24b",
       "enable_thinking": false,
     },
     "favorite_models": [],

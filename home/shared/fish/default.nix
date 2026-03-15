@@ -10,8 +10,11 @@ in {
     };
 
     shellInit = ''
-      if test -d "${home}/nix/config/bin"
-        fish_add_path ${home}/nix/config/bin
+      fish_add_path ~/bin
+      fish_add_path ~/nix/config/bin
+
+      if type -q sprinter
+        sprinter completion fish | source
       end
 
       # Homebrew
