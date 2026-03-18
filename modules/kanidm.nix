@@ -63,8 +63,8 @@ in {
             groups = [
               "miniflux.access"
 
-              # "forgejo.access"
-              # "forgejo.admins"
+              "forgejo.access"
+              "forgejo.admins"
 
               # "grafana.access"
               # "grafana.admins"
@@ -76,8 +76,8 @@ in {
           # Miniflux
           "miniflux.access" = {};
           # Forgejo
-          # "forgejo.access" = {};
-          # "forgejo.admins" = {};
+          "forgejo.access" = {};
+          "forgejo.admins" = {};
           # Vikunja
           # "vikunja.access" = {};
         };
@@ -94,20 +94,21 @@ in {
             };
           };
 
-    #       forgejo = lib.mkIf config.kamov.forgejo.enable {
-    #         displayName = "Forgejo";
-    #         originUrl = "https://git.kamoshi.org/user/oauth2/kanidm/callback";
-    #         originLanding = "https://git.kamoshi.org/user/oauth2/kanidm";
-    #         basicSecretFile = config.sops.secrets."kanidm/forgejo".path;
-    #         preferShortUsername = true;
-    #         scopeMaps = {
-    #           "forgejo.access" = [ "openid" "profile" "email" ];
-    #         };
-    #         claimMaps.groups = {
-    #           joinType = "array";
-    #           valuesByGroup."forgejo.admins" = [ "admin" ];
-    #         };
-    #       };
+          forgejo = lib.mkIf config.kamov.forgejo.enable {
+            displayName = "Forgejo";
+            originUrl = "https://git.kamoshi.org/user/oauth2/kanidm/callback";
+            originLanding = "https://git.kamoshi.org/user/oauth2/kanidm";
+            basicSecretFile = config.sops.secrets."kanidm/forgejo".path;
+            preferShortUsername = true;
+            scopeMaps = {
+              "forgejo.access" = [ "openid" "profile" "email" ];
+            };
+            claimMaps.groups = {
+              joinType = "array";
+              valuesByGroup."forgejo.admins" = [ "admin" ];
+            };
+          };
+
     #       # vikunja = lib.mkIf config.kamov.vikunja.enable {
     #       #   displayName = "Vikunja";
     #       #   originUrl = "https://kanban.kamoshi.org/auth/openid/";

@@ -1,7 +1,13 @@
-{ self, pkgs, device,... }:
+{
+  self,
+  pkgs,
+  device,
+  ...
+}:
 let
   user = "kamov";
-in {
+in
+{
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   # environment.systemPackages = with pkgs; [
@@ -23,33 +29,33 @@ in {
     onActivation.cleanup = "uninstall";
     onActivation.upgrade = true;
 
-    taps = [];
+    taps = [ ];
     brews = [
-      "gpg"
       "dosbox-x"
+      "gpg"
+      "mpv"
       "pinentry-mac"
       "python"
-      "mpv"
     ];
     casks = [
-      "steam"
       "anki"
-      "zed"
-      "ghostty"
-      "obsidian"
-      "krita"
       "calibre"
-      "netnewswire"
-      "discord"
-      "transmission"
-      "google-chrome"
-      "vlc"
-      "the-unarchiver"
-      "musicbrainz-picard"
+      "claude"
+      "db-browser-for-sqlite"
       "element"
-      # proton
+      "ghostty"
+      "google-chrome"
+      "krita"
+      "musicbrainz-picard"
+      "netnewswire"
+      "obsidian"
       "proton-mail"
       "proton-pass"
+      "steam"
+      "the-unarchiver"
+      "transmission"
+      "vlc"
+      "zed"
     ];
   };
 
@@ -83,9 +89,9 @@ in {
         AppleShowAllExtensions = true;
         ShowPathbar = true;
         FXEnableExtensionChangeWarning = false;
-        _FXShowPosixPathInTitle = true;  # Show full path in finder window title
-        AppleShowAllFiles = true;        # Always show hidden files
-        FXPreferredViewStyle = "Nlsv";   # Default to List View (much faster/organized)
+        _FXShowPosixPathInTitle = true; # Show full path in finder window title
+        AppleShowAllFiles = true; # Always show hidden files
+        FXPreferredViewStyle = "Nlsv"; # Default to List View (much faster/organized)
       };
 
       dock = {

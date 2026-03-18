@@ -1,7 +1,14 @@
-{ config, pkgs, nightly, utils, ... }:
+{
+  config,
+  pkgs,
+  nightly,
+  utils,
+  ...
+}:
 let
   home = config.home.homeDirectory;
-in {
+in
+{
   imports = [
     ../shared/core.nix
     ../shared/sops.nix
@@ -14,9 +21,9 @@ in {
   home.username = "kamov";
 
   sops.secrets = {
-    "syncthing/workspace" = {};
-    "syncthing/obsidian" = {};
-    "syncthing/photos" = {};
+    "syncthing/workspace" = { };
+    "syncthing/obsidian" = { };
+    "syncthing/photos" = { };
   };
 
   programs.git = {
@@ -28,7 +35,7 @@ in {
     };
 
     settings = {
-      user.name  = "Maciej Jur";
+      user.name = "Maciej Jur";
       user.email = "maciej@kamoshi.org";
 
       init.defaultBranch = "main";
@@ -48,7 +55,8 @@ in {
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
-  } // utils.home.symlink config [
+  }
+  // utils.home.symlink config [
     ".XCompose"
   ];
 
@@ -68,7 +76,9 @@ in {
     ffmpeg-full
     mupdf-headless
     ncdu
+    nil
     nixd
+    nixfmt
     ripgrep
     sops
     typst

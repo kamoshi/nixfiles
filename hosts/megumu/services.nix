@@ -48,14 +48,14 @@
 
   # Forgejo
   # =====
-  # sops.secrets."kanidm/forgejo" = {
-  #   owner = "git";
-  #   group = "kanidm";
-  #   mode = "0440";
-  # };
+  sops.secrets."kanidm/forgejo" = {
+    owner = "git";
+    group = "kanidm";
+    mode = "0440";
+  };
 
   kamov.forgejo = {
-    enable = false;
+    enable = true;
     domain = "git.kamoshi.org";
     port = 3200;
     bind = "127.0.0.1";

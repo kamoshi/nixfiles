@@ -1,5 +1,11 @@
 {
   "agent_servers": {
+    "codex-acp": {
+      "type": "registry"
+    },
+    "claude-acp": {
+      "type": "registry"
+    },
     "gemini": {
       "type": "registry"
     }

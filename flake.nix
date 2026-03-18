@@ -3,11 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-
-    nightly = {
-      url = "github:nixos/nixpkgs/nixos-unstable";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nightly.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # aarch64-darwin
     nix-darwin = {

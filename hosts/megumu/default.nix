@@ -2,11 +2,17 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, pkgs, vpn, ... }:
+{
+  config,
+  pkgs,
+  vpn,
+  ...
+}:
 let
   ssh = 39016;
   pathBackup = "/var/backup/postgres";
-in {
+in
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -29,6 +35,7 @@ in {
     # services
     ./services.nix
     ./services/glance.nix
+    # ./services/woodpecker.nix
   ];
 
   # Use the GRUB 2 boot loader.
@@ -78,7 +85,11 @@ in {
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "25.05"; # Did you read the comment?
 
-  nix.settings.trusted-users = [ "root" "@wheel" "kamov" ];
+  nix.settings.trusted-users = [
+    "root"
+    "@wheel"
+    "kamov"
+  ];
 
   # console = {
   #   font = "Lat2-Terminus16";
@@ -93,7 +104,10 @@ in {
   #   };
   # };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   nix = {
     package = pkgs.lixPackageSets.stable.lix;
@@ -141,7 +155,10 @@ in {
   networking = {
     firewall = {
       enable = true;
-      allowedTCPPorts = [ 22 ssh ];
+      allowedTCPPorts = [
+        22
+        ssh
+      ];
       trustedInterfaces = [ "gensokyo" ];
     };
   };
@@ -155,7 +172,10 @@ in {
   # Define a user account. Don't forget to set a password with `passwd`.
   users.users.kamov = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "www" ];
+    extraGroups = [
+      "wheel"
+      "www"
+    ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIPeYt5Es7OB2z5EKC48XW/ziq2f8RtDhdODfSYISGJu kamov@aya"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEelrqEvoCTbgjdN5W6SnIMZ3HrsbfOg3PE2van+XlR4 kamov@momiji"
@@ -243,7 +263,7 @@ in {
   services.postgresqlBackup = {
     enable = true;
     # Add database names in modules
-    databases = [];
+    databases = [ ];
     location = pathBackup;
     startAt = "*-*-* 23:15:00";
   };
