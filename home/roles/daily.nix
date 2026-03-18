@@ -39,6 +39,7 @@ in
       user.email = "maciej@kamoshi.org";
 
       init.defaultBranch = "main";
+      core.excludesFile = "~/.gitignore";
     };
   };
 
@@ -58,6 +59,7 @@ in
   }
   // utils.home.symlink config [
     ".XCompose"
+    ".gitignore"
   ];
 
   xdg.configFile = utils.home.symlink config [
