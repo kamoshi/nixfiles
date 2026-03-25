@@ -1,4 +1,11 @@
-{ config, utils, vpn, ... }:
+{
+  config,
+  pkgs,
+  nightly,
+  utils,
+  vpn,
+  ...
+}:
 {
   imports = [
     ../shared/core.nix
@@ -6,6 +13,16 @@
     ../shared/fish
     ../shared/nvim.nix
     ../shared/syncthing.nix
+  ];
+
+  nixpkgs.config.allowUnfree = true;
+
+  # The home.packages option allows you to install Nix packages into your
+  # environment.
+  home.packages = with pkgs; [
+    # bleeding edge
+    nightly.claude-code
+    nightly.gemini-cli
   ];
 
   # Home Manager needs a bit of information about you
@@ -48,7 +65,8 @@
     #   org.gradle.daemon.idletimeout=3600000
     # '';
     "wireguard/wg0.conf".text = vpn.text;
-  } // utils.home.symlink config [
+  }
+  // utils.home.symlink config [
     ".XCompose"
   ];
 

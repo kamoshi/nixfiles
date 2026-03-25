@@ -14,6 +14,7 @@ in {
   home.packages = with pkgs; [
     age
     biome
+    nil
     nixd
     ripgrep
     typst

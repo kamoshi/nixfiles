@@ -86,7 +86,8 @@ in
     typst
     uv
 
-    # unstable stuff
+    # bleeding edge
+    nightly.claude-code
     nightly.gemini-cli
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
