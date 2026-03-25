@@ -26,7 +26,12 @@ let
               inputs.sops-nix.homeManagerModules.sops
             ];
             extraSpecialArgs = {
-              nightly = nightly.legacyPackages.${device.arch};
+              nightly = import nightly {
+                system = device.arch;
+                config = {
+                  allowUnfree = true;
+                };
+              };
 
               inherit device mesh vpn;
               utils = {
