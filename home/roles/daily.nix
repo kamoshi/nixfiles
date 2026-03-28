@@ -40,6 +40,14 @@ in
 
       init.defaultBranch = "main";
       core.excludesFile = "~/.gitignore";
+
+      sendemail = {
+        smtpserver = "127.0.0.1";
+        smtpuser = "maciej@kamoshi.org";
+        smtpencryption = "tls";
+        smtpserverport = 1025;
+        smtpsslcertpath = "";
+      };
     };
   };
 
