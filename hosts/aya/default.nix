@@ -42,7 +42,6 @@ in
       "calibre"
       "claude"
       "db-browser-for-sqlite"
-      "discord"
       "element"
       "ghostty"
       "google-chrome"

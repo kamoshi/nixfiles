@@ -1,19 +1,19 @@
 {
+  "when_closing_with_no_tabs": "keep_window_open",
   "agent_servers": {
     "codex-acp": {
-      "type": "registry"
+      "type": "registry",
     },
     "claude-acp": {
-      "type": "registry"
+      "type": "registry",
     },
     "gemini": {
-      "type": "registry"
-    }
+      "type": "registry",
+    },
   },
   "vim_mode": true,
   "ui_font_size": 16,
   "buffer_font_size": 14,
-  "buffer_font_family": "JetBrainsMono Nerd Font",
   "buffer_line_height": { "custom": 1.4 },
   "theme": {
     "mode": "system",
@@ -49,8 +49,16 @@
         },
       },
     },
+    "lua-language-server": {
+      "binary": {
+        "path": "lua-language-server",
+      },
+    },
   },
   "languages": {
+    "HTML": {
+      "tab_size": 2,
+    },
     "Nix": {
       "tab_size": 2,
     },

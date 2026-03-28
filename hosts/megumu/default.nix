@@ -25,7 +25,7 @@ in
     ./unbound.nix
 
     # api
-    ./services/api.nix
+    ./services/fukurou.nix
 
     # services @ internal
     ./services/jellyfin.nix

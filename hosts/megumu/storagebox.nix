@@ -20,17 +20,18 @@ in {
 
     wants = [
       "time-sync.target"
+      "blocky.service"
+      "unbound.service"
     ];
 
     requires = [
       "network-online.target"
-      "blocky.service"
-      "unbound.service"
     ];
 
     path = [ "/run/wrappers" ];
 
     preStart = ''
+      ${pkgs.util-linux}/bin/umount -l /data 2>/dev/null || true
       mkdir -p /data
       mkdir -p ${cache}
     '';
