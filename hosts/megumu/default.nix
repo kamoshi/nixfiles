@@ -10,7 +10,6 @@
 }:
 let
   ssh = 39016;
-  pathBackup = "/var/backup/postgres";
 in
 {
   imports = [
@@ -19,6 +18,7 @@ in
     # Custom module definitions
     ../../modules
     ./storagebox.nix
+    ./backup.nix
 
     # http + dns
     ./nginx.nix
@@ -129,9 +129,6 @@ in
     "wireguard" = {
       mode = "0600";
     };
-    "restic" = {
-      mode = "0600";
-    };
   };
 
   # List packages installed in system profile. To search, run:
@@ -150,6 +147,7 @@ in
 
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = true;
+    "kernel.panic" = 10;
   };
 
   networking = {
@@ -252,36 +250,5 @@ in
     };
   };
 
-  services.postgresql = {
-    enable = true;
-  };
-
-  systemd.tmpfiles.rules = [
-    "d ${pathBackup} 0700 postgres postgres -"
-  ];
-
-  services.postgresqlBackup = {
-    enable = true;
-    # Add database names in modules
-    databases = [ ];
-    location = pathBackup;
-    startAt = "*-*-* 23:15:00";
-  };
-
-  services.restic.backups = {
-    daily = {
-      # Add paths in modules
-      paths = [
-        pathBackup
-      ];
-      repository = "/data/backup/megumu";
-      initialize = true;
-      pruneOpts = [
-        "--keep-daily 7"
-        "--keep-weekly 5"
-        "--keep-monthly 12"
-      ];
-      passwordFile = config.sops.secrets."restic".path;
-    };
-  };
+  services.journald.extraConfig = "SystemMaxUse=500M";
 }
