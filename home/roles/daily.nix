@@ -72,7 +72,7 @@ in
 
   xdg.configFile = utils.home.symlink config [
     # zed
-    # "zed/settings.json"
+    "zed/settings.json"
   ];
 
   # The home.packages option allows you to install Nix packages into your
@@ -83,6 +83,7 @@ in
     biome
     deno
     dust
+    esbuild
     ffmpeg-full
     mupdf-headless
     ncdu

@@ -89,6 +89,12 @@
     "Svelte": {
       "tab_size": 2,
     },
+    "Jinja2": {
+      "tab_size": 2,
+    },
+    "Fish": {
+      "tab_size": 2,
+    },
   },
   "ssh_connections": [
     {
