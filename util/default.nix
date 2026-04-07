@@ -11,6 +11,14 @@ inputs@{
 let
   utilsHome = import ./home.nix inputs;
   lib = nixpkgs.lib;
+  nightlyFor =
+    system:
+    import nightly {
+      inherit system;
+      config = {
+        allowUnfree = true;
+      };
+    };
 
   maybeAttachHome =
     type: device: mesh: vpn:
@@ -26,12 +34,7 @@ let
               inputs.sops-nix.homeManagerModules.sops
             ];
             extraSpecialArgs = {
-              nightly = import nightly {
-                system = device.arch;
-                config = {
-                  allowUnfree = true;
-                };
-              };
+              nightly = nightlyFor device.arch;
 
               inherit device mesh vpn;
               utils = {
@@ -54,6 +57,7 @@ let
       system = device.arch; # "x86_64-linux"
       modules = device.modules ++ maybeAttachHome "nixos" device mesh vpn;
       specialArgs = {
+        nightly = nightlyFor device.arch;
         inherit
           self
           device
@@ -73,6 +77,7 @@ let
       system = device.arch;
       modules = device.modules ++ maybeAttachHome "darwin" device mesh vpn;
       specialArgs = {
+        nightly = nightlyFor device.arch;
         inherit
           self
           device
@@ -98,12 +103,7 @@ let
       # Optionally use extraSpecialArgs
       # to pass through arguments to home.nix
       extraSpecialArgs = {
-        nightly = import nightly {
-          system = device.arch;
-          config = {
-            allowUnfree = true;
-          };
-        };
+        nightly = nightlyFor device.arch;
 
         inherit device mesh vpn;
         utils = {

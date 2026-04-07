@@ -1,7 +1,5 @@
 {
   config,
-  pkgs,
-  nightly,
   utils,
   vpn,
   ...
@@ -13,17 +11,11 @@
     ../shared/fish
     ../shared/nvim.nix
     ../shared/syncthing.nix
+    ../shared/claude.nix
+    ../shared/gemini.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
-
-  # The home.packages option allows you to install Nix packages into your
-  # environment.
-  home.packages = with pkgs; [
-    # bleeding edge
-    nightly.claude-code
-    nightly.gemini-cli
-  ];
 
   # Home Manager needs a bit of information about you
   # and the paths it should manage.

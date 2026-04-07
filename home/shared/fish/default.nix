@@ -1,9 +1,10 @@
-{ config, ... }:
+{ config, nightly, ... }:
 let
   home = config.home.homeDirectory;
 in {
   programs.fish = {
     enable = true;
+    package = nightly.fish;
 
     shellAliases = {
       python = "python3";

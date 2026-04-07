@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  nightly,
   utils,
   ...
 }:
@@ -16,6 +15,9 @@ in
     ../shared/fish
     ../shared/nvim.nix
     ../shared/syncthing.nix
+    ../shared/claude.nix
+    ../shared/codex.nix
+    ../shared/gemini.nix
   ];
 
   home.username = "kamov";
@@ -94,10 +96,6 @@ in
     sops
     typst
     uv
-
-    # bleeding edge
-    nightly.claude-code
-    nightly.gemini-cli
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the

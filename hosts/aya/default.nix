@@ -1,7 +1,7 @@
 {
   self,
-  pkgs,
   device,
+  nightly,
   ...
 }:
 let
@@ -14,7 +14,10 @@ in
   # ]
 
   # Enable alternative shell support in nix-darwin.
-  programs.fish.enable = true;
+  programs.fish = {
+    enable = true;
+    package = nightly.fish;
+  };
 
   networking = {
     computerName = device.name;
