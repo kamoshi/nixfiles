@@ -14,8 +14,9 @@ in {
   };
 
   systemd.services.navidrome = {
-    # Force Navidrome to wait until /data is actually mounted
-    requires = [ "storagebox.service" ];
+    # Force Navidrome to wait until /data is actually mounted,
+    # and stop it immediately if storagebox unmounts (e.g. during nixos-rebuild)
+    bindsTo = [ "storagebox.service" ];
     after = [ "storagebox.service" ];
   };
 

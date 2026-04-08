@@ -16,6 +16,11 @@ in {
         rev = version;
         hash = "sha256-UlM6GmOSm1HyfQWvar3WCDCDAhyQcu1HNALk0E4hW5s=";
       };
+      nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+        pkgs.python3Packages.pythonRelaxDepsHook
+      ];
+      # nixpkgs currently ships wand 0.7.0 while 0.6.26 still declares <0.7.0.
+      pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "wand" ];
     });
 
     listen.ip = bind;
@@ -27,8 +32,9 @@ in {
   };
 
   systemd.services.calibre-web = {
-    # Force Calibre to wait until /data is actually mounted
-    requires = [ "storagebox.service" ];
+    # Force Calibre to wait until /data is actually mounted,
+    # and stop it immediately if storagebox unmounts (e.g. during nixos-rebuild)
+    bindsTo = [ "storagebox.service" ];
     after = [ "storagebox.service" ];
   };
 

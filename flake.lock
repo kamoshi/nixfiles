@@ -50,11 +50,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774699436,
-        "narHash": "sha256-ojGoJM28w7nRdpHhdeIuOeCq3UnIasSYqQxDcN7KiS4=",
+        "lastModified": 1775675772,
+        "narHash": "sha256-EBTzL3wZDu9uiA1wKJmLLkJiWfb8L1WWrf+G5DMLc0A=",
         "owner": "kamoshi",
         "repo": "fukurou",
-        "rev": "0b81e3a37e16da629e9dc313527a1067ec332195",
+        "rev": "2d9338292139e02af2baa8acc422e8f1899d23ee",
         "type": "github"
       },
       "original": {
