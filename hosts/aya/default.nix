@@ -77,7 +77,20 @@ in
 
     primaryUser = user;
 
+    startup.chime = false;
+
     defaults = {
+      controlcenter = {
+        BatteryShowPercentage = false;
+        NowPlaying = false;
+      };
+
+      CustomUserPreferences = {
+        NSGlobalDomain = {
+          AppleActionOnDoubleClick = "Maximize";
+        };
+      };
+
       NSGlobalDomain = {
         AppleShowAllExtensions = true;
 
@@ -86,6 +99,12 @@ in
 
         # 120, 94, 68, 35, 25, 15
         InitialKeyRepeat = 15;
+      };
+
+      screencapture = {
+        location = "/Users/${user}/Pictures/Screenshots";
+        type = "png";
+        disable-shadow = true;
       };
 
       finder = {
@@ -99,6 +118,7 @@ in
 
       dock = {
         autohide = true;
+        autohide-time-modifier = 0.5;
         show-recents = true;
         launchanim = true;
         orientation = "bottom";
