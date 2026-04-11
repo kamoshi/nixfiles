@@ -43,7 +43,6 @@ in
     casks = [
       "anki"
       "calibre"
-      "claude"
       "db-browser-for-sqlite"
       "element"
       "ghostty"

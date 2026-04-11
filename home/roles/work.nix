@@ -66,7 +66,7 @@
     enable = true;
   };
 
-  xdg.configFile = utils.home.symlink config [
+  xdg.configFile = utils.home.xdgSymlink config [
     "zed"
   ];
 

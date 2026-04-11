@@ -12,7 +12,7 @@ in {
 
     shellInit = ''
       fish_add_path ~/bin
-      fish_add_path ~/nix/config/bin
+      fish_add_path ~/nix/dotfiles/bin
 
       if type -q sprinter
         sprinter completion fish | source

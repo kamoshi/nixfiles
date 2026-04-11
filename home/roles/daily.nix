@@ -73,7 +73,7 @@ in
     ".gitignore"
   ];
 
-  xdg.configFile = utils.home.symlink config [
+  xdg.configFile = utils.home.xdgSymlink config [
     # zed
     "zed/settings.json"
   ];
@@ -128,7 +128,9 @@ in
   #
   #  /etc/profiles/per-user/kamov/etc/profile.d/hm-session-vars.sh
   #
-  # home.sessionVariables = {};
+  home.sessionVariables = {
+    MOZ_ENABLE_WAYLAND = "1";
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
