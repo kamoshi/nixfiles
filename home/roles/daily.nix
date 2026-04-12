@@ -19,6 +19,7 @@ in
     ../shared/codex.nix
     ../shared/gemini.nix
     ../shared/opencode.nix
+    ../shared/ocaml.nix
   ];
 
   home.username = "kamov";
