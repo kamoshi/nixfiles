@@ -15,11 +15,17 @@ in
     ../shared/fish
     ../shared/nvim.nix
     ../shared/syncthing.nix
+
+    # languages
+    ../shared/ocaml.nix
+    ../shared/haskell.nix
+    ../shared/rust.nix
+
+    # ai
     ../shared/claude.nix
     ../shared/codex.nix
     ../shared/gemini.nix
     ../shared/opencode.nix
-    ../shared/ocaml.nix
   ];
 
   home.username = "kamov";

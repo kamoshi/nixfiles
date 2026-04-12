@@ -1,7 +1,8 @@
 { config, ... }:
 let
   home = config.home.homeDirectory;
-in {
+in
+{
   programs.bash = {
     enable = true;
     shellAliases = {
@@ -12,10 +13,6 @@ in {
     bashrcExtra = ''
       # Homebrew
       [ -f "/opt/homebrew/bin/brew" ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-      # Haskell ghcup
-      [ -f "${home}/.ghcup/env" ] && . "${home}/.ghcup/env"
-      # Rust cargo
-      [ -d "${home}/.cargo/bin" ] && export PATH="${home}/.cargo/bin:$PATH"
     '';
     initExtra = ''
       PS1='\[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '

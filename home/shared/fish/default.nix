@@ -1,7 +1,4 @@
-{ config, nightly, ... }:
-let
-  home = config.home.homeDirectory;
-in
+{ nightly, ... }:
 {
   programs.fish = {
     enable = true;
@@ -22,11 +19,6 @@ in
       # Homebrew
       if test -f /opt/homebrew/bin/brew
         eval (/opt/homebrew/bin/brew shellenv)
-      end
-
-      # Rust cargo
-      if test -d "${home}/.cargo/bin"
-        set -p fish_user_paths "${home}/.cargo/bin"
       end
 
       source ${./functions.fish}
