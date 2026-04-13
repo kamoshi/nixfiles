@@ -1,10 +1,14 @@
-{ config, pkgs, vpn, ... }:
+{
+  config,
+  pkgs,
+  vpn,
+  ...
+}:
 let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
-  home = if isDarwin
-    then "/Users/${config.home.username}"
-    else "/home/${config.home.username}";
-in {
+  home = if isDarwin then "/Users/${config.home.username}" else "/home/${config.home.username}";
+in
+{
   home.homeDirectory = home;
 
   home.file."wireguard/gensokyo.conf".text = vpn.text;
@@ -14,6 +18,7 @@ in {
   home.packages = with pkgs; [
     age
     biome
+    lazygit
     nil
     nixd
     ripgrep
