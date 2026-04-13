@@ -5,10 +5,6 @@ in
 {
   home.packages = with pkgs; [
     dune
-    ocaml
-    ocamlPackages.ocaml-lsp
-    ocamlPackages.utop
-    ocamlformat
     opam
   ];
 
