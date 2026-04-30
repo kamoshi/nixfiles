@@ -23,6 +23,8 @@ in
     nixd
     ripgrep
     typst
+    tree-sitter
+    nodejs_22
     uv
     wireguard-tools
     # # Adds the 'hello' command to your environment. It prints a friendly

@@ -1,9 +1,14 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  nightly,
+  ...
+}:
 let
   home = config.home.homeDirectory;
 in
 {
-  home.packages = with pkgs; [
+  home.packages = with nightly; [
     dune
     opam
   ];

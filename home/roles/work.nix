@@ -11,8 +11,16 @@
     ../shared/fish
     ../shared/nvim.nix
     ../shared/syncthing.nix
+
+    # ai
     ../shared/claude.nix
+    ../shared/codex.nix
+    ../shared/copilot.nix
     ../shared/gemini.nix
+
+    # rust
+    ../shared/rust.nix
+    ../shared/ocaml.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -40,6 +48,7 @@
   home.sessionPath = [
     "$HOME/bin"
     "$HOME/.local/bin"
+    "$HOME/.cache/cargo/bin"
     "/home/maciej/elasticsearch-2.2.0/bin"
   ];
 

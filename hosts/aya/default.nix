@@ -56,8 +56,10 @@ in
       "steam"
       "the-unarchiver"
       "transmission"
+      "visual-studio-code"
       "vlc"
       "zed"
+      "codex"
     ];
   };
 

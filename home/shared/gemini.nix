@@ -27,6 +27,7 @@ let
 in
 {
   home.packages = [
-    gemini-cli-034
+    # gemini-cli-034
+    nightly.gemini-cli
   ];
 }
