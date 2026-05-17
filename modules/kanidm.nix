@@ -1,8 +1,14 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.kamov.kanidm;
   certs = config.security.acme.certs."${cfg.domain}";
-in {
+in
+{
   options.kamov.kanidm = {
     enable = lib.mkEnableOption "Enable Kanidm";
 
@@ -29,14 +35,14 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.kanidm = {
-      package = pkgs.kanidmWithSecretProvisioning_1_9;
+      package = pkgs.kanidmWithSecretProvisioning_1_10;
 
       enableServer = true;
       serverSettings = {
         domain = cfg.domain;
         origin = "https://${cfg.domain}";
         tls_chain = "${certs.directory}/fullchain.pem";
-        tls_key   = "${certs.directory}/key.pem";
+        tls_key = "${certs.directory}/key.pem";
         trust_x_forward_for = true;
         bindaddress = "${cfg.bind}:${toString cfg.port}";
 
@@ -74,10 +80,10 @@ in {
 
         groups = {
           # Miniflux
-          "miniflux.access" = {};
+          "miniflux.access" = { };
           # Forgejo
-          "forgejo.access" = {};
-          "forgejo.admins" = {};
+          "forgejo.access" = { };
+          "forgejo.admins" = { };
           # Vikunja
           # "vikunja.access" = {};
         };
@@ -90,7 +96,11 @@ in {
             basicSecretFile = config.sops.secrets."kanidm/miniflux".path;
             preferShortUsername = true;
             scopeMaps = {
-              "miniflux.access" = [ "openid" "profile" "email" ];
+              "miniflux.access" = [
+                "openid"
+                "profile"
+                "email"
+              ];
             };
           };
 
@@ -101,7 +111,11 @@ in {
             basicSecretFile = config.sops.secrets."kanidm/forgejo".path;
             preferShortUsername = true;
             scopeMaps = {
-              "forgejo.access" = [ "openid" "profile" "email" ];
+              "forgejo.access" = [
+                "openid"
+                "profile"
+                "email"
+              ];
             };
             claimMaps.groups = {
               joinType = "array";
@@ -109,37 +123,37 @@ in {
             };
           };
 
-    #       # vikunja = lib.mkIf config.kamov.vikunja.enable {
-    #       #   displayName = "Vikunja";
-    #       #   originUrl = "https://kanban.kamoshi.org/auth/openid/";
-    #       #   originLanding = "https://kanban.kamoshi.org";
-    #       #   preferShortUsername = true;
-    #       #   scopeMaps = {
-    #       #     "miniflux.access" = [ "openid" "profile" "email" ];
-    #       #   };
-    #       # };
-    #     };
+          #       # vikunja = lib.mkIf config.kamov.vikunja.enable {
+          #       #   displayName = "Vikunja";
+          #       #   originUrl = "https://kanban.kamoshi.org/auth/openid/";
+          #       #   originLanding = "https://kanban.kamoshi.org";
+          #       #   preferShortUsername = true;
+          #       #   scopeMaps = {
+          #       #     "miniflux.access" = [ "openid" "profile" "email" ];
+          #       #   };
+          #       # };
+          #     };
 
-    #     # Grafana
-    #     groups."grafana.access" = { };
-    #     groups."grafana.editors" = { };
-    #     groups."grafana.admins" = { };
-    #     groups."grafana.server-admins" = { };
-    #     systems.oauth2.grafana = lib.mkIf config.kamov.grafana.enable {
-    #       displayName = "Grafana";
-    #       originUrl = "https://data.kamoshi.org/login/generic_oauth";
-    #       originLanding = "https://data.kamoshi.org/login/generic_oauth";
-    #       basicSecretFile = config.sops.secrets."grafana/client_secret".path;
-    #       preferShortUsername = true;
-    #       scopeMaps."grafana.access" = [ "openid" "email" "profile" ];
-    #       claimMaps.groups = {
-    #         joinType = "array";
-    #         valuesByGroup = {
-    #           "grafana.editors" = [ "editor" ];
-    #           "grafana.admins" = [ "admin" ];
-    #           "grafana.server-admins" = [ "server_admin" ];
-    #         };
-    #       };
+          #     # Grafana
+          #     groups."grafana.access" = { };
+          #     groups."grafana.editors" = { };
+          #     groups."grafana.admins" = { };
+          #     groups."grafana.server-admins" = { };
+          #     systems.oauth2.grafana = lib.mkIf config.kamov.grafana.enable {
+          #       displayName = "Grafana";
+          #       originUrl = "https://data.kamoshi.org/login/generic_oauth";
+          #       originLanding = "https://data.kamoshi.org/login/generic_oauth";
+          #       basicSecretFile = config.sops.secrets."grafana/client_secret".path;
+          #       preferShortUsername = true;
+          #       scopeMaps."grafana.access" = [ "openid" "email" "profile" ];
+          #       claimMaps.groups = {
+          #         joinType = "array";
+          #         valuesByGroup = {
+          #           "grafana.editors" = [ "editor" ];
+          #           "grafana.admins" = [ "admin" ];
+          #           "grafana.server-admins" = [ "server_admin" ];
+          #         };
+          #       };
         };
       };
     };
@@ -151,8 +165,8 @@ in {
       ];
       serviceConfig = {
         SupplementaryGroups = [ certs.group ];
-        BindReadOnlyPaths   = [ certs.directory ];
-        BindPaths           = [ "/var/lib/kanidm" ];
+        BindReadOnlyPaths = [ certs.directory ];
+        BindPaths = [ "/var/lib/kanidm" ];
       };
     };
 

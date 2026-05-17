@@ -4,7 +4,6 @@
     ../shared/core.nix
     ../shared/bash.nix
     ../shared/fish
-    ../shared/nvim.nix
   ];
 
   home.username = "kamov";

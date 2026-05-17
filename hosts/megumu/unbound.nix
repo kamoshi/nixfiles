@@ -1,6 +1,9 @@
 { ... }:
 {
-  networking.nameservers = [ "127.0.0.1" "::1" ];
+  networking.nameservers = [
+    "127.0.0.1"
+    "::1"
+  ];
 
   services.blocky = {
     enable = true;
@@ -15,63 +18,30 @@
       # For initially solving DoH/DoT Requests when no system resolver is available.
       bootstrapDns = {
         upstream = "https://dns.quad9.net/dns-query";
-        ips = [ "9.9.9.9" "149.112.112.112" ];
+        ips = [
+          "9.9.9.9"
+          "149.112.112.112"
+        ];
       };
 
       blocking = {
         blockType = "zeroIP";
 
         blackLists = {
-          # The internet would be better off without this crap.
           crap = [
             "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
             "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro.txt"
             "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif.txt"
             "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/nsfw.txt"
           ];
-
-          # Social media platforms are the horsemen of the enshittification.
-          # Shoutout to the sites that don't let you see anything without logging in.
-          social = [
-            "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/social.txt"
-          ];
         };
 
-        allowlists = {
-          social = [
-            # Discord is one of the worst things that happened when it comes to
-            # communication. However, as of right now, it's the best option for
-            # group chats.
-            ''
-              *.discord.com
-              *.discordapp.com
-              *.discordapp.net
-              *.discord.gg
-              *.discord.media
-              *.discordcdn.com
-              *.discordstatus.com
-              *.dis.gd
-            ''
-            # There are multiple reasons why one would want to block reddit, one
-            # of them is the incremental enshittification of the platform.
-            # However, there are also times when having access to Reddit is
-            # genuinely useful.
-            # ''
-            #   *.reddit.com
-            #   *.redd.it
-            #   *.redditmail.com
-            #   *.redditmedia.com
-            #   *.redditstatic.com
-            # ''
+        clientGroupsBlock = {
+          default = [
+            "crap"
+            "social"
           ];
         };
-
-      	clientGroupsBlock = {
-        	default = [
-           "crap"
-           "social"
-          ];
-      	};
       };
 
       caching = {
@@ -117,7 +87,7 @@
             "2620:fe::fe#dns.quad9.net"
             "2620:fe::9#dns.quad9.net"
           ];
-          forward-tls-upstream = true;  # Protected DNS
+          forward-tls-upstream = true; # Protected DNS
         }
       ];
     };

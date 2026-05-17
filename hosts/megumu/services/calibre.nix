@@ -1,27 +1,14 @@
-{ pkgs, ... }:
+{ pkgs, nightly, ... }:
 let
   domain = "calibre.internal";
   bind = "10.0.0.1";
   port = 9998;
-in {
+in
+{
   services.calibre-web = {
     enable = true;
 
-    # FIXME: temporary override
-    package = pkgs.calibre-web.overrideAttrs (old: rec {
-      version = "0.6.26";
-      src = pkgs.fetchFromGitHub {
-        owner = "janeczku";
-        repo = "calibre-web";
-        rev = version;
-        hash = "sha256-UlM6GmOSm1HyfQWvar3WCDCDAhyQcu1HNALk0E4hW5s=";
-      };
-      nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
-        pkgs.python3Packages.pythonRelaxDepsHook
-      ];
-      # nixpkgs currently ships wand 0.7.0 while 0.6.26 still declares <0.7.0.
-      pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "wand" ];
-    });
+    package = nightly.calibre-web;
 
     listen.ip = bind;
     listen.port = port;
