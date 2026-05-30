@@ -4,6 +4,9 @@
     enable = true;
     viAlias = true;
     vimAlias = true;
+    withRuby = false;
+    withPython3 = false;
+    sideloadInitLua = true;
   };
 
   xdg.configFile = utils.home.xdgSymlink config [

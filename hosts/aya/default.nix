@@ -43,24 +43,33 @@ in
     casks = [
       "anki"
       "calibre"
-      "db-browser-for-sqlite"
+      "discord"
       "element"
-      "ghostty"
       "google-chrome"
       "krita"
-      "musicbrainz-picard"
       "netnewswire"
-      "obsidian"
-      "proton-mail"
-      "proton-pass"
       "steam"
+      "vlc"
+
+      # Tools
+      "db-browser-for-sqlite"
+      "ghostty"
       "the-unarchiver"
       "transmission"
+
+      # IDE
+      "obsidian"
       "visual-studio-code"
-      "vlc"
       "zed"
-      "codex"
-      "codex-app"
+
+      # Proton
+      "proton-mail"
+      "proton-pass"
+
+      # AI
+      "antigravity"
+      "antigravity-cli"
+      "google-gemini"
     ];
   };
 
@@ -138,8 +147,10 @@ in
           "/Applications/Proton Pass.app"
           "/Applications/Ghostty.app"
           "/Applications/Zed.app"
-          # "/Applications/Discord.app"
-          # "/Applications/Spotify.app"
+          "/Applications/Gemini.app"
+          "/Applications/Antigravity.app"
+          "/Applications/Discord.app"
+          "/Applications/Steam.app"
         ];
       };
     };

@@ -13,10 +13,7 @@
     ../shared/syncthing.nix
 
     # ai
-    ../shared/claude.nix
-    ../shared/codex.nix
-    ../shared/copilot.nix
-    ../shared/gemini.nix
+    ../shared/opencode.nix
 
     # rust
     ../shared/rust.nix
