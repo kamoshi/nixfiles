@@ -56,7 +56,7 @@ in {
           enabled = true;
           redirecturl = "https://${cfg.domain}/auth/openid/";
           providers = let
-            sso = config.services.kanidm.domain;
+            sso = config.services.kanidm.server.settings.domain;
           in [
             {
               name = "Arstotzka";

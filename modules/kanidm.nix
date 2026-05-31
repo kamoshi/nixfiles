@@ -37,25 +37,31 @@ in
     services.kanidm = {
       package = pkgs.kanidmWithSecretProvisioning_1_10;
 
-      enableServer = true;
-      serverSettings = {
-        domain = cfg.domain;
-        origin = "https://${cfg.domain}";
-        tls_chain = "${certs.directory}/fullchain.pem";
-        tls_key = "${certs.directory}/key.pem";
-        trust_x_forward_for = true;
-        bindaddress = "${cfg.bind}:${toString cfg.port}";
+      server = {
+        enable = true;
+        settings = {
+          domain = cfg.domain;
+          origin = "https://${cfg.domain}";
+          tls_chain = "${certs.directory}/fullchain.pem";
+          tls_key = "${certs.directory}/key.pem";
+          http_client_address_info = {
+            x-forward-for = [ "127.0.0.1" "::1" ];
+          };
+          bindaddress = "${cfg.bind}:${toString cfg.port}";
 
-        online_backup = {
-          path = "/var/backup/kanidm/";
-          schedule = "0 20 * * *"; # UTC time
-          versions = 2;
+          online_backup = {
+            path = "/var/backup/kanidm/";
+            schedule = "0 20 * * *"; # UTC time
+            versions = 2;
+          };
         };
       };
 
-      enableClient = true;
-      clientSettings = {
-        uri = "https://${cfg.domain}";
+      client = {
+        enable = true;
+        settings = {
+          uri = "https://${cfg.domain}";
+        };
       };
 
       provision = {

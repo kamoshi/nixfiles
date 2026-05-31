@@ -45,6 +45,7 @@ in {
         --sftp-port ${toString port} \
         --sftp-key-file ${key} \
         --allow-other \
+        --allow-non-empty \
         --cache-dir ${cache} \
         --vfs-cache-mode full \
         --vfs-cache-max-size 5G \
