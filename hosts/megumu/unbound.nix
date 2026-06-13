@@ -34,6 +34,18 @@
             "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif.txt"
             "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/nsfw.txt"
           ];
+          social = [
+            "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/social.txt"
+            ./filters/hackernews.txt
+            ./filters/wykop.txt
+          ];
+        };
+
+        allowlists = {
+          social = [
+            ./filters/discord.txt
+            # ./filters/reddit.txt
+          ];
         };
 
         clientGroupsBlock = {

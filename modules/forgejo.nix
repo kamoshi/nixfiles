@@ -113,7 +113,16 @@ in {
     };
 
     systemd.services.forgejo = {
-      serviceConfig.RestartSec = "60"; # Retry every minute
+      after = [
+        "network-online.target"
+        "blocky.service"
+        "nginx.service"
+        "kanidm.service"
+      ];
+      wants = [
+        "network-online.target"
+      ];
+      serviceConfig.RestartSec = "10";
       preStart =
         let
           exe = lib.getExe config.services.forgejo.package;

@@ -147,6 +147,8 @@ in
 
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = true;
+    "net.ipv4.ip_nonlocal_bind" = true;
+    "net.ipv6.ip_nonlocal_bind" = true;
     "kernel.panic" = 10;
   };
 

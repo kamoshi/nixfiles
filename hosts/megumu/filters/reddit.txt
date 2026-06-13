@@ -1,0 +1,6 @@
+reddit.com
+*.reddit.com
+*.redd.it
+*.redditmail.com
+*.redditmedia.com
+*.redditstatic.com
