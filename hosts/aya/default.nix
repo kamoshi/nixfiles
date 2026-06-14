@@ -43,9 +43,7 @@ in
     casks = [
       "anki"
       "calibre"
-      "discord"
       "element"
-      "google-chrome"
       "krita"
       "netnewswire"
       "steam"
@@ -59,7 +57,6 @@ in
 
       # IDE
       "obsidian"
-      "visual-studio-code"
       "zed"
 
       # Proton
@@ -130,7 +127,7 @@ in
       dock = {
         autohide = true;
         autohide-time-modifier = 0.5;
-        show-recents = true;
+        show-recents = false;
         launchanim = true;
         orientation = "bottom";
         tilesize = 48;
@@ -144,13 +141,10 @@ in
           "/Applications/Obsidian.app"
           "/Applications/calibre.app"
           "/Applications/Proton Mail.app"
-          "/Applications/Proton Pass.app"
           "/Applications/Ghostty.app"
           "/Applications/Zed.app"
           "/Applications/Gemini.app"
           "/Applications/Antigravity.app"
-          "/Applications/Discord.app"
-          "/Applications/Steam.app"
         ];
       };
     };
