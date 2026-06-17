@@ -79,19 +79,4 @@ in
       endpoint = "94.130.182.219";
     };
   };
-
-  # nitori
-  nitori = {
-    id = "4SIJHMJ-6RR5KGV-E53GPIR-MJOZ3PO-4KSKIXP-T7DYO3J-2AP2TGI-GD524A6";
-    name = "Nitori";
-    type = Type.Home;
-    arch = "x86_64-linux";
-    modules = [
-      ../home/roles/work.nix
-    ];
-    vpn = {
-      ip = "10.0.0.5";
-      pubkey = "h56pMAJImznBc9ir7lPrhm+H5ImY6Zu1vgLuhARmMVI=";
-    };
-  };
 }
