@@ -6,7 +6,6 @@
       aya = "~/nix";
       momiji = "~/nix";
       megumu = "~/nix";
-      nitori = "~/nix";
     };
   };
   calibre = {

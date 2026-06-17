@@ -273,7 +273,15 @@ in
       ];
       folders = lib.pipe folders [
         (lib.filterAttrs (_: folder: lib.hasAttr key folder.path))
-        (lib.mapAttrs (_: folder: mkSyncthingFolder { inherit config key folder; }))
+        (lib.mapAttrs (folderName: folder:
+          let
+            invalidPeers = lib.filter (name: !lib.hasAttr name devices) (lib.attrNames folder.path);
+          in
+          if invalidPeers != [] then
+            throw "Folder '${folderName}' references undefined device(s) in inventory/folders.nix: ${lib.concatStringsSep ", " invalidPeers}"
+          else
+            mkSyncthingFolder { inherit config key folder; }
+        ))
       ];
     };
 
