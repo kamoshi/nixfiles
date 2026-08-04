@@ -54,7 +54,7 @@ in
     name = "Hatate";
     vpn = {
       ip = "10.0.0.3";
-      pubkey = "ro/HmBKJv/U2gWHByO88eBFeNoG9tOSPn37daENA6zY=";
+      pubkey = "32PZKaWNzCwpCZVhLOGal/Pupe/gDVLDeEfdjlsM7y0=";
     };
   };
 

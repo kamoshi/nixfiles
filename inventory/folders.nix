@@ -8,6 +8,16 @@
       megumu = "~/nix";
     };
   };
+
+  music = {
+    id = "music";
+    label = "Music";
+    path = {
+      momiji = "/data/music";
+      megumu = "/data/music";
+    };
+  };
+
   calibre = {
     id = "calibre";
     label = "Calibre";

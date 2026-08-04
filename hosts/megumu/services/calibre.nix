@@ -8,8 +8,6 @@ in
   services.calibre-web = {
     enable = true;
 
-    package = nightly.calibre-web;
-
     listen.ip = bind;
     listen.port = port;
     options = {

@@ -29,13 +29,13 @@ in
     ./services/fukurou.nix
 
     # services @ internal
-    ./services/jellyfin.nix
-    ./services/calibre.nix
+    # ./services/jellyfin.nix
+    # ./services/calibre.nix
     ./services/navidrome.nix
 
     # services
     ./services.nix
-    ./services/glance.nix
+    # ./services/glance.nix
     # ./services/woodpecker.nix
   ];
 

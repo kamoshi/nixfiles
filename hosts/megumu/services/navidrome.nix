@@ -1,7 +1,8 @@
 { ... }:
 let
-  domain = "navidrome.internal";
-  bind = "10.0.0.1";
+  domainInternal = "music.internal";
+  domainExternal = "music.kamoshi.org";
+  bind = "127.0.0.1";
   port = 4533;
 in {
   services.navidrome = {
@@ -9,7 +10,12 @@ in {
     settings = {
       Address = bind;
       Port = port;
-      MusicFolder = "/data/navidrome/";
+      MusicFolder = "/data/music/";
+      EnforceNonRootUser = true;
+      EnableTranscodingConfig = false;
+
+      # EnableSharing = false;
+      DefaultShareExpiration = "24h";
     };
   };
 
@@ -22,7 +28,7 @@ in {
 
   services.caddy = {
     enable = true;
-    virtualHosts.${domain}.extraConfig = ''
+    virtualHosts.${domainInternal}.extraConfig = ''
       bind 10.0.0.1
       tls internal
       reverse_proxy ${bind}:${toString port}
@@ -30,6 +36,15 @@ in {
   };
 
   services.blocky = {
-    settings.customDNS.mapping.${domain} = "10.0.0.1";
+    settings.customDNS.mapping.${domainInternal} = "10.0.0.1";
+  };
+
+  services.nginx.virtualHosts.${domainExternal} = {
+    enableACME = true;
+    forceSSL = true;
+
+    locations."/" = {
+      proxyPass = "http://${bind}:${toString port}";
+    };
   };
 }

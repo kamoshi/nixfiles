@@ -20,6 +20,7 @@ in
     ../shared/ocaml.nix
     ../shared/haskell.nix
     ../shared/rust.nix
+    ../shared/lean.nix
 
     # ai
     ../shared/opencode.nix
@@ -35,11 +36,6 @@ in
 
   programs.git = {
     enable = true;
-
-    signing = {
-      key = "191CBFF5F72ECAFD";
-      signByDefault = true;
-    };
 
     settings = {
       user.name = "Maciej Jur";

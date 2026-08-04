@@ -16,7 +16,6 @@ in
   # Enable alternative shell support in nix-darwin.
   programs.fish = {
     enable = true;
-    package = nightly.fish;
   };
 
   networking = {
@@ -44,10 +43,12 @@ in
       "anki"
       "calibre"
       "element"
+      "google-chrome"
       "krita"
       "netnewswire"
       "steam"
       "vlc"
+      "xld"
 
       # Tools
       "db-browser-for-sqlite"
@@ -57,6 +58,7 @@ in
 
       # IDE
       "obsidian"
+      "visual-studio-code"
       "zed"
 
       # Proton
@@ -130,7 +132,7 @@ in
         show-recents = false;
         launchanim = true;
         orientation = "bottom";
-        tilesize = 48;
+        tilesize = 56;
         autohide-delay = 0.0;
 
         persistent-apps = [
@@ -142,7 +144,6 @@ in
           "/Applications/calibre.app"
           "/Applications/Proton Mail.app"
           "/Applications/Ghostty.app"
-          "/Applications/Zed.app"
           "/Applications/Gemini.app"
           "/Applications/Antigravity.app"
         ];

@@ -2,7 +2,6 @@
 {
   programs.fish = {
     enable = true;
-    package = nightly.fish;
 
     shellAliases = {
       python = "python3";
