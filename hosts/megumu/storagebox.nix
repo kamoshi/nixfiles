@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
   user = "u489674";
   host = "u489674.your-storagebox.de";
@@ -6,6 +6,11 @@ let
   key = "/root/.ssh/root@megumu";
   cache = "/var/cache/rclone";
 in {
+  sops.secrets."storagebox-rclone" = {
+    mode = "0400";
+    restartUnits = [ "storagebox_enc.service" ];
+  };
+
   programs.ssh.knownHosts = {
     storagebox-rsa = {
       hostNames = [ "[${host}]:${toString port}" ];
@@ -89,6 +94,98 @@ in {
       '';
 
       ExecStop = "${pkgs.util-linux}/bin/umount -l /data";
+
+      Restart = "on-failure";
+      RestartSec = "30s";
+
+      TimeoutStopSec = "60s";
+    };
+  };
+
+  systemd.services."storagebox_enc" =
+  let
+    location = "/srv/storagebox/crypt";
+    encryptedPath = "crypt";
+    encryptedCache = "${cache}/storagebox_enc";
+  in
+  {
+    description = "Hetzner Rclone Encrypted Mount";
+
+    wantedBy = [ "multi-user.target" ];
+
+    after = [
+      "network-online.target"
+      "time-sync.target"
+      "blocky.service"
+      "unbound.service"
+    ];
+
+    wants = [
+      "time-sync.target"
+      "blocky.service"
+      "unbound.service"
+    ];
+
+    requires = [
+      "network-online.target"
+    ];
+
+    path = [ "/run/wrappers" pkgs.getent ];
+
+    preStart = ''
+      ${pkgs.util-linux}/bin/umount -l ${location} 2>/dev/null || true
+      ${pkgs.coreutils}/bin/install -d -m 0755 ${location}
+      ${pkgs.coreutils}/bin/install -d -m 0700 ${encryptedCache}
+
+      # DNS check...
+      attempt=1
+      while [ "$attempt" -le 60 ]; do
+        if ${lib.getExe pkgs.getent} ahostsv4 ${host} >/dev/null; then
+          exit 0
+        fi
+
+        echo "Waiting for DNS to resolve ${host} ($attempt/60)"
+        ${pkgs.coreutils}/bin/sleep 1
+        attempt=$((attempt + 1))
+      done
+
+      echo "DNS never resolved ${host}" >&2
+      exit 1
+    '';
+
+    serviceConfig = {
+      Type = "notify";
+
+      EnvironmentFile = config.sops.secrets."storagebox-rclone".path;
+      Environment = [
+        "RCLONE_CONFIG_STORAGEBOX_SFTP_TYPE=sftp"
+        "RCLONE_CONFIG_STORAGEBOX_SFTP_HOST=${host}"
+        "RCLONE_CONFIG_STORAGEBOX_SFTP_USER=${user}"
+        "RCLONE_CONFIG_STORAGEBOX_SFTP_PORT=${toString port}"
+        "RCLONE_CONFIG_STORAGEBOX_SFTP_KEY_FILE=${key}"
+        "RCLONE_CONFIG_STORAGEBOX_SFTP_KNOWN_HOSTS_FILE=/etc/ssh/ssh_known_hosts"
+        "RCLONE_CONFIG_STORAGEBOX_CRYPT_TYPE=crypt"
+        "RCLONE_CONFIG_STORAGEBOX_CRYPT_REMOTE=storagebox_sftp:${encryptedPath}"
+        "RCLONE_CONFIG_STORAGEBOX_CRYPT_FILENAME_ENCRYPTION=standard"
+        "RCLONE_CONFIG_STORAGEBOX_CRYPT_DIRECTORY_NAME_ENCRYPTION=true"
+      ];
+
+      ExecStart = ''
+        ${pkgs.rclone}/bin/rclone mount storagebox_crypt: ${location} \
+        --config="" \
+        --allow-other \
+        --cache-dir ${encryptedCache} \
+        --vfs-cache-mode full \
+        --vfs-cache-max-size 5G \
+        --vfs-cache-max-age 4h \
+        --vfs-cache-min-free-space 10G \
+        --vfs-read-ahead 64M \
+        --buffer-size 4M \
+        --dir-cache-time 72h \
+        --use-mmap
+      '';
+
+      ExecStop = "${pkgs.util-linux}/bin/umount -l ${location}";
 
       Restart = "on-failure";
       RestartSec = "30s";
