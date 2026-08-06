@@ -1,7 +1,6 @@
-{ ... }:
+{ device, inventory, ... }:
 let
-  domain = "jellyfin.internal";
-  port = 8096;
+  endpoint = inventory.endpoints.jellyfin;
 in {
   services.jellyfin = {
     enable = true;
@@ -14,12 +13,12 @@ in {
   networking.firewall = {
     # Open ONLY for WireGuard
     interfaces."gensokyo" = {
-      allowedTCPPorts = [ port ];
+      allowedTCPPorts = [ endpoint.port ];
     };
   };
 
   systemd.services.jellyfin = {
-    # Force Jellyfin to wait until /data is actually mounted,
+    # Force Jellyfin to wait until the storagebox is actually mounted,
     # and stop it immediately if storagebox unmounts (e.g. during nixos-rebuild)
     bindsTo = [ "storagebox.service" ];
     after = [ "storagebox.service" ];
@@ -27,17 +26,17 @@ in {
 
   services.caddy = {
     enable = true;
-    virtualHosts.${domain}.extraConfig = ''
-      bind 10.0.0.1
+    virtualHosts.${endpoint.domains.internal}.extraConfig = ''
+      bind ${device.vpn.ip}
       tls internal
       encode zstd gzip
-      reverse_proxy 127.0.0.1:${toString port} {
+      reverse_proxy ${endpoint.bind}:${toString endpoint.port} {
         flush_interval -1
       }
     '';
   };
 
   services.blocky = {
-    settings.customDNS.mapping.${domain} = "10.0.0.1";
+    settings.customDNS.mapping.${endpoint.domains.internal} = device.vpn.ip;
   };
 }

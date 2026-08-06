@@ -1,13 +1,28 @@
-{ config, lib, ... }:
+{ config, inventory, lib, ... }:
+let
+  inherit (inventory) endpoints;
+in
 {
   # Syncthing
   # =========
   kamov.syncthing = {
     enable = true;
-    port = 8384;
-    bind = "10.0.0.1";
+    bind = endpoints.syncthing.bind;
+    port = endpoints.syncthing.port;
+    domain = endpoints.syncthing.domains.internal;
     user = "kamov";
     configDir = "/home/kamov/.config/syncthing";
+  };
+
+  systemd.services.syncthing = {
+    bindsTo = [
+      "storagebox.service"
+      "storagebox_enc.service"
+    ];
+    after = [
+      "storagebox.service"
+      "storagebox_enc.service"
+    ];
   };
 
   # Kotori
@@ -25,9 +40,9 @@
   # ======
   kamov.kanidm = {
     enable = true;
-    domain = "auth.kamoshi.org";
-    port = 8443;
-    bind = "127.0.0.1";
+    bind = endpoints.kanidm.bind;
+    port = endpoints.kanidm.port;
+    domain = endpoints.kanidm.domains.external;
   };
 
   # Miniflux
@@ -40,9 +55,9 @@
 
   kamov.miniflux = {
     enable = true;
-    domain = "rss.kamoshi.org";
-    port = 2137;
-    bind = "127.0.0.1";
+    bind = endpoints.miniflux.bind;
+    port = endpoints.miniflux.port;
+    domain = endpoints.miniflux.domains.external;
     oauthSecretPath = config.sops.secrets."kanidm/miniflux".path;
   };
 
@@ -56,9 +71,9 @@
 
   kamov.forgejo = {
     enable = true;
-    domain = "git.kamoshi.org";
-    port = 3200;
-    bind = "127.0.0.1";
+    bind = endpoints.forgejo.bind;
+    port = endpoints.forgejo.port;
+    domain = endpoints.forgejo.domains.external;
     oauthSecretPath = config.sops.secrets."kanidm/forgejo".path;
   };
 
@@ -66,9 +81,9 @@
   # =====
   kamov.gatus = {
     enable = false;
-    domain = "status.kamoshi.org";
-    port = 2138;
-    bind = "127.0.0.1";
+    bind = endpoints.gatus.bind;
+    port = endpoints.gatus.port;
+    domain = endpoints.gatus.domains.external;
   };
 
   # Grafana
@@ -87,17 +102,17 @@
 
   kamov.grafana = {
     enable = false;
-    domain = "data.kamoshi.org";
-    port = 2139;
-    bind = "127.0.0.1";
+    bind = endpoints.grafana.bind;
+    port = endpoints.grafana.port;
+    domain = endpoints.grafana.domains.external;
   };
 
   # Vikunja
   # =======
   kamov.vikunja = {
     enable = false;
-    domain = "kanban.kamoshi.org";
-    port = 6969;
-    bind = "127.0.0.1";
+    bind = endpoints.vikunja.bind;
+    port = endpoints.vikunja.port;
+    domain = endpoints.vikunja.domains.external;
   };
 }

@@ -1,23 +1,19 @@
-{ nightly, ... }:
+{ device, inventory, nightly, ... }:
 let
-  domainInternal = "photos.internal";
-  domainExternal = "photos.kamoshi.org";
-  bind = "127.0.0.1";
-  port = 2283;
-  proxyPort = 2285;
+  endpoint = inventory.endpoints.immich;
   photos = "/srv/storagebox/crypt/photos";
 in
 {
   services.immich = {
     enable = true;
-    host = bind;
-    port = port;
+    host = endpoint.bind;
+    port = endpoint.port;
     openFirewall = false;
 
     settings = {
       # Generate share links for the public proxy while keeping the Immich UI
       # itself available only through the internal domain below.
-      server.externalDomain = "https://${domainExternal}";
+      server.externalDomain = "https://${endpoint.domains.external}";
 
       # Force sequential job execution to prevent resource starvation
       job = {
@@ -64,19 +60,19 @@ in
   services.postgresqlBackup.databases = [ "immich" ];
   # services.restic.backups.daily.paths = [ "/var/lib/immich" ];
 
-  services.caddy.virtualHosts.${domainInternal}.extraConfig = ''
-    bind 10.0.0.1
+  services.caddy.virtualHosts.${endpoint.domains.internal}.extraConfig = ''
+    bind ${device.vpn.ip}
     tls internal
-    reverse_proxy ${bind}:${toString port}
+    reverse_proxy ${endpoint.bind}:${toString endpoint.port}
   '';
 
-  services.blocky.settings.customDNS.mapping.${domainInternal} = "10.0.0.1";
+  services.blocky.settings.customDNS.mapping.${endpoint.domains.internal} = device.vpn.ip;
 
   services.immich-public-proxy = {
     enable = true;
     package = nightly.immich-public-proxy;
-    immichUrl = "http://${bind}:${toString port}";
-    port = proxyPort;
+    immichUrl = "http://${endpoint.bind}:${toString endpoint.port}";
+    port = endpoint.proxyPort;
     openFirewall = false;
 
     settings.ipp = {
@@ -141,12 +137,12 @@ in
     };
   };
 
-  services.nginx.virtualHosts.${domainExternal} = {
+  services.nginx.virtualHosts.${endpoint.domains.external} = {
     enableACME = true;
     forceSSL = true;
 
     locations."/" = {
-      proxyPass = "http://${bind}:${toString proxyPort}";
+      proxyPass = "http://${endpoint.bind}:${toString endpoint.proxyPort}";
     };
   };
 }

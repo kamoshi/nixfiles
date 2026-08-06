@@ -1,4 +1,4 @@
-{ config, pkgs, lib, mesh, ... }:
+{ config, device, pkgs, lib, mesh, ... }:
 let
   cfg = config.kamov.syncthing;
 in {
@@ -7,7 +7,6 @@ in {
 
     port = lib.mkOption {
       type = lib.types.port;
-      default = 8384;
       description = "Port for the Syncthing GUI.";
     };
 
@@ -15,6 +14,11 @@ in {
       type = lib.types.str;
       default = "127.0.0.1";
       description = "IP for Syncthing GUI to bind to.";
+    };
+
+    domain = lib.mkOption {
+      type = lib.types.str;
+      description = "Internal domain for the Syncthing GUI.";
     };
 
     user = lib.mkOption {
@@ -50,7 +54,7 @@ in {
       };
     };
 
-    # Syncthing ports: 8384 for remote access to GUI
+    # Syncthing GUI and synchronization ports
     # 22000 TCP and/or UDP for sync traffic
     # 21027/UDP for discovery
     # source: https://docs.syncthing.net/users/firewall.html
@@ -66,15 +70,15 @@ in {
 
     services.caddy = {
       enable = true;
-      virtualHosts."syncthing.internal".extraConfig = ''
-        bind 10.0.0.1
+      virtualHosts.${cfg.domain}.extraConfig = ''
+        bind ${device.vpn.ip}
         tls internal
         reverse_proxy ${cfg.bind}:${toString cfg.port}
       '';
     };
 
     services.blocky = {
-      settings.customDNS.mapping."syncthing.internal" = "10.0.0.1";
+      settings.customDNS.mapping.${cfg.domain} = device.vpn.ip;
     };
   };
 }

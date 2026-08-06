@@ -14,7 +14,7 @@
     label = "Music";
     path = {
       momiji = "/data/music";
-      megumu = "/data/music";
+      megumu = "/srv/storagebox/plain/sync/music";
     };
   };
 
@@ -24,33 +24,30 @@
     path = {
       aya = "~/calibre";
       momiji = "~/calibre";
-      megumu = "/data/sync/calibre";
+      megumu = "/srv/storagebox/plain/sync/calibre";
     };
   };
+
   obsidian = {
     id = "obsidian";
     label = "Obsidian";
     path = {
       aya = "~/Desktop/Obsidian";
       momiji = "~/Desktop/Obsidian";
-      megumu = {
-        path = "/data/sync/obsidian";
-        encrypted = "syncthing/obsidian";
-      };
+      megumu = "/srv/storagebox/crypt/sync/obsidian";
     };
   };
+
   workspace = {
     id = "workspace";
     label = "Workspace";
     path = {
       aya = "~/Desktop/Workspace";
       momiji = "~/Desktop/Workspace";
-      megumu = {
-        path = "/data/sync/workspace";
-        encrypted = "syncthing/workspace";
-      };
+      megumu = "/srv/storagebox/crypt/sync/workspace";
     };
   };
+
   photos = {
     id = "photos";
     label = "Photos";
@@ -58,10 +55,7 @@
       aya = "~/Desktop/Photos";
       hatate = "~/DCIM";
       momiji = "~/Desktop/Photos";
-      megumu = {
-        path = "/data/sync/photos";
-        encrypted = "syncthing/photos";
-      };
+      megumu = "/srv/storagebox/crypt/sync/photos";
     };
   };
 }

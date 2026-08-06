@@ -1,6 +1,7 @@
-{ config, pkgs, lib, ... }:
+{ config, inventory, pkgs, lib, ... }:
 let
   cfg = config.kamov.gatus;
+  inherit (inventory) endpoints;
 in {
   options.kamov.gatus = {
     enable = lib.mkEnableOption "Enable Gatus";
@@ -50,7 +51,7 @@ in {
           }
           {
             name = "Auth";
-            url = "https://auth.kamoshi.org/status";
+            url = "https://${endpoints.kanidm.domains.external}/status";
             interval = "5m";
             conditions = [
               "[STATUS] == 200"
@@ -59,7 +60,7 @@ in {
           }
           {
             name = "Miniflux";
-            url = "https://rss.kamoshi.org/healthcheck";
+            url = "https://${endpoints.miniflux.domains.external}/healthcheck";
             interval = "5m";
             conditions = [
               "[STATUS] == 200"
@@ -67,7 +68,7 @@ in {
           }
           {
             name = "Forgejo";
-            url = "https://git.kamoshi.org/api/healthz";
+            url = "https://${endpoints.forgejo.domains.external}/api/healthz";
             interval = "5m";
             conditions = [
               "[STATUS] == 200"

@@ -29,7 +29,7 @@ in
       paths = [
         pathBackup
       ];
-      repository = "/data/backup/megumu";
+      repository = "/srv/storagebox/plain/backup/megumu";
       initialize = true;
       pruneOpts = [
         "--keep-daily 7"
@@ -44,7 +44,7 @@ in
     };
   };
 
-  # Restic backs up to /data which is the storagebox FUSE mount
+  # Restic backs up to the plain storagebox FUSE mount.
   systemd.services.restic-backups-daily = {
     requires = [ "storagebox.service" ];
     after = [ "storagebox.service" ];

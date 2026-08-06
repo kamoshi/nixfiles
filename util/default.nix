@@ -37,6 +37,7 @@ let
   mkExtraSpecialArgs =
     {
       device,
+      inventory,
       mesh,
       vpn,
     }:
@@ -45,6 +46,7 @@ let
 
       inherit
         device
+        inventory
         mesh
         vpn
         ;
@@ -64,11 +66,19 @@ let
   mkHomeExtraSpecialArgs =
     {
       device,
+      inventory,
       mesh,
       vpn,
       vpnFor ? null,
     }:
-    mkExtraSpecialArgs { inherit device mesh vpn; }
+    mkExtraSpecialArgs {
+      inherit
+        device
+        inventory
+        mesh
+        vpn
+        ;
+    }
     // {
       utils = mkHomeUtils { inherit vpnFor; };
     };
@@ -77,6 +87,7 @@ let
     {
       type,
       device,
+      inventory,
       mesh,
       vpn,
     }:
@@ -90,7 +101,14 @@ let
           sharedModules = [
             inputs.sops-nix.homeManagerModules.sops
           ];
-          extraSpecialArgs = mkHomeExtraSpecialArgs { inherit device mesh vpn; };
+          extraSpecialArgs = mkHomeExtraSpecialArgs {
+            inherit
+              device
+              inventory
+              mesh
+              vpn
+              ;
+          };
         };
       }
     ];
@@ -101,6 +119,7 @@ let
       vpnFor,
       key,
       device,
+      inventory,
     }:
     let
       deviceWithKey = device // {
@@ -109,6 +128,7 @@ let
     in
     {
       device = deviceWithKey;
+      inherit inventory;
       mesh = meshFor key;
       vpn = vpnFor key;
     };
@@ -216,7 +236,12 @@ in
         ctx.device.modules
         ++ homeManagerModules {
           type = "nixos";
-          inherit (ctx) device mesh vpn;
+          inherit (ctx)
+            device
+            inventory
+            mesh
+            vpn
+            ;
         };
       specialArgs = mkExtraSpecialArgs ctx // {
         inherit self;
@@ -234,7 +259,12 @@ in
         ctx.device.modules
         ++ homeManagerModules {
           type = "darwin";
-          inherit (ctx) device mesh vpn;
+          inherit (ctx)
+            device
+            inventory
+            mesh
+            vpn
+            ;
         };
       specialArgs = mkExtraSpecialArgs ctx // {
         inherit self;
@@ -251,7 +281,12 @@ in
       modules = ctx.device.modules;
       extraSpecialArgs = mkHomeExtraSpecialArgs (
         {
-          inherit (ctx) device mesh vpn;
+          inherit (ctx)
+            device
+            inventory
+            mesh
+            vpn
+            ;
         }
         // {
           inherit (args) vpnFor;
@@ -278,7 +313,7 @@ in
             invalidPeers = lib.filter (name: !lib.hasAttr name devices) (lib.attrNames folder.path);
           in
           if invalidPeers != [] then
-            throw "Folder '${folderName}' references undefined device(s) in inventory/folders.nix: ${lib.concatStringsSep ", " invalidPeers}"
+            throw "Folder '${folderName}' references undefined device(s) in inventory/sync.nix: ${lib.concatStringsSep ", " invalidPeers}"
           else
             mkSyncthingFolder { inherit config key folder; }
         ))

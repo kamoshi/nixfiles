@@ -1,16 +1,13 @@
-{ ... }:
+{ device, inventory, ... }:
 let
-  domainInternal = "music.internal";
-  domainExternal = "music.kamoshi.org";
-  bind = "127.0.0.1";
-  port = 4533;
+  endpoint = inventory.endpoints.navidrome;
 in {
   services.navidrome = {
     enable = true;
     settings = {
-      Address = bind;
-      Port = port;
-      MusicFolder = "/data/music/";
+      Address = endpoint.bind;
+      Port = endpoint.port;
+      MusicFolder = inventory.sync.music;
       EnforceNonRootUser = true;
       EnableTranscodingConfig = false;
 
@@ -20,7 +17,7 @@ in {
   };
 
   systemd.services.navidrome = {
-    # Force Navidrome to wait until /data is actually mounted,
+    # Force Navidrome to wait until the storagebox is actually mounted,
     # and stop it immediately if storagebox unmounts (e.g. during nixos-rebuild)
     bindsTo = [ "storagebox.service" ];
     after = [ "storagebox.service" ];
@@ -28,23 +25,23 @@ in {
 
   services.caddy = {
     enable = true;
-    virtualHosts.${domainInternal}.extraConfig = ''
-      bind 10.0.0.1
+    virtualHosts.${endpoint.domains.internal}.extraConfig = ''
+      bind ${device.vpn.ip}
       tls internal
-      reverse_proxy ${bind}:${toString port}
+      reverse_proxy ${endpoint.bind}:${toString endpoint.port}
     '';
   };
 
   services.blocky = {
-    settings.customDNS.mapping.${domainInternal} = "10.0.0.1";
+    settings.customDNS.mapping.${endpoint.domains.internal} = device.vpn.ip;
   };
 
-  services.nginx.virtualHosts.${domainExternal} = {
+  services.nginx.virtualHosts.${endpoint.domains.external} = {
     enableACME = true;
     forceSSL = true;
 
     locations."/" = {
-      proxyPass = "http://${bind}:${toString port}";
+      proxyPass = "http://${endpoint.bind}:${toString endpoint.port}";
     };
   };
 }

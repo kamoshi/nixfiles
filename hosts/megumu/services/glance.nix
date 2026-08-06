@@ -1,12 +1,12 @@
-{ config, pkgs, ... }:
+{ config, inventory, pkgs, ... }:
 let
-  port = 9292;
-  domain = "glance.kamoshi.org";
+  endpoint = inventory.endpoints.glance;
+  fukurouEndpoint = inventory.endpoints.fukurou;
 in {
   services.glance = {
     enable = true;
     settings = {
-      server.port = port;
+      server.port = endpoint.port;
 
       pages = [
         {
@@ -18,7 +18,7 @@ in {
                 {
                   type = "extension";
                   title = "News Summary";
-                  url = "https://api.kamoshi.org/summary";
+                  url = "https://${fukurouEndpoint.domains.external}/summary";
                   allow-potentially-dangerous-html = true;
                   cache = "1s";
                 }
@@ -54,11 +54,11 @@ in {
     };
   };
 
-  services.nginx.virtualHosts.${domain} = {
+  services.nginx.virtualHosts.${endpoint.domains.external} = {
     enableACME = true;
     forceSSL = true;
     locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString port}";
+      proxyPass = "http://${endpoint.bind}:${toString endpoint.port}";
     };
   };
 }

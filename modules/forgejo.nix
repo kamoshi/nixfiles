@@ -1,6 +1,7 @@
-{ config, pkgs, lib, ... }:
+{ config, inventory, pkgs, lib, ... }:
 let
   cfg = config.kamov.forgejo;
+  kanidmEndpoint = inventory.endpoints.kanidm;
   user   = "git";
   state  = "/var/lib/forgejo";
 in {
@@ -144,7 +145,7 @@ in {
               ]
               [
                 "--auto-discover-url"
-                "https://auth.kamoshi.org/oauth2/openid/${clientId}/.well-known/openid-configuration"
+                "https://${kanidmEndpoint.domains.external}/oauth2/openid/${clientId}/.well-known/openid-configuration"
               ]
               [
                 "--scopes"

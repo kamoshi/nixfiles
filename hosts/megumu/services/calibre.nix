@@ -1,23 +1,21 @@
-{ pkgs, nightly, ... }:
+{ device, inventory, pkgs, nightly, ... }:
 let
-  domain = "calibre.internal";
-  bind = "10.0.0.1";
-  port = 9998;
+  endpoint = inventory.endpoints.calibre;
 in
 {
   services.calibre-web = {
     enable = true;
 
-    listen.ip = bind;
-    listen.port = port;
+    listen.ip = endpoint.bind;
+    listen.port = endpoint.port;
     options = {
-      calibreLibrary = "/data/sync/calibre";
+      calibreLibrary = inventory.sync.calibre;
       enableBookUploading = false;
     };
   };
 
   systemd.services.calibre-web = {
-    # Force Calibre to wait until /data is actually mounted,
+    # Force Calibre to wait until the storagebox is actually mounted,
     # and stop it immediately if storagebox unmounts (e.g. during nixos-rebuild)
     bindsTo = [ "storagebox.service" ];
     after = [ "storagebox.service" ];
@@ -25,14 +23,14 @@ in
 
   services.caddy = {
     enable = true;
-    virtualHosts.${domain}.extraConfig = ''
-      bind 10.0.0.1
+    virtualHosts.${endpoint.domains.internal}.extraConfig = ''
+      bind ${device.vpn.ip}
       tls internal
-      reverse_proxy ${bind}:${toString port}
+      reverse_proxy ${endpoint.bind}:${toString endpoint.port}
     '';
   };
 
   services.blocky = {
-    settings.customDNS.mapping.${domain} = "10.0.0.1";
+    settings.customDNS.mapping.${endpoint.domains.internal} = device.vpn.ip;
   };
 }

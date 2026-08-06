@@ -1,5 +1,6 @@
 {
   config,
+  inventory,
   pkgs,
   lib,
   ...
@@ -7,6 +8,8 @@
 let
   cfg = config.kamov.kanidm;
   certs = config.security.acme.certs."${cfg.domain}";
+  forgejoEndpoint = inventory.endpoints.forgejo;
+  minifluxEndpoint = inventory.endpoints.miniflux;
 in
 {
   options.kamov.kanidm = {
@@ -35,7 +38,7 @@ in
 
   config = lib.mkIf cfg.enable {
     services.kanidm = {
-      package = pkgs.kanidmWithSecretProvisioning_1_10;
+      package = pkgs.kanidmWithSecretProvisioning_1_11;
 
       server = {
         enable = true;
@@ -97,8 +100,8 @@ in
         systems.oauth2 = {
           miniflux = lib.mkIf config.kamov.miniflux.enable {
             displayName = "Miniflux";
-            originUrl = "https://rss.kamoshi.org/oauth2/oidc/callback";
-            originLanding = "https://rss.kamoshi.org/oauth2/oidc/redirect";
+            originUrl = "https://${minifluxEndpoint.domains.external}/oauth2/oidc/callback";
+            originLanding = "https://${minifluxEndpoint.domains.external}/oauth2/oidc/redirect";
             basicSecretFile = config.sops.secrets."kanidm/miniflux".path;
             preferShortUsername = true;
             scopeMaps = {
@@ -112,8 +115,8 @@ in
 
           forgejo = lib.mkIf config.kamov.forgejo.enable {
             displayName = "Forgejo";
-            originUrl = "https://git.kamoshi.org/user/oauth2/kanidm/callback";
-            originLanding = "https://git.kamoshi.org/user/oauth2/kanidm";
+            originUrl = "https://${forgejoEndpoint.domains.external}/user/oauth2/kanidm/callback";
+            originLanding = "https://${forgejoEndpoint.domains.external}/user/oauth2/kanidm";
             basicSecretFile = config.sops.secrets."kanidm/forgejo".path;
             preferShortUsername = true;
             scopeMaps = {
@@ -131,8 +134,8 @@ in
 
           #       # vikunja = lib.mkIf config.kamov.vikunja.enable {
           #       #   displayName = "Vikunja";
-          #       #   originUrl = "https://kanban.kamoshi.org/auth/openid/";
-          #       #   originLanding = "https://kanban.kamoshi.org";
+          #       #   originUrl = "https://${inventory.endpoints.vikunja.domains.external}/auth/openid/";
+          #       #   originLanding = "https://${inventory.endpoints.vikunja.domains.external}";
           #       #   preferShortUsername = true;
           #       #   scopeMaps = {
           #       #     "miniflux.access" = [ "openid" "profile" "email" ];
@@ -147,8 +150,8 @@ in
           #     groups."grafana.server-admins" = { };
           #     systems.oauth2.grafana = lib.mkIf config.kamov.grafana.enable {
           #       displayName = "Grafana";
-          #       originUrl = "https://data.kamoshi.org/login/generic_oauth";
-          #       originLanding = "https://data.kamoshi.org/login/generic_oauth";
+          #       originUrl = "https://${inventory.endpoints.grafana.domains.external}/login/generic_oauth";
+          #       originLanding = "https://${inventory.endpoints.grafana.domains.external}/login/generic_oauth";
           #       basicSecretFile = config.sops.secrets."grafana/client_secret".path;
           #       preferShortUsername = true;
           #       scopeMaps."grafana.access" = [ "openid" "email" "profile" ];

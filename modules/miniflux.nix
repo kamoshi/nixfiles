@@ -1,6 +1,7 @@
-{ config, pkgs, lib, ... }:
+{ config, inventory, pkgs, lib, ... }:
 let
   cfg = config.kamov.miniflux;
+  kanidmEndpoint = inventory.endpoints.kanidm;
 in {
   options.kamov.miniflux = {
     enable = lib.mkEnableOption "Enable Miniflux";
@@ -68,7 +69,7 @@ in {
         OAUTH2_CLIENT_ID = "miniflux";
         OAUTH2_CLIENT_SECRET_FILE = cfg.oauthSecretPath;
         OAUTH2_REDIRECT_URL = "https://${cfg.domain}/oauth2/oidc/callback";
-        OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://auth.kamoshi.org/oauth2/openid/miniflux";
+        OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://${kanidmEndpoint.domains.external}/oauth2/openid/miniflux";
 
         # Disable local auth
         DISABLE_LOCAL_AUTH = "true";

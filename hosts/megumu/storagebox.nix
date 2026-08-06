@@ -27,7 +27,12 @@ in {
     };
   };
 
-  systemd.services."storagebox" = {
+  systemd.services."storagebox" =
+  let
+    location = "/srv/storagebox/plain";
+    plainCache = "${cache}/storagebox_plain";
+  in
+  {
     description = "Hetzner Rclone Mount";
 
     wantedBy = [ "multi-user.target" ];
@@ -52,9 +57,9 @@ in {
     path = [ "/run/wrappers" pkgs.getent ];
 
     preStart = ''
-      ${pkgs.util-linux}/bin/umount -l /data 2>/dev/null || true
-      mkdir -p /data
-      mkdir -p ${cache}
+      ${pkgs.util-linux}/bin/umount -l ${location} 2>/dev/null || true
+      ${pkgs.coreutils}/bin/install -d -m 0755 ${location}
+      ${pkgs.coreutils}/bin/install -d -m 0700 ${plainCache}
 
       attempt=1
       while [ "$attempt" -le 60 ]; do
@@ -74,7 +79,7 @@ in {
     serviceConfig = {
       Type = "notify";
       ExecStart = ''
-        ${pkgs.rclone}/bin/rclone mount :sftp:megumu /data \
+        ${pkgs.rclone}/bin/rclone mount :sftp:megumu ${location} \
         --sftp-user ${user} \
         --sftp-host ${host} \
         --sftp-port ${toString port} \
@@ -82,7 +87,7 @@ in {
         --sftp-known-hosts-file /etc/ssh/ssh_known_hosts \
         --allow-other \
         --allow-non-empty \
-        --cache-dir ${cache} \
+        --cache-dir ${plainCache} \
         --vfs-cache-mode full \
         --vfs-cache-max-size 5G \
         --vfs-cache-max-age 4h \
@@ -93,7 +98,7 @@ in {
         --use-mmap
       '';
 
-      ExecStop = "${pkgs.util-linux}/bin/umount -l /data";
+      ExecStop = "${pkgs.util-linux}/bin/umount -l ${location}";
 
       Restart = "on-failure";
       RestartSec = "30s";

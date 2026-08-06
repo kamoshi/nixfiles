@@ -1,9 +1,6 @@
-{ config, ... }:
+{ config, device, inventory, ... }:
 let
-  domainExternal = "api.kamoshi.org";
-  domainInternal = "fukurou.internal";
-  portExternal = 4321;
-  portInternal = 4322;
+  endpoint = inventory.endpoints.fukurou;
 in
 {
   sops.secrets.kotori = {
@@ -12,32 +9,32 @@ in
 
   services.fukurou = {
     enable = true;
-    port = portExternal;
-    portInternal = portInternal;
+    port = endpoint.port;
+    portInternal = endpoint.internalPort;
     envFile = config.sops.secrets.kotori.path;
   };
 
   services.caddy = {
     enable = true;
-    virtualHosts.${domainInternal}.extraConfig = ''
-      bind 10.0.0.1
+    virtualHosts.${endpoint.domains.internal}.extraConfig = ''
+      bind ${device.vpn.ip}
       tls internal
-      reverse_proxy 127.0.0.1:${toString portInternal}
+      reverse_proxy ${endpoint.bind}:${toString endpoint.internalPort}
     '';
   };
 
   services.blocky = {
-    settings.customDNS.mapping.${domainInternal} = "10.0.0.1";
+    settings.customDNS.mapping.${endpoint.domains.internal} = device.vpn.ip;
   };
 
   services.nginx = {
     enable = true;
 
-    virtualHosts.${domainExternal} = {
+    virtualHosts.${endpoint.domains.external} = {
       forceSSL = true;
       enableACME = true;
       locations."/" = {
-        proxyPass = "http://localhost:${toString portExternal}";
+        proxyPass = "http://${endpoint.bind}:${toString endpoint.port}";
       };
     };
   };

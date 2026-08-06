@@ -1,7 +1,8 @@
 # https://github.com/oddlama/nix-config/blob/main/hosts/sire/guests/grafana.nix
-{ config, pkgs, lib, ... }:
+{ config, inventory, pkgs, lib, ... }:
 let
   cfg = config.kamov.grafana;
+  kanidmEndpoint = inventory.endpoints.kanidm;
 in {
   options.kamov.grafana = {
     enable = lib.mkEnableOption "Enable Grafana";
@@ -63,9 +64,9 @@ in {
           client_secret = "$__file{${config.sops.secrets."grafana/client_secret".path}}";
           scopes = "openid email profile";
           login_attribute_path = "preferred_username";
-          auth_url = "https://auth.kamoshi.org/ui/oauth2";
-          token_url = "https://auth.kamoshi.org/oauth2/token";
-          api_url = "https://auth.kamoshi.org/oauth2/openid/grafana/userinfo";
+          auth_url = "https://${kanidmEndpoint.domains.external}/ui/oauth2";
+          token_url = "https://${kanidmEndpoint.domains.external}/oauth2/token";
+          api_url = "https://${kanidmEndpoint.domains.external}/oauth2/openid/grafana/userinfo";
           use_pkce = true;
           # Allow mapping oauth2 roles to server admin
           allow_assign_grafana_admin = true;

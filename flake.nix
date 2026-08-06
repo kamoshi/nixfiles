@@ -46,17 +46,40 @@
         system ? "type" && system.type == type;
 
       devices = import ./inventory/devices.nix { inherit inputs Type; };
-      folders = import ./inventory/folders.nix;
+      endpoints = import ./inventory/endpoints.nix;
+      syncFolders = import ./inventory/sync.nix;
+
+      resolveBind =
+        device: bind:
+        if bind == "vpn" then
+          device.vpn.ip
+        else if bind == "loopback" then
+          "127.0.0.1"
+        else
+          bind;
+
+      resolveEndpoint = device: endpoint: endpoint // { bind = resolveBind device endpoint.bind; };
+
+      endpointsFor =
+        key:
+        lib.pipe endpoints [
+          (lib.filterAttrs (_: endpoint: endpoint.host == key))
+          (lib.mapAttrs (_: endpoint: resolveEndpoint devices.${key} endpoint))
+        ];
+
+      syncPath = entry: if lib.isAttrs entry then entry.path else entry;
+      syncFor =
+        key:
+        lib.pipe syncFolders [
+          (lib.filterAttrs (_: folder: lib.hasAttr key folder.path))
+          (lib.mapAttrs (_: folder: syncPath folder.path.${key}))
+        ];
 
       meshFor =
         key: config:
         util.meshFor {
-          inherit
-            devices
-            folders
-            key
-            config
-            ;
+          inherit devices key config;
+          folders = syncFolders;
         };
       vpnFor =
         key:
@@ -73,6 +96,10 @@
             key
             device
             ;
+          inventory = {
+            endpoints = endpointsFor key;
+            sync = syncFor key;
+          };
         };
     in
     {
