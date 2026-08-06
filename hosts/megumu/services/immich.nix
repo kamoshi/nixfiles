@@ -11,7 +11,26 @@ in
     host = bind;
     port = port;
     openFirewall = false;
-    settings.server.externalDomain = "https://${domain}";
+
+    settings = {
+      server.externalDomain = "https://${domain}";
+
+      # Force sequential job execution to prevent resource starvation
+      job = {
+        backgroundTask.concurrency = 1;
+        thumbnailGeneration.concurrency = 1;
+        metadataExtraction.concurrency = 1;
+        videoConversion.concurrency = 1;
+        faceDetection.concurrency = 1;
+        smartSearch.concurrency = 1;
+        library.concurrency = 1;
+        migration.concurrency = 1;
+        sidecar.concurrency = 1;
+      };
+
+      # Limit video transcoding to a single thread
+      ffmpeg.threads = 1;
+    };
 
     # Keep the initial deployment small. This can be enabled later for face
     # recognition and semantic search.
@@ -26,7 +45,16 @@ in
 
     # Immich may index this external library but cannot modify its source
     # photos or create XMP sidecars there.
-    serviceConfig.BindReadOnlyPaths = [ photos ];
+    serviceConfig = {
+      BindReadOnlyPaths = [ photos ];
+
+      # Protect system stability by leaving ~25% of the 1 vCPU core free
+      CPUQuota = "75%";
+
+      # Apply memory pressure here, with a firm safety boundary above it.
+      MemoryHigh = "2G";
+      MemoryMax = "2500M";
+    };
   };
 
   services.postgresqlBackup.databases = [ "immich" ];
