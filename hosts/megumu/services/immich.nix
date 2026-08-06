@@ -1,8 +1,10 @@
-{ ... }:
+{ nightly, ... }:
 let
-  domain = "photos.internal";
+  domainInternal = "photos.internal";
+  domainExternal = "photos.kamoshi.org";
   bind = "127.0.0.1";
   port = 2283;
+  proxyPort = 2285;
   photos = "/srv/storagebox/crypt/photos";
 in
 {
@@ -13,7 +15,9 @@ in
     openFirewall = false;
 
     settings = {
-      server.externalDomain = "https://${domain}";
+      # Generate share links for the public proxy while keeping the Immich UI
+      # itself available only through the internal domain below.
+      server.externalDomain = "https://${domainExternal}";
 
       # Force sequential job execution to prevent resource starvation
       job = {
@@ -60,11 +64,89 @@ in
   services.postgresqlBackup.databases = [ "immich" ];
   # services.restic.backups.daily.paths = [ "/var/lib/immich" ];
 
-  services.caddy.virtualHosts.${domain}.extraConfig = ''
+  services.caddy.virtualHosts.${domainInternal}.extraConfig = ''
     bind 10.0.0.1
     tls internal
     reverse_proxy ${bind}:${toString port}
   '';
 
-  services.blocky.settings.customDNS.mapping.${domain} = "10.0.0.1";
+  services.blocky.settings.customDNS.mapping.${domainInternal} = "10.0.0.1";
+
+  services.immich-public-proxy = {
+    enable = true;
+    package = nightly.immich-public-proxy;
+    immichUrl = "http://${bind}:${toString port}";
+    port = proxyPort;
+    openFirewall = false;
+
+    settings.ipp = {
+      # Keep download permissions under the control of each Immich share.
+      allowDownload = 1;
+      maxDownloadQuality = "original";
+      downloadedFilename = 0;
+
+      # Avoid overwhelming this host while assembling a large ZIP archive.
+      downloadFromImmichConcurrencyLimit = 2;
+
+      gallery = {
+        # A direct image response has no metadata or download controls.
+        singleImage = true;
+        singleItemAutoOpen = true;
+      };
+
+      lightbox.showDownload = true;
+
+      # IPP still suppresses all of these unless "Show metadata" is enabled
+      # on the individual share in Immich.
+      showMetadata = {
+        description = {
+          caption = false;
+          sidebar = true;
+        };
+
+        exif = {
+          dateTimeOriginal = true;
+          fileName = true;
+          dimensions = true;
+          fileSize = true;
+          make = true;
+          model = true;
+          lensModel = true;
+          exposureTime = true;
+          iso = true;
+          fNumber = true;
+          focalLength = true;
+        };
+
+        # Place names are useful context; exact coordinates remain private.
+        location = {
+          city = true;
+          state = true;
+          country = true;
+          gps = false;
+        };
+      };
+    };
+  };
+
+  systemd.services.immich-public-proxy = {
+    requires = [ "immich-server.service" ];
+    after = [ "immich-server.service" ];
+
+    # The public proxy only needs to talk to Immich on loopback, and nginx is
+    # the only intended client. Keep it isolated even if firewall rules change.
+    serviceConfig = {
+      IPAddressDeny = "any";
+      IPAddressAllow = "localhost";
+    };
+  };
+
+  services.nginx.virtualHosts.${domainExternal} = {
+    enableACME = true;
+    forceSSL = true;
+
+    locations."/" = {
+      proxyPass = "http://${bind}:${toString proxyPort}";
+    };
+  };
 }
