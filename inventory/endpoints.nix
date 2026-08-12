@@ -89,7 +89,7 @@
 
   syncthing = {
     host = "megumu";
-    bind = "vpn";
+    bind = "loopback";
     port = 8384;
     domains.internal = "syncthing.internal";
   };

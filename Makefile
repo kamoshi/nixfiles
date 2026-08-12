@@ -1,4 +1,9 @@
-.PHONY: aya momiji megumu megumu-up megumu-down megumu-remote update check clean-system clean-home-manager clean-profile gc
+.PHONY: default aya momiji megumu megumu-up megumu-down megumu-remote update check clean-system clean-home-manager clean-profile gc
+
+HOSTNAME := $(shell hostname -s)
+
+default:
+	@$(MAKE) --no-print-directory "$(HOSTNAME)"
 
 aya:
 	sudo darwin-rebuild switch --flake .#aya
@@ -17,9 +22,6 @@ megumu-down:
 
 megumu-remote:
 	nix run nixpkgs#nixos-rebuild -- switch --flake .#megumu --target-host megumu --sudo --ask-sudo-password
-
-nitori:
-	home-manager switch --flake .#nitori
 
 update:
 	nix flake update

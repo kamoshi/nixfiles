@@ -38,13 +38,13 @@
             "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/social.txt"
             ./filters/hackernews.txt
             ./filters/wykop.txt
+            ./filters/reddit.txt
           ];
         };
 
         allowlists = {
           social = [
             ./filters/discord.txt
-            # ./filters/reddit.txt
           ];
         };
 
@@ -62,6 +62,12 @@
         prefetching = true;
       };
     };
+  };
+
+  # Blocky serves internal DNS to WireGuard peers only.
+  networking.firewall.interfaces.gensokyo = {
+    allowedTCPPorts = [ 53 ];
+    allowedUDPPorts = [ 53 ];
   };
 
   services.unbound = {

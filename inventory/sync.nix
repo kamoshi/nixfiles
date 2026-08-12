@@ -48,14 +48,14 @@
     };
   };
 
-  photos = {
-    id = "photos";
-    label = "Photos";
+  dcim = {
+    id = "dcim";
+    label = "DCIM";
     path = {
-      aya = "~/Desktop/Photos";
+      aya = "~/DCIM";
       hatate = "~/DCIM";
-      momiji = "~/Desktop/Photos";
-      megumu = "/srv/storagebox/crypt/sync/photos";
+      momiji = "~/DCIM";
+      megumu = "/srv/storagebox/crypt/sync/DCIM";
     };
   };
 }

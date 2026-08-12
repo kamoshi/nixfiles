@@ -310,13 +310,13 @@ def process_standalone_flacs(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Extract and split FLAC from a zip file using a CUE sheet."
+        description="Split FLAC files using a CUE sheet from a zip file or directory."
     )
     parser.add_argument(
-        "zip_file",
+        "input_path",
         nargs="?",
         default=None,
-        help="The zip file containing the FLAC and CUE files.",
+        help="A zip file or an already extracted directory containing FLAC and CUE files.",
     )
     parser.add_argument(
         "--opus",
@@ -330,36 +330,46 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    if args.zip_file:
-        zip_file: str = args.zip_file
+    if args.input_path:
+        input_path = Path(args.input_path)
     else:
         # Find the first zip file in the current directory
         zip_files: list[Path] = list(Path(".").glob("*.zip"))
         if not zip_files:
             print("No .zip file found in the current directory!")
             return
-        zip_file = str(zip_files[0])
+        input_path = zip_files[0]
 
-    base_name: str = os.path.splitext(zip_file)[0]
-    temp_dir: str = base_name + ".temp"
-    final_dir: str = base_name
+    cleanup_dir: Path | None = None
+    if input_path.is_dir():
+        source_dir = input_path
+        final_dir = input_path
+        print(f"Processing directory in place: '{input_path}'")
+    elif input_path.is_file():
+        base_path = input_path.with_suffix("")
+        source_dir = Path(f"{base_path}.temp")
+        final_dir = base_path
+        cleanup_dir = source_dir
 
-    print(f"Extracting '{zip_file}' to '{temp_dir}'...")
-    try:
-        with zipfile.ZipFile(zip_file, "r") as zf:
-            for info in zf.infolist():
-                info.filename = fix_zip_filename(info)
-                zf.extract(info, temp_dir)
-    except Exception as e:
-        print(f"Failed to extract zip file: {e}")
+        print(f"Extracting '{input_path}' to '{source_dir}'...")
+        try:
+            with zipfile.ZipFile(input_path, "r") as zf:
+                for info in zf.infolist():
+                    info.filename = fix_zip_filename(info)
+                    zf.extract(info, source_dir)
+        except Exception as e:
+            print(f"Failed to extract zip file: {e}")
+            return
+    else:
+        print(f"Input path does not exist: '{input_path}'")
         return
 
-    # Search for CUE and FLAC files in the temp directory
-    cue_files: list[str] = [str(p) for p in Path(temp_dir).rglob("*.cue")]
-    flac_files: list[str] = [str(p) for p in Path(temp_dir).rglob("*.flac")]
+    # Search for CUE and FLAC files in the source directory
+    cue_files: list[str] = [str(p) for p in source_dir.rglob("*.cue")]
+    flac_files: list[str] = [str(p) for p in source_dir.rglob("*.flac")]
 
     if not flac_files:
-        print("No .flac file found in the extracted archive!")
+        print(f"No .flac file found in '{source_dir}'!")
         return
 
     # Check if ffmpeg is installed
@@ -371,7 +381,7 @@ def main() -> None:
         return
 
     # Create the final directory
-    os.makedirs(final_dir, exist_ok=True)
+    final_dir.mkdir(parents=True, exist_ok=True)
 
     if cue_files:
         # Assume the first found files are the ones we want
@@ -388,7 +398,7 @@ def main() -> None:
         process_standalone_flacs(flac_files, final_dir, args.opus)
 
     # Copy all images (like cover art) from temp_dir to final_dir
-    if args.copy_images:
+    if args.copy_images and source_dir != final_dir:
         print(f"\nCopying images to '{final_dir}'...")
         image_extensions: list[str] = [
             "*.jpg",
@@ -399,23 +409,24 @@ def main() -> None:
             "*.webp",
         ]
         for ext in image_extensions:
-            for img_path in Path(temp_dir).rglob(ext):
+            for img_path in source_dir.rglob(ext):
                 # Ignore case by also checking uppercase extensions just in case, though rglob is case-sensitive on Linux/sometimes macOS
                 dest_path: str = os.path.join(final_dir, img_path.name)
                 # Only copy if it doesn't already exist to prevent overwriting with duplicates if any
                 if not os.path.exists(dest_path):
                     shutil.copy2(img_path, dest_path)
                     print(f"Copied: {img_path.name}")
-    else:
+    elif source_dir != final_dir:
         print("\nSkipping image copy (use --copy-images to include them).")
 
     # Clean up the temporary directory
-    print(f"\nCleaning up temporary directory '{temp_dir}'...")
-    try:
-        shutil.rmtree(temp_dir)
-        print("Cleanup successful.")
-    except Exception as e:
-        print(f"Warning: Failed to clean up temp directory: {e}")
+    if cleanup_dir is not None:
+        print(f"\nCleaning up temporary directory '{cleanup_dir}'...")
+        try:
+            shutil.rmtree(cleanup_dir)
+            print("Cleanup successful.")
+        except Exception as e:
+            print(f"Warning: Failed to clean up temp directory: {e}")
 
     print(f"\nAll done! Folder '{final_dir}' is ready for Jellyfin.")
 

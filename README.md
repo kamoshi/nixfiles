@@ -18,4 +18,3 @@ for syncing with Syncthing.
 | `aya`    | macOS (Darwin) | Uses `nix-darwin` and `home-manager`.                          | `darwin-rebuild switch --flake .#aya`   |
 | `momiji` | Arch Linux     | Home environment configuration via `home-manager`.             | `home-manager switch --flake .#momiji`  |
 | `megumu` | NixOS          | Full NixOS system configuration; includes `sops-nix` module.   | `nixos-rebuild switch --flake .#megumu` |
-| `nitori` | Arch Linux     | Home environment configuration via `home-manager`.             | `home-manager switch --flake .#nitori`  |

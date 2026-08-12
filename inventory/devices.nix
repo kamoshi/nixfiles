@@ -50,7 +50,7 @@ in
 
   # hatate
   hatate = {
-    id = "IF63A73-XV6LEZS-UZH7DEU-CPOJVEN-OQ3CEWZ-KHVNC5U-KNFCLLD-S7MOXAW";
+    id = "C7YIZDV-2PYEKKM-T2ZOOKR-FCJUXU3-I4AOAWP-Y7HT663-JQNICD5-56BTCAC";
     name = "Hatate";
     vpn = {
       ip = "10.0.0.3";

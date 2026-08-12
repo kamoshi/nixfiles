@@ -44,41 +44,43 @@ in {
       guiAddress = "${cfg.bind}:${toString cfg.port}";
 
       settings = {
-        gui = {
-          enabled = true;
-          user = "kamov";
-          password = "kamov";
-        };
+        gui.enabled = false;
+
+        # gui = {
+        #   enabled = true;
+        #   user = "kamov";
+        #   # Store a bcrypt hash in SOPS; never put a plaintext password
+        #   # in the Nix configuration.
+        #   password = "<sops-managed-bcrypt-hash>";
+        # };
 
         inherit (mesh config) devices folders;
       };
     };
 
-    # Syncthing GUI and synchronization ports
-    # 22000 TCP and/or UDP for sync traffic
-    # 21027/UDP for discovery
+    # Public Syncthing synchronization ports.
     # source: https://docs.syncthing.net/users/firewall.html
     networking.firewall = {
       enable = true;
       allowedTCPPorts = [ 22000 ];
-      allowedUDPPorts = [ 22000 21027 ];
-      interfaces.gensokyo.allowedTCPPorts = [ cfg.port ];
+      allowedUDPPorts = [ 22000 ];
     };
 
     # Don't create default ~/Sync folder
     systemd.services.syncthing.environment.STNODEFAULTFOLDER = "true";
 
-    services.caddy = {
-      enable = true;
-      virtualHosts.${cfg.domain}.extraConfig = ''
-        bind ${device.vpn.ip}
-        tls internal
-        reverse_proxy ${cfg.bind}:${toString cfg.port}
-      '';
-    };
+    # services.caddy = {
+    #   enable = true;
+    #   virtualHosts.${cfg.domain}.extraConfig = ''
+    #     bind ${device.vpn.ip}
+    #     tls internal
+    #     reverse_proxy ${cfg.bind}:${toString cfg.port}
+    #   '';
+    # };
 
-    services.blocky = {
-      settings.customDNS.mapping.${cfg.domain} = device.vpn.ip;
-    };
+    # services.blocky = {
+    #   settings.customDNS.mapping.${cfg.domain} = device.vpn.ip;
+    # };
+
   };
 }

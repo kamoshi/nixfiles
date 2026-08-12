@@ -1,6 +1,7 @@
 { device, inventory, nightly, ... }:
 let
   endpoint = inventory.endpoints.immich;
+  proxyBind = "127.0.0.1";
   photos = "/srv/storagebox/crypt/photos";
 in
 {
@@ -58,7 +59,7 @@ in
   };
 
   services.postgresqlBackup.databases = [ "immich" ];
-  # services.restic.backups.daily.paths = [ "/var/lib/immich" ];
+  services.restic.backups.daily.paths = [ "/var/lib/immich" ];
 
   services.caddy.virtualHosts.${endpoint.domains.internal}.extraConfig = ''
     bind ${device.vpn.ip}
@@ -114,7 +115,6 @@ in
           focalLength = true;
         };
 
-        # Place names are useful context; exact coordinates remain private.
         location = {
           city = true;
           state = true;
@@ -129,8 +129,8 @@ in
     requires = [ "immich-server.service" ];
     after = [ "immich-server.service" ];
 
-    # The public proxy only needs to talk to Immich on loopback, and nginx is
-    # the only intended client. Keep it isolated even if firewall rules change.
+    # The public proxy only needs loopback access to Immich and nginx. Keep it
+    # isolated even if firewall rules change.
     serviceConfig = {
       IPAddressDeny = "any";
       IPAddressAllow = "localhost";
@@ -142,7 +142,7 @@ in
     forceSSL = true;
 
     locations."/" = {
-      proxyPass = "http://${endpoint.bind}:${toString endpoint.proxyPort}";
+      proxyPass = "http://${proxyBind}:${toString endpoint.proxyPort}";
     };
   };
 }
