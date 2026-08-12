@@ -7,6 +7,7 @@ in {
     settings = {
       Address = endpoint.bind;
       Port = endpoint.port;
+      MusicFolder = inventory.sync.music;
       EnforceNonRootUser = true;
       EnableTranscodingConfig = false;
 
@@ -20,14 +21,6 @@ in {
     # and stop it immediately if storagebox unmounts (e.g. during nixos-rebuild)
     bindsTo = [ "storagebox.service" ];
     after = [ "storagebox.service" ];
-
-    serviceConfig = {
-      # Hide the Storagebox behind an empty read-only filesystem, then expose
-      # only Navidrome's music library from the host, also read-only.
-      Environment = [ "ND_MUSICFOLDER=${inventory.sync.music}" ];
-      TemporaryFileSystem = [ "/srv/storagebox:ro" ];
-      BindReadOnlyPaths = [ inventory.sync.music ];
-    };
   };
 
   services.caddy = {

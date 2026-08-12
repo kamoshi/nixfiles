@@ -159,7 +159,7 @@ in
         PasswordAuthentication = false;
         KbdInteractiveAuthentication = false;
         PermitRootLogin = "no";
-        AllowUsers = [ "kamov" ];
+        AllowUsers = [ "kamov" "git" ];
         MaxAuthTries = 3;
         X11Forwarding = false;
       };
