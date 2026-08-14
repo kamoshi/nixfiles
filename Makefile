@@ -1,8 +1,9 @@
 .PHONY: default aya momiji megumu megumu-up megumu-down megumu-remote update check clean-system clean-home-manager clean-profile gc
 
-HOSTNAME := $(shell hostname -s)
+HOSTNAME := $(firstword $(subst ., ,$(shell uname -n)))
 
 default:
+	@test -n "$(HOSTNAME)" || { echo "Could not determine hostname" >&2; exit 1; }
 	@$(MAKE) --no-print-directory "$(HOSTNAME)"
 
 aya:

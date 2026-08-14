@@ -3,7 +3,7 @@
   Type,
 }:
 let
-  inherit (inputs) fukurou sops-nix;
+  inherit (inputs) fukurou karasu sops-nix;
 in
 {
   # aya
@@ -67,6 +67,7 @@ in
     modules = [
       sops-nix.nixosModules.sops
       fukurou.nixosModules.default
+      karasu.nixosModules.default
       ../hosts/megumu
     ];
     home = {

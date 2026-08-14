@@ -15,8 +15,6 @@ in
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    # Custom module definitions
-    ../../modules
     ./storagebox.nix
     ./backup.nix
     ./automation.nix
@@ -27,15 +25,19 @@ in
 
     # api
     ./services/fukurou.nix
+    ./services/karasu.nix
 
     # services @ internal
     # ./services/jellyfin.nix
     # ./services/calibre.nix
     ./services/immich.nix
+    ./services/forgejo.nix
+    ./services/kanidm.nix
+    ./services/miniflux.nix
     ./services/navidrome.nix
+    ./services/syncthing.nix
 
     # services
-    ./services.nix
     # ./services/glance.nix
     # ./services/woodpecker.nix
   ];

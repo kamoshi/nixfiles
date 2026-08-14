@@ -84,6 +84,26 @@
         "type": "github"
       }
     },
+    "karasu": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786624117,
+        "narHash": "sha256-U4zO8u2gFtRdtZKHqU7KgOnXBnYkA3AQzOIezCu9qu8=",
+        "ref": "refs/heads/main",
+        "rev": "5d453131a02c7e574d36b3c0044bf36eb11a8082",
+        "revCount": 1,
+        "type": "git",
+        "url": "https://git.kamoshi.org/kamov/karasu"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.kamoshi.org/kamov/karasu"
+      }
+    },
     "naersk": {
       "inputs": {
         "fenix": "fenix",
@@ -105,11 +125,11 @@
     },
     "nightly": {
       "locked": {
-        "lastModified": 1785692966,
-        "narHash": "sha256-vUfIeBEfpbAfZ5zjgIkYk7eHBeVfCYVjLbWnMkseYnk=",
+        "lastModified": 1786599213,
+        "narHash": "sha256-yNJd40f11EzXBjSByCB7IPpeFFAdeoSKKM67dGkfFoU=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "643809054d65fdd466a63e3155b8c498cb483c04",
+        "rev": "0e251e24a4f24e036a084b6b4b2d2491af4167f4",
         "type": "github"
       },
       "original": {
@@ -158,11 +178,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1785734586,
-        "narHash": "sha256-ODZkEK9Gy50yg6h98u7KkitZ3oc/uuTFK00bh1CRdNA=",
+        "lastModified": 1786535285,
+        "narHash": "sha256-rG5HKMAgAhMgydvKGtco6rqTxRq4EDZQCx9USLvVqYw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "531670d871c0e29724a02f3cbcac170adc65b58c",
+        "rev": "9f78f44a87948854445dae0b6bf82b2e87e4efb5",
         "type": "github"
       },
       "original": {
@@ -176,6 +196,7 @@
       "inputs": {
         "fukurou": "fukurou",
         "home-manager": "home-manager",
+        "karasu": "karasu",
         "nightly": "nightly",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_2",
@@ -206,11 +227,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783174389,
-        "narHash": "sha256-aCWC8ngycU7OdJrU2+Je3qf+1a2ykuBvpPhZT/9tXMc=",
+        "lastModified": 1786629091,
+        "narHash": "sha256-gkig4nPi1CWc4Z50GBsjE4ygSE7hMpl/TwID2an2Cck=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "f1406619a3884cd5c47992a70b8b35c9c0fcb4c9",
+        "rev": "a8627b21b9107c5711c96b84f32a9a4b3d45295f",
         "type": "github"
       },
       "original": {

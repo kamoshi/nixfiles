@@ -24,25 +24,11 @@
     };
   };
 
-  gatus = {
-    host = "megumu";
-    bind = "loopback";
-    port = 2138;
-    domains.external = "status.kamoshi.org";
-  };
-
   glance = {
     host = "megumu";
     bind = "loopback";
     port = 9292;
     domains.external = "glance.kamoshi.org";
-  };
-
-  grafana = {
-    host = "megumu";
-    bind = "loopback";
-    port = 2139;
-    domains.external = "data.kamoshi.org";
   };
 
   immich = {
@@ -54,6 +40,13 @@
       internal = "photos.internal";
       external = "photos.kamoshi.org";
     };
+  };
+
+  karasu = {
+    host = "megumu";
+    bind = "loopback";
+    port = 4323;
+    domains.external = "karasu.kamoshi.org";
   };
 
   jellyfin = {
@@ -92,13 +85,6 @@
     bind = "loopback";
     port = 8384;
     domains.internal = "syncthing.internal";
-  };
-
-  vikunja = {
-    host = "megumu";
-    bind = "loopback";
-    port = 6969;
-    domains.external = "kanban.kamoshi.org";
   };
 
   woodpecker = {
