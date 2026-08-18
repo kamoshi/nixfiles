@@ -90,7 +90,7 @@ in
   };
 
   nix = {
-    package = pkgs.lixPackageSets.stable.lix;
+    package = pkgs.nix;
   };
 
   # Load secrets

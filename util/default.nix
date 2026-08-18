@@ -153,10 +153,15 @@ let
         lib.filterAttrs (_: isVpnServer) candidates
     );
 
-  mkWireGuardPeer = device: {
-    publicKey = device.vpn.pubkey;
-    allowedIPs = [ "${device.vpn.ip}/32" ];
-  };
+  mkWireGuardPeer = listenPort: device:
+    {
+      publicKey = device.vpn.pubkey;
+      allowedIPs = [ "${device.vpn.ip}/32" ];
+    }
+    // lib.optionalAttrs (isVpnServer device) {
+      endpoint = "${device.vpn.endpoint}:${toString listenPort}";
+      persistentKeepalive = 25;
+    };
 
   mkWireGuardPeerText = listenPort: device: ''
     [Peer]
@@ -334,7 +339,7 @@ in
       ips = [ "${local.vpn.ip}/24" ];
       inherit listenPort;
 
-      peers = map mkWireGuardPeer peers;
+      peers = map (mkWireGuardPeer listenPort) peers;
 
       text = ''
         [Interface]

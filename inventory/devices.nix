@@ -24,7 +24,7 @@ in
       ../hosts/aya
     ];
     home = {
-      kamov = ../home/roles/daily.nix;
+      kamov = ../hosts/aya/home/kamov.nix;
     };
     vpn = {
       ip = "10.0.0.4";
@@ -34,17 +34,20 @@ in
 
   # momiji
   momiji = {
-    id = "24FX4TW-B2RVLIO-DXXDZWP-4XQAE4H-NHKLMLK-5SJZCIV-45OBS2N-MJEYNQ2";
+    id = "V5CJGN4-TTH7STB-XZA7PGZ-SRBVVM7-GDGS5VX-YMRNXVZ-55MFIMO-QTOYDAW";
     name = "Momiji";
-    type = Type.Home;
+    type = Type.NixOS;
     arch = "x86_64-linux";
     modules = [
-      inputs.sops-nix.homeManagerModules.sops
-      ../home/roles/daily.nix
+      sops-nix.nixosModules.sops
+      ../hosts/momiji
     ];
+    home = {
+      kamov = ../hosts/momiji/home/kamov.nix;
+    };
     vpn = {
       ip = "10.0.0.2";
-      pubkey = "9UISV736vJr39rHCvTuJeF72vjSxnD8DJgF0NZYzLTU=";
+      pubkey = "bJx1OJDnDCC7kEhiLtBUbrz11ZXMfpn/7mE+JFAL2WY=";
     };
   };
 
@@ -71,7 +74,7 @@ in
       ../hosts/megumu
     ];
     home = {
-      kamov = ../home/roles/server.nix;
+      kamov = ../hosts/megumu/home/kamov.nix;
     };
     vpn = {
       ip = "10.0.0.1";

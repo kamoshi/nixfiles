@@ -8,6 +8,6 @@ in {
       if isDarwin
         then "${home}/Library/Application Support/sops/age/keys.txt"
         else "${home}/.config/sops/age/keys.txt";
-    defaultSopsFile = ../../sops/kamov.yaml;
+    defaultSopsFile = ../sops/kamov.yaml;
   };
 }

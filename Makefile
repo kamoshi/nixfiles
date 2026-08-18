@@ -10,7 +10,7 @@ aya:
 	sudo darwin-rebuild switch --flake .#aya
 
 momiji:
-	home-manager switch --flake .#momiji
+	sudo nixos-rebuild switch --flake .#momiji
 
 megumu:
 	sudo nixos-rebuild switch --flake .#megumu
