@@ -8,6 +8,7 @@
     ../../../home/fish
     ../../../home/nvim.nix
     ../../../home/syncthing.nix
+    ./tempbox.nix
     # ../../../home/ocaml.nix
     # ../../../home/haskell.nix
     ../../../home/rust.nix

@@ -42,9 +42,7 @@ in
       sops-nix.nixosModules.sops
       ../hosts/momiji
     ];
-    home = {
-      kamov = ../hosts/momiji/home/kamov.nix;
-    };
+    home = import ../hosts/momiji/home;
     vpn = {
       ip = "10.0.0.2";
       pubkey = "bJx1OJDnDCC7kEhiLtBUbrz11ZXMfpn/7mE+JFAL2WY=";

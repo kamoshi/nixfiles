@@ -9,6 +9,12 @@
     # Include the results of the hardware scan.
     ./hardware.nix
     ./wireguard.nix
+
+    ./programs/calibre.nix
+    ./programs/firefox.nix
+    ./programs/kdeconnect.nix
+    ./programs/music.nix
+    ./programs/steam.nix
   ];
 
   nix.settings.experimental-features = [
@@ -34,15 +40,27 @@
     loader.efi.canTouchEfiVariables = true;
   };
 
-  networking.hostName = "momiji"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
   # Enable networking
-  networking.networkmanager.enable = true;
+  networking = {
+    hostName = "momiji"; # Define your hostname.
+
+    # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+    firewall = {
+      enable = true;
+      allowPing = false;
+
+      # Open ports in the firewall.
+      # allowedTCPPorts = [ ... ];
+      # allowedUDPPorts = [ ... ];
+    };
+
+    networkmanager.enable = true;
+
+    # Configure network proxy if necessary
+    # proxy.default = "http://user:password@proxy:port/";
+    # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Warsaw";
@@ -124,43 +142,9 @@
       "wheel"
     ];
     shell = pkgs.fish;
-    packages = with pkgs; [
-      kdePackages.kate
-      #  thunderbird
-    ];
-  };
-
-  programs.firefox = {
-    enable = true;
-    package = nightly.firefox-devedition;
-
-    policies = {
-      HttpsOnlyMode = "enabled";
-
-      EnableTrackingProtection = {
-        Value = true;
-        Cryptomining = true;
-        Fingerprinting = true;
-        EmailTracking = true;
-        Locked = false;
-      };
-
-      FirefoxHome = {
-        SponsoredTopSites = false;
-        SponsoredStories = false;
-        Locked = false;
-      };
-
-      FirefoxSuggest = {
-        SponsoredSuggestions = false;
-        ImproveSuggest = false;
-        Locked = false;
-      };
-    };
   };
 
   programs.fish.enable = true;
-  programs.steam.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -168,15 +152,18 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    wget
-    zed-editor
+    vim
     git
-    discord
-    nightly.codex
+    curl
+    wget
+    gnumake
+
     nil
     nixd
-    gnumake
+    zed-editor
+    discord
+    vlc
+    nightly.codex
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -202,12 +189,6 @@
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

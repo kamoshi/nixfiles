@@ -23,7 +23,7 @@
     label = "Calibre";
     path = {
       aya = "~/calibre";
-      momiji = "~/calibre";
+      momiji = "~/Sync/calibre";
       megumu = "/srv/storagebox/plain/sync/calibre";
     };
   };
