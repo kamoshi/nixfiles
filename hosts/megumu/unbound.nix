@@ -38,13 +38,13 @@
             "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/social.txt"
             # ./filters/hackernews.txt
             ./filters/wykop.txt
-            # ./filters/reddit.txt
           ];
         };
 
         allowlists = {
           social = [
             ./filters/discord.txt
+            ./filters/reddit.txt
           ];
         };
 

@@ -13,7 +13,7 @@
     id = "music";
     label = "Music";
     path = {
-      momiji = "/data/music";
+      momiji = "~/Music";
       megumu = "/srv/storagebox/plain/sync/music";
     };
   };

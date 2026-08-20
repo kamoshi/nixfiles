@@ -72,10 +72,25 @@
     ];
   };
 
+  fileSystems."/data" = {
+    device = "/dev/disk/by-uuid/6e9fbbea-d1f6-4618-8088-b8f040ce8b29";
+    fsType = "btrfs";
+    options = [
+      "nofail"
+      "x-systemd.device-timeout=5s"
+      "noatime"
+      "compress=zstd:1"
+      "discard=async"
+    ];
+  };
+
   services.btrfs.autoScrub = {
     enable = true;
     interval = "monthly";
-    fileSystems = [ "/" ];
+    fileSystems = [
+      "/"
+      "/data"
+    ];
   };
 
   services.fstrim.enable = true;

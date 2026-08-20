@@ -10,12 +10,6 @@ in
 {
   home.username = "kamov";
 
-  sops.secrets = {
-    "syncthing/workspace" = { };
-    "syncthing/obsidian" = { };
-    "syncthing/photos" = { };
-  };
-
   programs.git = {
     enable = true;
 

@@ -161,6 +161,7 @@
     nil
     nixd
     zed-editor
+    anki
     discord
     vlc
     nightly.codex
