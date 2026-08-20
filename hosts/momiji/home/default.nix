@@ -1,3 +1,3 @@
 {
-  kamov = ./kamov.nix;
+  kamov = ./kamov;
 }

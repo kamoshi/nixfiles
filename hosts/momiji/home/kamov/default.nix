@@ -1,29 +1,42 @@
-{ pkgs, ... }:
+{ pkgs, nightly, ... }:
+let
+  nick = "kamov";
+  home = "/home/${nick}";
+in
 {
   imports = [
-    ../../../home/personal.nix
-    ../../../home/core.nix
-    ../../../home/sops.nix
-    ../../../home/bash.nix
-    ../../../home/fish
-    ../../../home/nvim.nix
-    ../../../home/syncthing.nix
     ./backup.nix
+    ../../../../home/personal.nix
+    ../../../../home/core.nix
+    ../../../../home/bash.nix
+    ../../../../home/fish
+    ../../../../home/nvim.nix
+    ../../../../home/syncthing.nix
+    ../../../../home/rust.nix
     # ../../../home/ocaml.nix
     # ../../../home/haskell.nix
-    ../../../home/rust.nix
     # ../../../home/lean.nix
     # ../../../home/opencode.nix
   ];
 
+  home = {
+    username = nick;
+    homeDirectory = home;
+  };
+
+  sops = {
+    age.keyFile = "${home}/.config/sops/age/momiji-kamov.txt";
+    defaultSopsFile = ./sops.yaml;
+  };
+
   home.packages = with pkgs; [
-    cmake
-    gcc
-    git
-    libclang
-    ninja
-    pkg-config
-    python3
+    anki
+    discord
+    nightly.codex
+    nil
+    nixd
+    vlc
+    zed-editor
   ];
 
   # This value determines the Home Manager release that your configuration is

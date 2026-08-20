@@ -152,19 +152,18 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim
-    git
+    age
     curl
-    wget
+    gcc
+    git
     gnumake
-
-    nil
-    nixd
-    zed-editor
-    anki
-    discord
-    vlc
-    nightly.codex
+    lazygit
+    python3
+    ripgrep
+    sops
+    uv
+    vim
+    wget
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
