@@ -158,6 +158,7 @@
     git
     gnumake
     lazygit
+    ncdu
     python3
     ripgrep
     sops

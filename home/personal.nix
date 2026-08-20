@@ -8,27 +8,9 @@ let
   home = config.home.homeDirectory;
 in
 {
+  imports = [ ./git.nix ];
+
   home.username = "kamov";
-
-  programs.git = {
-    enable = true;
-
-    settings = {
-      user.name = "Maciej Jur";
-      user.email = "maciej@kamoshi.org";
-
-      init.defaultBranch = "main";
-      core.excludesFile = "~/.gitignore";
-
-      sendemail = {
-        smtpserver = "127.0.0.1";
-        smtpuser = "maciej@kamoshi.org";
-        smtpencryption = "tls";
-        smtpserverport = 1025;
-        smtpsslcertpath = "";
-      };
-    };
-  };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -46,7 +28,6 @@ in
   }
   // utils.home.symlink config [
     ".XCompose"
-    ".gitignore"
   ];
 
   xdg.configFile = utils.home.xdgSymlink config [
