@@ -55,9 +55,10 @@ in
   };
 
   home.packages = with pkgs; [
-    anki
     discord
     ffmpeg-full
+    google-chrome
+    nightly.anki
     nightly.codex
     nil
     nixd

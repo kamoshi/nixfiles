@@ -20,6 +20,7 @@ let
     runtimeInputs = [ pkgs.openssh ];
     text = ''
       exec ssh \
+        -F none \
         -p 23 \
         -i ${lib.escapeShellArg "${home}/.ssh/kamov"} \
         -o IdentitiesOnly=yes \
@@ -201,17 +202,35 @@ let
       status=$1
       unit=$2
 
+      case "$unit" in
+        restic-backup-momiji.service)
+          task="SSD backup"
+          ;;
+        restic-backup-momiji-cloud.service)
+          task="Cloud backup"
+          ;;
+        restic-check-momiji-ssd-*.service)
+          task="SSD repository check"
+          ;;
+        restic-check-momiji-cloud-*.service)
+          task="Cloud repository check"
+          ;;
+        *)
+          task="$unit"
+          ;;
+      esac
+
       case "$status" in
         success)
           urgency=normal
           icon=emblem-default
-          title="Restic task succeeded"
+          title="$task succeeded"
           message="$unit completed successfully."
           ;;
         failure)
           urgency=critical
           icon=dialog-error
-          title="Restic task failed"
+          title="$task failed"
           message="$unit failed. Inspect it with: journalctl --user -u $unit"
           ;;
         *)
@@ -223,9 +242,11 @@ let
       exec notify-send \
         --app-name="Restic backups" \
         --urgency="$urgency" \
+        --expire-time=0 \
         --icon="$icon" \
         --hint=string:desktop-entry:restic-backups \
         --hint=boolean:transient:false \
+        --hint=boolean:resident:true \
         "$title" \
         "$message"
     '';
