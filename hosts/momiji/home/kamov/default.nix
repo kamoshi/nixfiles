@@ -63,6 +63,7 @@ in
     nil
     nixd
     nixfmt
+    osu-lazer-bin
     vlc
     zed-editor
   ];
