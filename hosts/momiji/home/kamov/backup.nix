@@ -1,19 +1,28 @@
 {
   config,
   lib,
+  nightly,
   pkgs,
   ...
 }:
 let
-  home = config.home.homeDirectory;
-  repository = "/data/Backups/restic-momiji";
-  sources = [
-    "${home}/Documents"
-    "${home}/Pictures"
-    "${home}/Videos"
+  inherit (config.home) homeDirectory;
+
+  backupSources = [
+    "${homeDirectory}/Documents"
+    "${homeDirectory}/Pictures"
+    "${homeDirectory}/Videos"
   ];
+
+  ssdRepository = "/data/Backups/restic-momiji";
   cloudRepository = "sftp:u489674-sub1@u489674-sub1.your-storagebox.de:restic-momiji-kamov";
-  backupLock = "%t/restic-backup-momiji.lock";
+  ssdPasswordFile = config.sops.secrets.restic-repo-momiji-ssd.path;
+  cloudPasswordFile = config.sops.secrets.restic-repo-momiji-cloud.path;
+  resticCacheDirectory = "${config.xdg.cacheHome}/restic";
+
+  taskLock = "restic-backup-momiji.lock";
+  taskStateDirectory = "restic-momiji";
+  taskStatePath = "${config.xdg.stateHome}/${taskStateDirectory}";
 
   storageboxSftp = pkgs.writeShellApplication {
     name = "storagebox-backup-sftp";
@@ -22,7 +31,7 @@ let
       exec ssh \
         -F none \
         -p 23 \
-        -i ${lib.escapeShellArg "${home}/.ssh/kamov"} \
+        -i ${lib.escapeShellArg "${homeDirectory}/.ssh/kamov"} \
         -o IdentitiesOnly=yes \
         -o PasswordAuthentication=no \
         -o KbdInteractiveAuthentication=no \
@@ -33,28 +42,90 @@ let
     '';
   };
 
-  runBackup = ''
-    export RESTIC_PASSWORD_FILE="''${RESTIC_PASSWORD_FILE:-${config.sops.secrets.restic-repo-momiji-ssd.path}}"
-    export RESTIC_CACHE_DIR="''${RESTIC_CACHE_DIR:-${config.xdg.cacheHome}/restic}"
+  mkResticWrapper =
+    {
+      name,
+      repository,
+      passwordFile,
+      extraOptions ? [ ],
+      runtimeInputs ? [ ],
+      preflight ? "",
+    }:
+    pkgs.writeShellApplication {
+      inherit name;
+      runtimeInputs = [
+        pkgs.coreutils
+        nightly.restic
+      ]
+      ++ runtimeInputs;
+      text = ''
+        export RESTIC_PASSWORD_FILE=${lib.escapeShellArg passwordFile}
+        export RESTIC_CACHE_DIR="''${RESTIC_CACHE_DIR:-${resticCacheDirectory}}"
+        mkdir -p "$RESTIC_CACHE_DIR"
 
-    mkdir -p "$RESTIC_CACHE_DIR"
+        ${preflight}
 
-    restic_command backup ${lib.escapeShellArgs sources}
-    restic_command forget --prune \
+        exec restic \
+          ${lib.escapeShellArgs extraOptions} \
+          --repo ${lib.escapeShellArg repository} \
+          "$@"
+      '';
+    };
+
+  resticSsd = mkResticWrapper {
+    name = "restic-ssd";
+    repository = ssdRepository;
+    passwordFile = ssdPasswordFile;
+    runtimeInputs = [ pkgs.util-linux ];
+    preflight = ''
+      if ! mountpoint --quiet /data; then
+        echo "Refusing to access the SSD repository: /data is not mounted" >&2
+        exit 1
+      fi
+    '';
+  };
+
+  resticCloud = mkResticWrapper {
+    name = "restic-cloud";
+    repository = cloudRepository;
+    passwordFile = cloudPasswordFile;
+    extraOptions = [
+      "-o"
+      "sftp.command=${lib.getExe storageboxSftp}"
+    ];
+  };
+
+  parseCheckOption = usage: ''
+    check_repository=0
+
+    if [[ "''${1:-}" == "--check" ]]; then
+      check_repository=1
+      shift
+    fi
+
+    if (( $# != 0 )); then
+      echo ${lib.escapeShellArg "Usage: ${usage}"} >&2
+      exit 2
+    fi
+  '';
+
+  runBackup = resticCommand: ''
+    ${resticCommand} backup ${lib.escapeShellArgs backupSources}
+    ${resticCommand} forget --prune \
       --keep-weekly 8 \
       --keep-monthly 12 \
       --keep-yearly 3
 
     if (( check_repository )); then
-      restic_command check
+      ${resticCommand} check
     fi
   '';
 
-  backupToDir = pkgs.writeShellApplication {
-    name = "backup-to-dir";
+  backupToPath = pkgs.writeShellApplication {
+    name = "backup-to-path";
     runtimeInputs = [
       pkgs.coreutils
-      pkgs.restic
+      nightly.restic
       pkgs.util-linux
     ];
     text = ''
@@ -65,42 +136,41 @@ let
       fi
 
       if (( $# != 1 )); then
-        echo "Usage: backup-to-dir [--check] DIRECTORY" >&2
+        echo "Usage: backup-to-path [--check] PATH" >&2
         exit 2
       fi
 
-      RESTIC_REPOSITORY=$(realpath -m -- "$1")
-      export RESTIC_REPOSITORY
+      repository=$(realpath -m -- "$1")
 
-      restic_command() {
-        restic "$@"
-      }
-
-      if [[ "$RESTIC_REPOSITORY" == /data/* ]] && ! mountpoint --quiet /data; then
+      if [[ "$repository" == /data/* ]] && ! mountpoint --quiet /data; then
         echo "Refusing to back up: /data is not mounted" >&2
         exit 1
       fi
 
-      for source in ${lib.escapeShellArgs sources}; do
-        if [[ "$RESTIC_REPOSITORY" == "$source" || "$RESTIC_REPOSITORY" == "$source"/* ]]; then
+      for source in ${lib.escapeShellArgs backupSources}; do
+        if [[ "$repository" == "$source" || "$repository" == "$source"/* ]]; then
           echo "Refusing to place the repository inside backup source: $source" >&2
           exit 2
         fi
       done
 
-      mkdir -p "$(dirname "$RESTIC_REPOSITORY")"
+      export RESTIC_REPOSITORY="$repository"
+      export RESTIC_PASSWORD_FILE="''${RESTIC_PASSWORD_FILE:-${ssdPasswordFile}}"
+      export RESTIC_CACHE_DIR="''${RESTIC_CACHE_DIR:-${resticCacheDirectory}}"
 
-      if [[ ! -e "$RESTIC_REPOSITORY/config" ]]; then
-        restic_command init
+      mkdir -p "$RESTIC_CACHE_DIR" "$(dirname "$repository")"
+
+      if [[ ! -e "$repository/config" ]]; then
+        restic init
       fi
 
-      ${runBackup}
+      ${runBackup "restic"}
     '';
   };
 
   backupToSsd = pkgs.writeShellApplication {
     name = "backup-to-ssd";
-    runtimeInputs = [ backupToDir ];
+    runtimeInputs = [ backupToPath ];
     text = ''
       check_option=()
       if [[ "''${1:-}" == "--check" ]]; then
@@ -113,84 +183,26 @@ let
         exit 2
       fi
 
-      exec backup-to-dir "''${check_option[@]}" ${lib.escapeShellArg repository}
+      exec backup-to-path "''${check_option[@]}" ${lib.escapeShellArg ssdRepository}
     '';
   };
 
   backupToCloud = pkgs.writeShellApplication {
     name = "backup-to-cloud";
-    runtimeInputs = [
-      pkgs.coreutils
-      pkgs.openssh
-      pkgs.restic
-    ];
+    runtimeInputs = [ resticCloud ];
     text = ''
-      check_repository=0
+      ${parseCheckOption "backup-to-cloud [--check]"}
 
-      while (( $# > 0 )); do
-        case "$1" in
-          --check)
-            check_repository=1
-            ;;
-          *)
-            echo "Usage: backup-to-cloud [--check]" >&2
-            exit 2
-            ;;
-        esac
-        shift
-      done
-
-      export RESTIC_REPOSITORY=${lib.escapeShellArg cloudRepository}
-      export RESTIC_PASSWORD_FILE=${lib.escapeShellArg config.sops.secrets.restic-repo-momiji-cloud.path}
-      export RESTIC_CACHE_DIR="''${RESTIC_CACHE_DIR:-${config.xdg.cacheHome}/restic}"
-
-      restic_command() {
-        restic -o ${lib.escapeShellArg "sftp.command=${lib.getExe storageboxSftp}"} "$@"
-      }
-
-      if ! restic_command cat config >/dev/null; then
-        echo "Cloud repository is unavailable; initialize it locally and rsync it first" >&2
+      if ! restic-cloud cat config >/dev/null; then
+        echo "Cloud repository is unavailable; initialize it locally and sync it first" >&2
         exit 1
       fi
 
-      ${runBackup}
+      ${runBackup "restic-cloud"}
     '';
   };
 
-  checkSsdRepository = pkgs.writeShellApplication {
-    name = "check-ssd-repository";
-    runtimeInputs = [
-      pkgs.restic
-      pkgs.util-linux
-    ];
-    text = ''
-      if ! mountpoint --quiet /data; then
-        echo "Refusing to check repository: /data is not mounted" >&2
-        exit 1
-      fi
-
-      export RESTIC_PASSWORD_FILE=${lib.escapeShellArg config.sops.secrets.restic-repo-momiji-ssd.path}
-      export RESTIC_CACHE_DIR=${lib.escapeShellArg "${config.xdg.cacheHome}/restic"}
-
-      exec restic --repo ${lib.escapeShellArg repository} check "$@"
-    '';
-  };
-
-  checkCloudRepository = pkgs.writeShellApplication {
-    name = "check-cloud-repository";
-    runtimeInputs = [ pkgs.restic ];
-    text = ''
-      export RESTIC_PASSWORD_FILE=${lib.escapeShellArg config.sops.secrets.restic-repo-momiji-cloud.path}
-      export RESTIC_CACHE_DIR=${lib.escapeShellArg "${config.xdg.cacheHome}/restic"}
-
-      exec restic \
-        -o ${lib.escapeShellArg "sftp.command=${lib.getExe storageboxSftp}"} \
-        --repo ${lib.escapeShellArg cloudRepository} \
-        check "$@"
-    '';
-  };
-
-  notifyBackupResult = pkgs.writeShellApplication {
+  notifyTaskResult = pkgs.writeShellApplication {
     name = "notify-restic-result";
     runtimeInputs = [ pkgs.libnotify ];
     text = ''
@@ -252,36 +264,173 @@ let
     '';
   };
 
-  resticMomiji = pkgs.writeShellApplication {
-    name = "restic-momiji";
-    runtimeInputs = [
-      pkgs.coreutils
-      pkgs.restic
-    ];
-    text = ''
-      if (( $# < 2 )); then
-        echo "Usage: restic-momiji COMMAND REPOSITORY [ARGUMENTS...]" >&2
-        exit 2
-      fi
+  taskDefinitions = {
+    restic-backup-momiji = {
+      description = "Back up personal files to the SSD";
+      command = [ (lib.getExe backupToSsd) ];
+      marker = "backup-ssd";
+      calendar = "Fri *-*-* 12:00:00";
+      randomizedDelay = "2h";
+    };
 
-      command=$1
-      repository=$(realpath -m -- "$2")
-      shift 2
+    restic-backup-momiji-cloud = {
+      description = "Back up personal files to Storage Box";
+      command = [ (lib.getExe backupToCloud) ];
+      marker = "backup-cloud";
+      calendar = "Fri *-*-* 14:00:00";
+      randomizedDelay = "2h";
+      after = [ "restic-backup-momiji.service" ];
+    };
 
-      export RESTIC_PASSWORD_FILE="''${RESTIC_PASSWORD_FILE:-${config.sops.secrets.restic-repo-momiji-ssd.path}}"
-      export RESTIC_CACHE_DIR="''${RESTIC_CACHE_DIR:-${config.xdg.cacheHome}/restic}"
+    restic-check-momiji-ssd-weekly = {
+      description = "Check SSD repository metadata";
+      command = [
+        (lib.getExe resticSsd)
+        "check"
+      ];
+      marker = "check-ssd-weekly";
+      calendar = "Tue *-*-* 12:00:00";
+      randomizedDelay = "1h";
+    };
 
-      exec restic --repo "$repository" "$command" "$@"
-    '';
+    restic-check-momiji-cloud-weekly = {
+      description = "Check Storage Box repository metadata";
+      command = [
+        (lib.getExe resticCloud)
+        "check"
+      ];
+      marker = "check-cloud-weekly";
+      calendar = "Tue *-*-* 14:00:00";
+      randomizedDelay = "1h";
+    };
+
+    restic-check-momiji-ssd-monthly = {
+      description = "Fully verify the SSD repository";
+      command = [
+        (lib.getExe resticSsd)
+        "check"
+        "--read-data"
+      ];
+      marker = "check-ssd-monthly";
+      calendar = "Wed *-*-01..07 12:00:00";
+      randomizedDelay = "1h";
+    };
+
+    restic-check-momiji-cloud-monthly = {
+      description = "Verify a data subset in the Storage Box repository";
+      command = [
+        (lib.getExe resticCloud)
+        "check"
+        "--read-data-subset=10%"
+      ];
+      marker = "check-cloud-monthly";
+      calendar = "Wed *-*-01..07 14:00:00";
+      randomizedDelay = "1h";
+    };
   };
+
+  mkTaskRunner =
+    name: task:
+    let
+      markerPath = "${taskStatePath}/${task.marker}";
+    in
+    pkgs.writeShellApplication {
+      name = "${name}-runner";
+      runtimeInputs = [
+        pkgs.coreutils
+        pkgs.util-linux
+      ];
+      text = ''
+        readonly max_attempts=4
+        readonly retry_delay=15m
+        readonly lock_file="''${XDG_RUNTIME_DIR:?}/${taskLock}"
+
+        # Preserve the marker when systemd interrupts us during shutdown.
+        trap 'exit 143' HUP INT TERM
+
+        for (( attempt = 1; attempt <= max_attempts; attempt++ )); do
+          if flock --exclusive "$lock_file" ${lib.escapeShellArgs task.command}; then
+            exit 0
+          else
+            status=$?
+          fi
+
+          if (( attempt == max_attempts )); then
+            break
+          fi
+
+          echo "Attempt $attempt/$max_attempts failed; retrying in $retry_delay" >&2
+          sleep "$retry_delay"
+        done
+
+        # The task completed with an ordinary failure, so it must not be
+        # mistaken for an interruption and resumed at the next login.
+        rm -f ${lib.escapeShellArg markerPath}
+        exit "$status"
+      '';
+    };
+
+  mkTaskService =
+    name: task:
+    let
+      markerPath = "${taskStatePath}/${task.marker}";
+      runner = mkTaskRunner name task;
+    in
+    {
+      Unit = {
+        Description = task.description;
+        After = task.after or [ ];
+        OnFailure = [ "restic-backup-failure@%n.service" ];
+        OnSuccess = [ "restic-backup-success@%n.service" ];
+      };
+
+      Service = {
+        Type = "oneshot";
+        ExecStartPre = "${pkgs.coreutils}/bin/touch ${lib.escapeShellArg markerPath}";
+        ExecStart = lib.getExe runner;
+        ExecStartPost = "${pkgs.coreutils}/bin/rm -f ${lib.escapeShellArg markerPath}";
+        StateDirectory = taskStateDirectory;
+        Nice = 10;
+        IOSchedulingClass = "idle";
+        NoNewPrivileges = true;
+        PrivateTmp = true;
+        X-RestartIfChanged = false;
+      };
+    };
+
+  mkRecoveryService = name: task: {
+    Unit = {
+      Description = "Resume interrupted ${task.description}";
+      ConditionPathExists = "${taskStatePath}/${task.marker}";
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.systemd}/bin/systemctl --user start --no-block ${name}.service";
+      X-RestartIfChanged = false;
+    };
+    Install.WantedBy = [ "default.target" ];
+  };
+
+  mkTaskTimer = task: {
+    Unit.Description = "Schedule: ${task.description}";
+    Timer = {
+      OnCalendar = task.calendar;
+      Persistent = true;
+      RandomizedDelaySec = task.randomizedDelay;
+    };
+    Install.WantedBy = [ "timers.target" ];
+  };
+
+  taskServices = lib.mapAttrs mkTaskService taskDefinitions;
+  recoveryServices = lib.mapAttrs' (
+    name: task: lib.nameValuePair "restic-recover-${name}" (mkRecoveryService name task)
+  ) taskDefinitions;
+  taskTimers = lib.mapAttrs (_: task: mkTaskTimer task) taskDefinitions;
 in
 {
-  sops.secrets.restic-repo-momiji-ssd = {
-    mode = "0400";
-  };
-
-  sops.secrets.restic-repo-momiji-cloud = {
-    mode = "0400";
+  sops.secrets = {
+    restic-repo-momiji-ssd.mode = "0400";
+    restic-repo-momiji-cloud.mode = "0400";
   };
 
   xdg.desktopEntries.restic-backups = {
@@ -293,192 +442,36 @@ in
   };
 
   home.packages = [
-    pkgs.restic
-    backupToDir
+    nightly.restic
+    resticSsd
+    resticCloud
+    backupToPath
     backupToSsd
     backupToCloud
-    resticMomiji
   ];
 
-  systemd.user.services.restic-backup-momiji = {
-    Unit = {
-      Description = "Back up personal files with Restic";
-      OnFailure = [ "restic-backup-failure@%n.service" ];
-      OnSuccess = [ "restic-backup-success@%n.service" ];
+  systemd.user.services =
+    taskServices
+    // recoveryServices
+    // {
+      "restic-backup-failure@" = {
+        Unit.Description = "Notify about failed Restic task %i";
+        Service = {
+          Type = "oneshot";
+          Environment = [ "DBUS_SESSION_BUS_ADDRESS=unix:path=%t/bus" ];
+          ExecStart = "${lib.getExe notifyTaskResult} failure %i";
+        };
+      };
+
+      "restic-backup-success@" = {
+        Unit.Description = "Notify about successful Restic task %i";
+        Service = {
+          Type = "oneshot";
+          Environment = [ "DBUS_SESSION_BUS_ADDRESS=unix:path=%t/bus" ];
+          ExecStart = "${lib.getExe notifyTaskResult} success %i";
+        };
+      };
     };
 
-    Service = {
-      Type = "oneshot";
-      Environment = [
-        "RESTIC_REPOSITORY=${repository}"
-        "RESTIC_PASSWORD_FILE=${config.sops.secrets.restic-repo-momiji-ssd.path}"
-        "RESTIC_CACHE_DIR=${config.xdg.cacheHome}/restic"
-      ];
-      ExecStart = "${pkgs.util-linux}/bin/flock --exclusive ${backupLock} ${lib.getExe backupToSsd}";
-      Nice = 10;
-      IOSchedulingClass = "idle";
-      NoNewPrivileges = true;
-      PrivateTmp = true;
-    };
-  };
-
-  systemd.user.timers.restic-backup-momiji = {
-    Unit.Description = "Weekly Restic backup of personal files";
-
-    Timer = {
-      OnCalendar = "Fri *-*-* 12:00:00";
-      Persistent = true;
-      RandomizedDelaySec = "2h";
-      Unit = "restic-backup-momiji.service";
-    };
-
-    Install.WantedBy = [ "timers.target" ];
-  };
-
-  systemd.user.services.restic-backup-momiji-cloud = {
-    Unit = {
-      Description = "Back up personal files to Storage Box with Restic";
-      After = [ "restic-backup-momiji.service" ];
-      OnFailure = [ "restic-backup-failure@%n.service" ];
-      OnSuccess = [ "restic-backup-success@%n.service" ];
-    };
-
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.util-linux}/bin/flock --exclusive ${backupLock} ${lib.getExe backupToCloud}";
-      Nice = 10;
-      IOSchedulingClass = "idle";
-      NoNewPrivileges = true;
-      PrivateTmp = true;
-    };
-  };
-
-  systemd.user.timers.restic-backup-momiji-cloud = {
-    Unit.Description = "Weekly Restic backup of personal files to Storage Box";
-
-    Timer = {
-      OnCalendar = "Fri *-*-* 14:00:00";
-      Persistent = true;
-      RandomizedDelaySec = "2h";
-      Unit = "restic-backup-momiji-cloud.service";
-    };
-
-    Install.WantedBy = [ "timers.target" ];
-  };
-
-  systemd.user.services."restic-backup-failure@" = {
-    Unit.Description = "Notify about failed Restic task %i";
-
-    Service = {
-      Type = "oneshot";
-      Environment = [ "DBUS_SESSION_BUS_ADDRESS=unix:path=%t/bus" ];
-      ExecStart = "${lib.getExe notifyBackupResult} failure %i";
-    };
-  };
-
-  systemd.user.services."restic-backup-success@" = {
-    Unit.Description = "Notify about successful Restic task %i";
-
-    Service = {
-      Type = "oneshot";
-      Environment = [ "DBUS_SESSION_BUS_ADDRESS=unix:path=%t/bus" ];
-      ExecStart = "${lib.getExe notifyBackupResult} success %i";
-    };
-  };
-
-  systemd.user.services.restic-check-momiji-ssd-weekly = {
-    Unit = {
-      Description = "Check SSD Restic repository metadata";
-      OnFailure = [ "restic-backup-failure@%n.service" ];
-      OnSuccess = [ "restic-backup-success@%n.service" ];
-    };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.util-linux}/bin/flock --exclusive ${backupLock} ${lib.getExe checkSsdRepository}";
-      Nice = 10;
-      IOSchedulingClass = "idle";
-    };
-  };
-
-  systemd.user.timers.restic-check-momiji-ssd-weekly = {
-    Unit.Description = "Weekly SSD Restic repository metadata check";
-    Timer = {
-      OnCalendar = "Tue *-*-* 12:00:00";
-      Persistent = true;
-      RandomizedDelaySec = "1h";
-    };
-    Install.WantedBy = [ "timers.target" ];
-  };
-
-  systemd.user.services.restic-check-momiji-cloud-weekly = {
-    Unit = {
-      Description = "Check Storage Box Restic repository metadata";
-      OnFailure = [ "restic-backup-failure@%n.service" ];
-      OnSuccess = [ "restic-backup-success@%n.service" ];
-    };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.util-linux}/bin/flock --exclusive ${backupLock} ${lib.getExe checkCloudRepository}";
-      Nice = 10;
-      IOSchedulingClass = "idle";
-    };
-  };
-
-  systemd.user.timers.restic-check-momiji-cloud-weekly = {
-    Unit.Description = "Weekly Storage Box Restic repository metadata check";
-    Timer = {
-      OnCalendar = "Tue *-*-* 14:00:00";
-      Persistent = true;
-      RandomizedDelaySec = "1h";
-    };
-    Install.WantedBy = [ "timers.target" ];
-  };
-
-  systemd.user.services.restic-check-momiji-ssd-monthly = {
-    Unit = {
-      Description = "Fully verify data in SSD Restic repository";
-      OnFailure = [ "restic-backup-failure@%n.service" ];
-      OnSuccess = [ "restic-backup-success@%n.service" ];
-    };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.util-linux}/bin/flock --exclusive ${backupLock} ${lib.getExe checkSsdRepository} --read-data";
-      Nice = 10;
-      IOSchedulingClass = "idle";
-    };
-  };
-
-  systemd.user.timers.restic-check-momiji-ssd-monthly = {
-    Unit.Description = "Monthly full SSD Restic repository data check";
-    Timer = {
-      OnCalendar = "Wed *-*-01..07 12:00:00";
-      Persistent = true;
-      RandomizedDelaySec = "1h";
-    };
-    Install.WantedBy = [ "timers.target" ];
-  };
-
-  systemd.user.services.restic-check-momiji-cloud-monthly = {
-    Unit = {
-      Description = "Verify a monthly data subset in Storage Box Restic repository";
-      OnFailure = [ "restic-backup-failure@%n.service" ];
-      OnSuccess = [ "restic-backup-success@%n.service" ];
-    };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.util-linux}/bin/flock --exclusive ${backupLock} ${lib.getExe checkCloudRepository} --read-data-subset=10%%";
-      Nice = 10;
-      IOSchedulingClass = "idle";
-    };
-  };
-
-  systemd.user.timers.restic-check-momiji-cloud-monthly = {
-    Unit.Description = "Monthly Storage Box Restic repository data-subset check";
-    Timer = {
-      OnCalendar = "Wed *-*-01..07 14:00:00";
-      Persistent = true;
-      RandomizedDelaySec = "1h";
-    };
-    Install.WantedBy = [ "timers.target" ];
-  };
+  systemd.user.timers = taskTimers;
 }
