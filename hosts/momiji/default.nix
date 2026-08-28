@@ -13,6 +13,7 @@
     ./programs/calibre.nix
     ./programs/firefox.nix
     ./programs/kdeconnect.nix
+    ./programs/meikipop.nix
     ./programs/music.nix
     ./programs/steam.nix
   ];
@@ -80,6 +81,13 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
+
+  fonts = {
+    # Some native games scan conventional font directories instead of fontconfig.
+    fontDir.enable = true;
+    # RimWorld's Unity fallback does not reliably load Noto's variable TTC.
+    packages = with pkgs; [ noto-fonts-cjk-sans-static ];
+  };
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "pl_PL.UTF-8";

@@ -1,7 +1,10 @@
-{ nightly, ... }:
+{ nightly, pkgs, ... }:
 {
   programs.steam = {
     enable = true;
+
+    # Steam does not inherit Plasma's cursor theme on NixOS.
+    extraPackages = [ pkgs.kdePackages.breeze ];
 
     remotePlay.openFirewall = false;
     dedicatedServer.openFirewall = false;

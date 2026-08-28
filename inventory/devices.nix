@@ -3,7 +3,12 @@
   Type,
 }:
 let
-  inherit (inputs) fukurou karasu sops-nix;
+  inherit (inputs)
+    fukurou
+    karasu
+    nix-flatpak
+    sops-nix
+    ;
 in
 {
   # aya
@@ -40,6 +45,7 @@ in
     arch = "x86_64-linux";
     modules = [
       sops-nix.nixosModules.sops
+      nix-flatpak.nixosModules.nix-flatpak
       ../hosts/momiji
     ];
     home = import ../hosts/momiji/home;
