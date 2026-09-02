@@ -1,4 +1,5 @@
 {
+  "load_direnv": "direct",
   "cli_default_open_behavior": "new_window",
   "outline_panel": {
     "dock": "left",

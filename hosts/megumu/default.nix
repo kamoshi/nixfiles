@@ -162,7 +162,10 @@ in
         PasswordAuthentication = false;
         KbdInteractiveAuthentication = false;
         PermitRootLogin = "no";
-        AllowUsers = [ "kamov" "git" ];
+        AllowUsers = [
+          "kamov"
+          "git"
+        ];
         MaxAuthTries = 3;
         X11Forwarding = false;
       };

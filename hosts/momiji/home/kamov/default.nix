@@ -59,6 +59,7 @@ in
     ffmpeg-full
     google-chrome
     nightly.anki
+    nightly.antigravity-cli
     nightly.codex
     nil
     nixd
@@ -70,6 +71,11 @@ in
 
   home.sessionVariables = {
     MOZ_ENABLE_WAYLAND = "1";
+  };
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
   };
 
   # This value determines the Home Manager release that your configuration is
