@@ -12,6 +12,7 @@ in
 {
   imports = [
     ./backup.nix
+    ./flatpak.nix
 
     ../../../../home/git.nix
     ../../../../home/bash.nix

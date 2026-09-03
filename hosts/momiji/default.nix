@@ -13,7 +13,6 @@
     ./programs/calibre.nix
     ./programs/firefox.nix
     ./programs/kdeconnect.nix
-    ./programs/meikipop.nix
     ./programs/music.nix
     ./programs/steam.nix
   ];
@@ -153,6 +152,8 @@
   };
 
   programs.fish.enable = true;
+
+  services.flatpak.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;

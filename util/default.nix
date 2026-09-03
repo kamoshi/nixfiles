@@ -100,6 +100,9 @@ let
           users = device.home;
           sharedModules = [
             inputs.sops-nix.homeManagerModules.sops
+          ]
+          ++ lib.optionals (lib.hasSuffix "-linux" device.arch) [
+            inputs.nix-flatpak.homeManagerModules.nix-flatpak
           ];
           extraSpecialArgs = mkHomeExtraSpecialArgs {
             inherit
