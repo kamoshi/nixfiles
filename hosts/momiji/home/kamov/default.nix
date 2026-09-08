@@ -62,6 +62,7 @@ in
     nightly.anki
     nightly.antigravity-cli
     nightly.codex
+    nightly.slint-lsp
     nil
     nixd
     nixfmt

@@ -15,6 +15,7 @@
     ./programs/kdeconnect.nix
     ./programs/music.nix
     ./programs/steam.nix
+    ./programs/codex.nix
   ];
 
   nix.settings.experimental-features = [
@@ -174,6 +175,7 @@
     uv
     vim
     wget
+    wl-clipboard
 
     nightly.piper
   ];

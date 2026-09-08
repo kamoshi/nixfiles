@@ -17,8 +17,15 @@ in
   services.flatpak = {
     enable = true;
 
+    overrides.settings.global.Environment = {
+      QT_PLUGIN_PATH = "/app/lib/qt/plugins";
+      QML2_IMPORT_PATH = "/app/lib/qt/qml";
+      QML_IMPORT_PATH = "/app/lib/qt/qml";
+    };
+
     packages = [
       meikipop
+      "md.obsidian.Obsidian"
     ];
   };
 }

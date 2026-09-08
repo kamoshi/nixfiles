@@ -44,8 +44,9 @@ in
     type = Type.NixOS;
     arch = "x86_64-linux";
     modules = [
-      sops-nix.nixosModules.sops
-      nix-flatpak.nixosModules.nix-flatpak
+      inputs.sops-nix.nixosModules.sops
+      inputs.nix-flatpak.nixosModules.nix-flatpak
+      inputs.codex-desktop-linux.nixosModules.default
       ../hosts/momiji
     ];
     home = import ../hosts/momiji/home;

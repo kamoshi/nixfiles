@@ -7,6 +7,7 @@ in
 {
   services.immich = {
     enable = true;
+    package = nightly.immich;
     host = endpoint.bind;
     port = endpoint.port;
     openFirewall = false;

@@ -2,6 +2,7 @@ inputs@{
   self,
   nixpkgs,
   nightly,
+  fukurou,
   nix-darwin,
   home-manager,
   ...
@@ -43,6 +44,7 @@ let
     }:
     {
       nightly = nightlyFor device.arch;
+      fukurouSrc = fukurou;
 
       inherit
         device

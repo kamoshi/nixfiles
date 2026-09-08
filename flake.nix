@@ -5,21 +5,20 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nightly.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # aarch64-darwin
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # dotfiles
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
+    nix-flatpak = {
+      url = "github:gmodena/nix-flatpak";
+    };
 
-    # secrets
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,6 +31,11 @@
 
     karasu = {
       url = "git+https://git.kamoshi.org/kamov/karasu";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    codex-desktop-linux = {
+      url = "github:ilysenko/codex-desktop-linux";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
