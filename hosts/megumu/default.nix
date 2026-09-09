@@ -22,7 +22,6 @@ in
     # http + dns
     ./nginx.nix
     ./unbound.nix
-    ./stuff/xray.nix
 
     # api
     ./services/fukurou.nix

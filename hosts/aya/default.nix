@@ -42,6 +42,7 @@ in
     casks = [
       "anki"
       "calibre"
+      "discord"
       "element"
       "google-chrome"
       "krita"
@@ -146,6 +147,7 @@ in
           "/Applications/Ghostty.app"
           "/Applications/Gemini.app"
           "/Applications/Antigravity.app"
+          "/Applications/Discord.app"
         ];
       };
     };

@@ -178,6 +178,7 @@
     wl-clipboard
 
     nightly.piper
+    nightly.wineWow64Packages.staging
   ];
 
   services.ratbagd.enable = true;
