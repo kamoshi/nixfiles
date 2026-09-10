@@ -1,9 +1,9 @@
-{ nightly, ... }:
+{ rolling, ... }:
 
 {
   programs.firefox = {
     enable = true;
-    package = nightly.firefox-devedition;
+    package = rolling.firefox-devedition;
 
     preferences = {
       "widget.use-xdg-desktop-portal.file-picker" = 1;

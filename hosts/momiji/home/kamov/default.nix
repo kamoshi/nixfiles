@@ -1,6 +1,6 @@
 {
   config,
-  nightly,
+  rolling,
   pkgs,
   utils,
   ...
@@ -13,6 +13,7 @@ in
   imports = [
     ./backup.nix
     ./flatpak.nix
+    ./unsloth.nix
 
     ../../../../home/git.nix
     ../../../../home/bash.nix
@@ -59,10 +60,10 @@ in
     discord
     ffmpeg-full
     google-chrome
-    nightly.anki
-    nightly.antigravity-cli
-    nightly.codex
-    nightly.slint-lsp
+    rolling.anki
+    rolling.antigravity-cli
+    rolling.codex
+    rolling.slint-lsp
     nil
     nixd
     nixfmt

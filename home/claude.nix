@@ -1,10 +1,10 @@
-{ config, nightly, utils, ... }:
+{ config, rolling, utils, ... }:
 {
   home.file = utils.home.symlink config [
     ".claude/skills"
   ];
 
   home.packages = [
-    nightly.claude-code
+    rolling.claude-code
   ];
 }

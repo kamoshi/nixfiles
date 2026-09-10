@@ -1,6 +1,6 @@
-{ nightly, ... }:
+{ rolling, ... }:
 {
   home.packages = [
-    nightly.codex
+    rolling.codex
   ];
 }

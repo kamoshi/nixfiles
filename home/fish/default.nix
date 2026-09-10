@@ -1,4 +1,4 @@
-{ nightly, ... }:
+{ rolling, ... }:
 {
   programs.fish = {
     enable = true;

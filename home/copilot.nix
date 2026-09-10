@@ -1,6 +1,6 @@
-{ nightly, ... }:
+{ rolling, ... }:
 {
-  home.packages = with nightly; [
+  home.packages = with rolling; [
     github-copilot-cli
   ];
 }

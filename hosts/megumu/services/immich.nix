@@ -1,4 +1,4 @@
-{ device, inventory, nightly, ... }:
+{ device, inventory, rolling, ... }:
 let
   endpoint = inventory.endpoints.immich;
   proxyBind = "127.0.0.1";
@@ -7,7 +7,7 @@ in
 {
   services.immich = {
     enable = true;
-    package = nightly.immich;
+    package = rolling.immich;
     host = endpoint.bind;
     port = endpoint.port;
     openFirewall = false;
@@ -72,7 +72,7 @@ in
 
   services.immich-public-proxy = {
     enable = true;
-    package = nightly.immich-public-proxy;
+    package = rolling.immich-public-proxy;
     immichUrl = "http://${endpoint.bind}:${toString endpoint.port}";
     port = endpoint.proxyPort;
     openFirewall = false;

@@ -1,7 +1,7 @@
 {
   self,
   device,
-  nightly,
+  rolling,
   ...
 }:
 let

@@ -1,4 +1,4 @@
-{ nightly, pkgs, ... }:
+{ rolling, pkgs, ... }:
 {
   programs.steam = {
     enable = true;
@@ -11,7 +11,7 @@
     localNetworkGameTransfers.openFirewall = false;
 
     # Make GE-Proton available in Steam's compatibility-tool selector.
-    extraCompatPackages = with nightly; [ proton-ge-bin ];
+    extraCompatPackages = with rolling; [ proton-ge-bin ];
 
     # Useful for applying Winetricks fixes to Proton prefixes.
     protontricks.enable = true;

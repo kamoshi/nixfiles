@@ -1,7 +1,7 @@
 inputs@{
   self,
   nixpkgs,
-  nightly,
+  rolling,
   fukurou,
   nix-darwin,
   home-manager,
@@ -18,9 +18,9 @@ let
       config.allowUnfree = true;
     };
 
-  nightlyFor =
+  rollingFor =
     system:
-    import nightly {
+    import rolling {
       inherit system;
       config.allowUnfree = true;
       overlays = [
@@ -43,7 +43,7 @@ let
       vpn,
     }:
     {
-      nightly = nightlyFor device.arch;
+      rolling = rollingFor device.arch;
       fukurouSrc = fukurou;
 
       inherit

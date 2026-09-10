@@ -1,7 +1,7 @@
 {
   config,
   lib,
-  nightly,
+  rolling,
   pkgs,
   ...
 }:
@@ -55,7 +55,7 @@ let
       inherit name;
       runtimeInputs = [
         pkgs.coreutils
-        nightly.restic
+        rolling.restic
       ]
       ++ runtimeInputs;
       text = ''
@@ -125,7 +125,7 @@ let
     name = "backup-to-path";
     runtimeInputs = [
       pkgs.coreutils
-      nightly.restic
+      rolling.restic
       pkgs.util-linux
     ];
     text = ''
@@ -442,7 +442,7 @@ in
   };
 
   home.packages = [
-    nightly.restic
+    rolling.restic
     resticSsd
     resticCloud
     backupToPath

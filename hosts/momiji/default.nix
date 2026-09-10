@@ -4,7 +4,7 @@
 
 {
   config,
-  nightly,
+  rolling,
   pkgs,
   ...
 }:
@@ -175,8 +175,8 @@
     wget
     wl-clipboard
 
-    nightly.piper
-    nightly.wineWow64Packages.staging
+    rolling.piper
+    rolling.wineWow64Packages.staging
   ];
 
   services.ratbagd.enable = true;

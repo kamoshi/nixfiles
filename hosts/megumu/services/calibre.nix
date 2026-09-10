@@ -1,4 +1,4 @@
-{ device, inventory, pkgs, nightly, ... }:
+{ device, inventory, pkgs, rolling, ... }:
 let
   endpoint = inventory.endpoints.calibre;
 in

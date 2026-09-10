@@ -1,7 +1,7 @@
-{ config, nightly, utils, ... }:
+{ config, rolling, utils, ... }:
 {
   home.packages = [
-    nightly.opencode
+    rolling.opencode
   ];
 
   xdg.configFile = utils.home.xdgSymlink config [

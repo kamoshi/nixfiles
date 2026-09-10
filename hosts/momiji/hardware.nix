@@ -5,7 +5,7 @@
   config,
   lib,
   pkgs,
-  nightly,
+  rolling,
   modulesPath,
   ...
 }:
@@ -25,7 +25,7 @@
   ];
 
   boot = {
-    kernelPackages = nightly.linuxPackages_latest;
+    kernelPackages = rolling.linuxPackages_latest;
     kernelModules = [ "kvm-amd" ];
     extraModulePackages = [ ];
 
@@ -38,7 +38,7 @@
   };
 
   hardware.nvidia = {
-    package = nightly.linuxPackages_latest.nvidiaPackages.latest;
+    package = rolling.linuxPackages_latest.nvidiaPackages.latest;
     open = true;
     modesetting.enable = true;
     powerManagement.enable = true;

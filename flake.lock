@@ -100,7 +100,7 @@
         "url": "https://git.kamoshi.org/kamov/karasu"
       }
     },
-    "nightly": {
+    "rolling": {
       "locked": {
         "lastModified": 1788752844,
         "narHash": "sha256-VaWGJ6+cIYN2erfSecbRV+4ljI185Ty2wUrXyvQbgOw=",
@@ -174,7 +174,7 @@
         "fukurou": "fukurou",
         "home-manager": "home-manager",
         "karasu": "karasu",
-        "nightly": "nightly",
+        "rolling": "rolling",
         "nix-darwin": "nix-darwin",
         "nix-flatpak": "nix-flatpak",
         "nixpkgs": "nixpkgs",
