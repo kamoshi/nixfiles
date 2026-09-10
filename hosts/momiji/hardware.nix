@@ -5,6 +5,7 @@
   config,
   lib,
   pkgs,
+  nightly,
   modulesPath,
   ...
 }:
@@ -23,16 +24,27 @@
     "sd_mod"
   ];
 
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+  boot = {
+    kernelPackages = nightly.linuxPackages_latest;
+    kernelModules = [ "kvm-amd" ];
+    extraModulePackages = [ ];
 
-  services.xserver.videoDrivers = [ "nvidia" ];
+    loader = {
+      systemd-boot.enable = true;
+      systemd-boot.configurationLimit = 10;
+      systemd-boot.memtest86.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+  };
 
   hardware.nvidia = {
+    package = nightly.linuxPackages_latest.nvidiaPackages.latest;
     open = true;
     modesetting.enable = true;
     powerManagement.enable = true;
   };
+
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/d61e3f69-be8a-4db4-bdd7-a7bbeae9b7ba";

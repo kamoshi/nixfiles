@@ -2,7 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ nightly, pkgs, ... }:
+{
+  config,
+  nightly,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
@@ -32,13 +37,6 @@
   nix.optimise = {
     automatic = true;
     dates = [ "weekly" ];
-  };
-
-  boot = {
-    loader.systemd-boot.enable = true;
-    loader.systemd-boot.configurationLimit = 10;
-    loader.systemd-boot.memtest86.enable = true;
-    loader.efi.canTouchEfiVariables = true;
   };
 
   # Enable networking

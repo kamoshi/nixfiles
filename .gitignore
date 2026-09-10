@@ -1,4 +1,23 @@
-.DS_Store
+*
 
-result/
-.stfolder/
+!/.gitignore
+!/.sops.yaml
+!/.stignore
+!/LICENSE
+!/Makefile
+!/README.md
+!/flake.lock
+!/flake.nix
+
+!/assets/
+!/assets/**
+!/dotfiles/
+!/dotfiles/**
+!/home/
+!/home/**
+!/hosts/
+!/hosts/**
+!/inventory/
+!/inventory/**
+!/util/
+!/util/**
