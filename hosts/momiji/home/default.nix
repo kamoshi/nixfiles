@@ -1,3 +1,7 @@
+{ inputs }:
 {
-  kamov = ./kamov;
+  kamov.imports = [
+    inputs.plasma-manager.homeModules.plasma-manager
+    ./kamov
+  ];
 }

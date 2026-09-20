@@ -4,7 +4,6 @@
 
 {
   config,
-  rolling,
   pkgs,
   ...
 }:
@@ -15,10 +14,8 @@
     ./hardware.nix
     ./wireguard.nix
 
-    ./programs/calibre.nix
     ./programs/firefox.nix
     ./programs/kdeconnect.nix
-    ./programs/music.nix
     ./programs/steam.nix
     ./programs/codex.nix
   ];
@@ -42,6 +39,7 @@
   # Enable networking
   networking = {
     hostName = "momiji"; # Define your hostname.
+    nftables.enable = true;
 
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -165,7 +163,6 @@
     gcc
     git
     gnumake
-    lazygit
     ncdu
     python3
     ripgrep
@@ -173,13 +170,10 @@
     uv
     vim
     wget
-    wl-clipboard
-
-    rolling.piper
-    rolling.wineWow64Packages.staging
   ];
 
   services.ratbagd.enable = true;
+  # services.fwupd.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

@@ -14,6 +14,11 @@ let
     };
 in
 {
+  # Let native games reach the sandboxed Discord Rich Presence socket.
+  systemd.user.tmpfiles.rules = [
+    "L %t/discord-ipc-0 - - - - app/com.discordapp.Discord/discord-ipc-0"
+  ];
+
   services.flatpak = {
     enable = true;
 
@@ -23,9 +28,29 @@ in
       QML_IMPORT_PATH = "/app/lib/qt/qml";
     };
 
+    overrides.settings."md.obsidian.Obsidian" = {
+      Context = {
+        # Keep vault access while clearing inherited host and signing paths.
+        filesystems = [
+          "!host:reset"
+          "~/Desktop/Obsidian"
+        ];
+        shared = [ "!network" ];
+        sockets = [ "!ssh-auth" ];
+      };
+
+      "Session Bus Policy" = {
+        "org.freedesktop.secrets" = "none";
+        "org.kde.kwalletd6" = "none";
+      };
+    };
+
     packages = [
       meikipop
+      "com.discordapp.Discord"
       "md.obsidian.Obsidian"
+      "org.prismlauncher.PrismLauncher"
+      "org.qbittorrent.qBittorrent"
     ];
   };
 }

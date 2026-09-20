@@ -8,11 +8,40 @@
 let
   nick = "kamov";
   home = "/home/${nick}";
+
+  pkgsRelease = with pkgs; [
+    android-tools
+    blender
+    calibre
+    feishin
+    ffmpeg-full
+    google-chrome
+    lazygit
+    libreoffice
+    nil
+    nixd
+    nixfmt
+    obs-studio
+    osu-lazer-bin
+    vlc
+    wl-clipboard
+    zed-editor
+  ];
+
+  pkgsRolling = with rolling; [
+    anki
+    antigravity-cli
+    codex
+    piper
+    slint-lsp
+    wineWow64Packages.staging
+  ];
 in
 {
   imports = [
     ./backup.nix
     ./flatpak.nix
+    ./plasma.nix
     ./unsloth.nix
 
     ../../../../home/git.nix
@@ -56,21 +85,7 @@ in
     defaultSopsFile = ./sops.yaml;
   };
 
-  home.packages = with pkgs; [
-    discord
-    ffmpeg-full
-    google-chrome
-    rolling.anki
-    rolling.antigravity-cli
-    rolling.codex
-    rolling.slint-lsp
-    nil
-    nixd
-    nixfmt
-    osu-lazer-bin
-    vlc
-    zed-editor
-  ];
+  home.packages = pkgsRelease ++ pkgsRolling;
 
   home.sessionVariables = {
     MOZ_ENABLE_WAYLAND = "1";

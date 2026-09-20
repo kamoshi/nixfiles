@@ -11,6 +11,7 @@ aya:
 
 momiji:
 	sudo nixos-rebuild switch --flake .#momiji
+	~/.local/share/plasma-manager/run_all.sh
 
 megumu:
 	sudo nixos-rebuild switch --flake .#megumu

@@ -35,10 +35,10 @@
             "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/nsfw.txt"
           ];
           social = [
-            "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/social.txt"
-            ./filters/hackernews.txt
-            ./filters/wykop.txt
-            ./filters/reddit.txt
+            # "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/social.txt"
+            # ./filters/hackernews.txt
+            # ./filters/wykop.txt
+            # ./filters/reddit.txt
           ];
         };
 

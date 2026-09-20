@@ -65,11 +65,6 @@ in
       # Proton
       "proton-mail"
       "proton-pass"
-
-      # AI
-      "antigravity"
-      "antigravity-cli"
-      "google-gemini"
     ];
   };
 
@@ -145,8 +140,6 @@ in
           "/Applications/calibre.app"
           "/Applications/Proton Mail.app"
           "/Applications/Ghostty.app"
-          "/Applications/Gemini.app"
-          "/Applications/Antigravity.app"
           "/Applications/Discord.app"
         ];
       };

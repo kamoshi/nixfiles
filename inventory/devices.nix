@@ -49,7 +49,7 @@ in
       inputs.codex-desktop-linux.nixosModules.default
       ../hosts/momiji
     ];
-    home = import ../hosts/momiji/home;
+    home = import ../hosts/momiji/home { inherit inputs; };
     vpn = {
       ip = "10.0.0.2";
       pubkey = "bJx1OJDnDCC7kEhiLtBUbrz11ZXMfpn/7mE+JFAL2WY=";

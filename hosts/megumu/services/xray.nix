@@ -314,7 +314,6 @@ in
   # code execution as the Xray UID cannot change these host-owned rules.
   # An accept in the isolation table does not bypass the normal input chain.
   networking.firewall.extraInputRules = fallbackRule;
-  networking.nftables.enable = true;
   networking.nftables.tables.xray-isolation = {
     family = "inet";
     content = ''
