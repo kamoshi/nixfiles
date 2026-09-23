@@ -46,7 +46,6 @@ in
     modules = [
       inputs.sops-nix.nixosModules.sops
       inputs.nix-flatpak.nixosModules.nix-flatpak
-      inputs.codex-desktop-linux.nixosModules.default
       ../hosts/momiji
     ];
     home = import ../hosts/momiji/home { inherit inputs; };

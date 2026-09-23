@@ -49,7 +49,7 @@ in
       "netnewswire"
       "steam"
       "vlc"
-      "xld"
+      "chatgpt"
 
       # Tools
       "db-browser-for-sqlite"

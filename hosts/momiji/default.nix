@@ -17,7 +17,6 @@
     ./programs/firefox.nix
     ./programs/kdeconnect.nix
     ./programs/steam.nix
-    ./programs/codex.nix
   ];
 
   nix.settings.experimental-features = [
