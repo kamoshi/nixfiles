@@ -55,6 +55,21 @@ in
     };
   };
 
+  # m920x
+  m920x = {
+    id = "O6LJ23V-RWL5IDT-JHDQKL7-MYP7LI3-K36CBP7-QB5PIYL-WJB3UPO-LOXGQQW";
+    name = "m920x";
+    type = Type.NixOS;
+    arch = "x86_64-linux";
+    modules = [
+      ../hosts/m920x
+    ];
+    vpn = {
+      ip = "10.0.0.5";
+      pubkey = "WZj6OKH/a0WPfj6npR1xBvNN0sX+mkBoQ88vM4MSxgs=";
+    };
+  };
+
   # hatate
   hatate = {
     id = "C7YIZDV-2PYEKKM-T2ZOOKR-FCJUXU3-I4AOAWP-Y7HT663-JQNICD5-56BTCAC";

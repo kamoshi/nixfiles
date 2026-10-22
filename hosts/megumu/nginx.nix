@@ -6,7 +6,6 @@
   # Directory for web content
   systemd.tmpfiles.rules = [
     "d /var/www/kamoshi.org 775 kamov www"
-    "d /var/www/sejm 775 kamov www"
   ];
 
   # Automatically renew certs
@@ -61,23 +60,6 @@
         root = "/var/www/hauchiwa";
         forceSSL = true;
         enableACME = true;
-
-        listen = [
-          { addr = "[::]";    port = 80; ssl = false; }
-          { addr = "94.130.182.219"; port = 80; ssl = false; }
-          { addr = "[::]";    port = 443; ssl = true; }
-          { addr = "94.130.182.219"; port = 443; ssl = true; }
-        ];
-      };
-
-      virtualHosts."sejm.kamoshi.org" = {
-        root = "/var/www/sejm";
-        forceSSL = true;
-        enableACME = true;
-
-        locations."/" = {
-          tryFiles = "$uri $uri/ /index.html";
-        };
 
         listen = [
           { addr = "[::]";    port = 80; ssl = false; }

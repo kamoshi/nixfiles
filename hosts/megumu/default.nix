@@ -37,8 +37,7 @@ in
     ./services/navidrome.nix
     ./services/syncthing.nix
 
-    # isolated public proxy
-    ./services/xray.nix
+    # ./services/xray.nix
 
     # services
     # ./services/glance.nix

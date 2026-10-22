@@ -71,7 +71,6 @@ let
     "_"
     "kamoshi.org"
     "hauchiwa.kamoshi.org"
-    "sejm.kamoshi.org"
     "rsvp.kamoshi.org"
   ]
   ++ map (name: inventory.endpoints.${name}.domains.external) externalEndpointNames;

@@ -1,15 +1,8 @@
-{ config, inventory, mesh, ... }:
+{ config, device, inventory, mesh, ... }:
 let
   endpoint = inventory.endpoints.syncthing;
 in
 {
-  assertions = [
-    {
-      assertion = endpoint.bind == "127.0.0.1";
-      message = "The Syncthing GUI/API must remain bound to loopback for the configuration updater.";
-    }
-  ];
-
   services.syncthing = {
     enable = true;
     user = "kamov";
@@ -19,19 +12,30 @@ in
     guiAddress = "${endpoint.bind}:${toString endpoint.port}";
 
     settings = {
-      # The declarative configuration updater needs the REST API served by
-      # the GUI. The loopback-only address keeps it local to this machine.
+      # The declarative configuration updater uses guiAddress for the REST API.
       gui.enabled = true;
 
       inherit (mesh config) devices folders;
     };
   };
 
+  services.caddy = {
+    enable = true;
+    virtualHosts.${endpoint.domains.internal}.extraConfig = ''
+      bind ${device.vpn.ip}
+      tls internal
+      reverse_proxy ${endpoint.bind}:${toString endpoint.port}
+    '';
+  };
+
+  services.blocky.settings.customDNS.mapping.${endpoint.domains.internal} = device.vpn.ip;
+
   # Public Syncthing synchronization ports.
   # Source: https://docs.syncthing.net/users/firewall.html
   networking.firewall = {
     allowedTCPPorts = [ 22000 ];
     allowedUDPPorts = [ 22000 ];
+    interfaces.gensokyo.allowedTCPPorts = [ endpoint.port ];
   };
 
   systemd.services.syncthing = {

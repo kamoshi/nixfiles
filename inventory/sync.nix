@@ -6,6 +6,7 @@
       aya = "~/nix";
       momiji = "~/nix";
       megumu = "~/nix";
+      m920x = "~/nix";
     };
   };
 
@@ -15,6 +16,7 @@
     path = {
       momiji = "~/Music";
       megumu = "/srv/storagebox/plain/sync/music";
+      m920x = "/data/music";
     };
   };
 

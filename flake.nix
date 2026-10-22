@@ -74,10 +74,10 @@
       resolveEndpoint = device: endpoint: endpoint // { bind = resolveBind device endpoint.bind; };
 
       endpointsFor =
-        key:
+        _key:
         lib.pipe endpoints [
-          (lib.filterAttrs (_: endpoint: endpoint.host == key))
-          (lib.mapAttrs (_: endpoint: resolveEndpoint devices.${key} endpoint))
+          # Proxies may need endpoints for services hosted on another device.
+          (lib.mapAttrs (_: endpoint: resolveEndpoint devices.${endpoint.host} endpoint))
         ];
 
       syncPath = entry: if lib.isAttrs entry then entry.path else entry;

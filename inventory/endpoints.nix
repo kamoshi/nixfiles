@@ -32,8 +32,8 @@
   };
 
   immich = {
-    host = "megumu";
-    bind = "loopback";
+    host = "m920x";
+    bind = "vpn";
     port = 2283;
     proxyPort = 2285;
     domains = {
@@ -71,8 +71,8 @@
   };
 
   navidrome = {
-    host = "megumu";
-    bind = "loopback";
+    host = "m920x";
+    bind = "vpn";
     port = 4533;
     domains = {
       internal = "music.internal";
@@ -82,9 +82,9 @@
 
   syncthing = {
     host = "megumu";
-    bind = "loopback";
+    bind = "vpn";
     port = 8384;
-    domains.internal = "syncthing.internal";
+    domains.internal = "syncthing.megumu.internal";
   };
 
   woodpecker = {

@@ -2,63 +2,10 @@
 let
   endpoint = inventory.endpoints.immich;
   proxyBind = "127.0.0.1";
-  photos = "/srv/storagebox/crypt/photos";
 in
 {
-  services.immich = {
-    enable = true;
-    package = rolling.immich;
-    host = endpoint.bind;
-    port = endpoint.port;
-    openFirewall = false;
-
-    settings = {
-      # Generate share links for the public proxy while keeping the Immich UI
-      # itself available only through the internal domain below.
-      server.externalDomain = "https://${endpoint.domains.external}";
-
-      # Force sequential job execution to prevent resource starvation
-      job = {
-        backgroundTask.concurrency = 1;
-        thumbnailGeneration.concurrency = 1;
-        metadataExtraction.concurrency = 1;
-        videoConversion.concurrency = 1;
-        faceDetection.concurrency = 1;
-        smartSearch.concurrency = 1;
-        library.concurrency = 1;
-        migration.concurrency = 1;
-        sidecar.concurrency = 1;
-      };
-
-      # Limit video transcoding to a single thread
-      ffmpeg.threads = 1;
-    };
-
-    # Keep the initial deployment small. This can be enabled later for face
-    # recognition and semantic search.
-    machine-learning.enable = false;
-  };
-
-  systemd.services.immich-server = {
-    # Immich must never start against the empty directory hidden beneath the
-    # rclone mount, and should stop if the mount disappears.
-    bindsTo = [ "storagebox_enc.service" ];
-    after = [ "storagebox_enc.service" ];
-
-    # Immich may index this external library but cannot modify its source
-    # photos or create XMP sidecars there.
-    serviceConfig = {
-      BindReadOnlyPaths = [ photos ];
-
-      # Protect system stability by leaving ~25% of the 1 vCPU core free
-      CPUQuota = "75%";
-
-      # Apply memory pressure here, with a firm safety boundary above it.
-      MemoryHigh = "2G";
-      MemoryMax = "2500M";
-    };
-  };
-
+  # Keep backups of the old Megumu database and upload directory while the
+  # active Immich instance runs on m920x.
   services.postgresqlBackup.databases = [ "immich" ];
   services.restic.backups.daily.paths = [ "/var/lib/immich" ];
 
@@ -127,14 +74,11 @@ in
   };
 
   systemd.services.immich-public-proxy = {
-    requires = [ "immich-server.service" ];
-    after = [ "immich-server.service" ];
-
-    # The public proxy only needs loopback access to Immich and nginx. Keep it
-    # isolated even if firewall rules change.
+    # The public proxy needs loopback for its listener and the m920x WireGuard
+    # address for Immich. Keep all other network access blocked.
     serviceConfig = {
       IPAddressDeny = "any";
-      IPAddressAllow = "localhost";
+      IPAddressAllow = [ "localhost" endpoint.bind ];
     };
   };
 

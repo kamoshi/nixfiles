@@ -158,20 +158,26 @@ let
         lib.filterAttrs (_: isVpnServer) candidates
     );
 
-  mkWireGuardPeer = listenPort: device:
+  mkWireGuardPeer = listenPort: local: device:
     {
       publicKey = device.vpn.pubkey;
-      allowedIPs = [ "${device.vpn.ip}/32" ];
+      allowedIPs =
+        if isVpnServer local then
+          [ "${device.vpn.ip}/32" ]
+        else
+          [ "10.0.0.0/24" ];
     }
     // lib.optionalAttrs (isVpnServer device) {
       endpoint = "${device.vpn.endpoint}:${toString listenPort}";
       persistentKeepalive = 25;
     };
 
-  mkWireGuardPeerText = listenPort: device: ''
+  mkWireGuardPeerText = listenPort: local: device: ''
     [Peer]
     PublicKey = ${device.vpn.pubkey}
-    AllowedIPs = ${device.vpn.ip}/32
+    AllowedIPs = ${lib.concatStringsSep ", " (
+      if isVpnServer local then [ "${device.vpn.ip}/32" ] else [ "10.0.0.0/24" ]
+    )}
     ${lib.optionalString (isVpnServer device) ''
       Endpoint = ${device.vpn.endpoint}:${toString listenPort}
       PersistentKeepalive = 25
@@ -344,7 +350,7 @@ in
       ips = [ "${local.vpn.ip}/24" ];
       inherit listenPort;
 
-      peers = map (mkWireGuardPeer listenPort) peers;
+      peers = map (mkWireGuardPeer listenPort local) peers;
 
       text = ''
         [Interface]
@@ -352,7 +358,7 @@ in
         ListenPort = ${toString listenPort}
         PrivateKey = <private_key>
 
-        ${lib.concatMapStringsSep "\n" (mkWireGuardPeerText listenPort) peers}
+        ${lib.concatMapStringsSep "\n" (mkWireGuardPeerText listenPort local) peers}
       '';
     };
 }
