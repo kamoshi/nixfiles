@@ -62,6 +62,8 @@ in
     type = Type.NixOS;
     arch = "x86_64-linux";
     modules = [
+      inputs.sops-nix.nixosModules.sops
+      fukurou.nixosModules.default
       ../hosts/m920x
     ];
     vpn = {
@@ -88,7 +90,6 @@ in
     arch = "x86_64-linux";
     modules = [
       sops-nix.nixosModules.sops
-      fukurou.nixosModules.default
       karasu.nixosModules.default
       ../hosts/megumu
     ];

@@ -15,7 +15,6 @@
     label = "Music";
     path = {
       momiji = "~/Music";
-      megumu = "/srv/storagebox/plain/sync/music";
       m920x = "/data/music";
     };
   };
@@ -26,7 +25,6 @@
     path = {
       aya = "~/calibre";
       momiji = "~/Sync/calibre";
-      megumu = "/srv/storagebox/plain/sync/calibre";
     };
   };
 
@@ -36,7 +34,6 @@
     path = {
       aya = "~/Desktop/Obsidian";
       momiji = "~/Desktop/Obsidian";
-      megumu = "/srv/storagebox/crypt/sync/obsidian";
     };
   };
 
@@ -46,7 +43,6 @@
     path = {
       aya = "~/Desktop/Workspace";
       momiji = "~/Desktop/Workspace";
-      megumu = "/srv/storagebox/crypt/sync/workspace";
     };
   };
 
@@ -57,7 +53,6 @@
       aya = "~/DCIM";
       hatate = "~/DCIM";
       momiji = "~/DCIM";
-      megumu = "/srv/storagebox/crypt/sync/DCIM";
     };
   };
 }

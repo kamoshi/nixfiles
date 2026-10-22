@@ -14,8 +14,8 @@
   };
 
   fukurou = {
-    host = "megumu";
-    bind = "loopback";
+    host = "m920x";
+    bind = "vpn";
     port = 4321;
     internalPort = 4322;
     domains = {

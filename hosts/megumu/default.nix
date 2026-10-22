@@ -25,7 +25,6 @@ in
 
     # api
     ./services/fukurou.nix
-    ./services/karasu.nix
 
     # services @ internal
     # ./services/jellyfin.nix

@@ -10,10 +10,21 @@ in
     port = 2283;
     openFirewall = false;
 
-    settings.server.externalDomain = "https://photos.kamoshi.org";
+    settings = {
+      server.externalDomain = "https://photos.kamoshi.org";
 
-    # Keep Immich's background work within this small host's resources.
-    machine-learning.enable = false;
+      ffmpeg.transcode = "disabled";
+
+      machineLearning = {
+        enabled = true;
+        clip.enabled = true;
+        duplicateDetection.enabled = false;
+        facialRecognition.enabled = false;
+        ocr.enabled = false;
+      };
+    };
+
+    machine-learning.enable = true;
   };
 
   # Only kamov and the Immich service group can traverse this library.

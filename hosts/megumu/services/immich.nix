@@ -4,11 +4,6 @@ let
   proxyBind = "127.0.0.1";
 in
 {
-  # Keep backups of the old Megumu database and upload directory while the
-  # active Immich instance runs on m920x.
-  services.postgresqlBackup.databases = [ "immich" ];
-  services.restic.backups.daily.paths = [ "/var/lib/immich" ];
-
   services.caddy.virtualHosts.${endpoint.domains.internal}.extraConfig = ''
     bind ${device.vpn.ip}
     tls internal

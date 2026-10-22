@@ -9,10 +9,16 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./wireguard.nix
-      ./immich.nix
-      ./navidrome.nix
-      ./nginx.nix
+
+      ./services/immich.nix
+      ./services/navidrome.nix
+      ./services/fukurou.nix
     ];
+
+  sops = {
+    age.keyFile = "/var/lib/sops-nix/key.txt";
+    defaultSopsFile = ./sops.yaml;
+  };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -25,6 +31,14 @@
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;
+      substituters = [
+        "https://cache.nixos.org/"
+        "https://nix-community.cachix.org"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
     };
 
     gc = {
@@ -75,10 +89,6 @@
   # You can disable this if you're only using the Wayland session.
   # services.xserver.enable = true;
 
-  # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "pl";
@@ -111,10 +121,6 @@
     isNormalUser = true;
     description = "kamov";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      kdePackages.kate
-    #  thunderbird
-    ];
   };
 
   # Install firefox.
@@ -137,12 +143,14 @@
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
+    age
     curl
     dig
     git
     gnumake
     ncdu
     ripgrep
+    sops
     vim
     wireguard-tools
     wget
@@ -168,10 +176,14 @@
     };
   };
 
-  networking.firewall.enable = true;
-  networking.firewall.allowedTCPPorts = [ 22 ];
-  networking.firewall.allowedUDPPorts = [ ];
-
+  networking = {
+    nftables.enable = true;
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [ 22 ];
+      allowedUDPPorts = [ ];
+    };
+  };
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you

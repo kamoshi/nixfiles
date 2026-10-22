@@ -39,14 +39,6 @@ in
   };
 
   systemd.services.syncthing = {
-    bindsTo = [
-      "storagebox.service"
-      "storagebox_enc.service"
-    ];
-    after = [
-      "storagebox.service"
-      "storagebox_enc.service"
-    ];
     environment.STNODEFAULTFOLDER = "true";
   };
 }
