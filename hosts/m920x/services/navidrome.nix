@@ -7,7 +7,7 @@ in
   services.navidrome = {
     enable = true;
     settings = {
-      Address = "127.0.0.1";
+      Address = "10.0.0.5";
       Port = port;
       MusicFolder = music;
       EnforceNonRootUser = true;
@@ -30,4 +30,6 @@ in
     "d ${music} 2770 kamov navidrome -"
     "z ${music} 2770 kamov navidrome -"
   ];
+
+  networking.firewall.interfaces.gensokyo.allowedTCPPorts = [ port ];
 }

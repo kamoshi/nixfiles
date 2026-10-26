@@ -6,7 +6,7 @@ in
   services.immich = {
     enable = true;
     package = rolling.immich;
-    host = "127.0.0.1";
+    host = "10.0.0.5";
     port = 2283;
     openFirewall = false;
 
@@ -36,4 +36,6 @@ in
   # This is an external library: Immich can index and read photos, but cannot
   # alter originals or write sidecars into the source directory.
   systemd.services.immich-server.serviceConfig.BindReadOnlyPaths = [ photos ];
+
+  networking.firewall.interfaces.gensokyo.allowedTCPPorts = [ 2283 ];
 }

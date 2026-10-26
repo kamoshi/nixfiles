@@ -5,7 +5,6 @@
 let
   inherit (inputs)
     fukurou
-    karasu
     nix-flatpak
     sops-nix
     ;
@@ -90,7 +89,6 @@ in
     arch = "x86_64-linux";
     modules = [
       sops-nix.nixosModules.sops
-      karasu.nixosModules.default
       ../hosts/megumu
     ];
     home = {

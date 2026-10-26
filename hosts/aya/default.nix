@@ -50,6 +50,7 @@ in
       "steam"
       "vlc"
       "chatgpt"
+      "codex"
 
       # Tools
       "db-browser-for-sqlite"

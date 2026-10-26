@@ -14,13 +14,6 @@ in
     };
   };
 
-  systemd.services.calibre-web = {
-    # Force Calibre to wait until the storagebox is actually mounted,
-    # and stop it immediately if storagebox unmounts (e.g. during nixos-rebuild)
-    bindsTo = [ "storagebox.service" ];
-    after = [ "storagebox.service" ];
-  };
-
   services.caddy = {
     enable = true;
     virtualHosts.${endpoint.domains.internal}.extraConfig = ''

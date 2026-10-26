@@ -1,6 +1,7 @@
 { config, ... }:
 let
   pathBackup = "/var/backup/postgres";
+  resticRepository = "/data/backup/megumu";
 in
 {
   sops.secrets."restic" = {
@@ -13,6 +14,7 @@ in
 
   systemd.tmpfiles.rules = [
     "d ${pathBackup} 0700 postgres postgres -"
+    "d ${resticRepository} 0700 root root -"
   ];
 
   services.postgresqlBackup = {
@@ -29,7 +31,7 @@ in
       paths = [
         pathBackup
       ];
-      repository = "/srv/storagebox/plain/backup/megumu";
+      repository = resticRepository;
       initialize = true;
       pruneOpts = [
         "--keep-daily 7"
@@ -44,9 +46,4 @@ in
     };
   };
 
-  # Restic backs up to the plain storagebox FUSE mount.
-  systemd.services.restic-backups-daily = {
-    requires = [ "storagebox.service" ];
-    after = [ "storagebox.service" ];
-  };
 }

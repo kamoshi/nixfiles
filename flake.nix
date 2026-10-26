@@ -35,11 +35,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    karasu = {
-      url = "git+https://git.kamoshi.org/kamov/karasu";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
   };
 
   outputs =
