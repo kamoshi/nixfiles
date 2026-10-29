@@ -22,7 +22,9 @@
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.tmp.useTmpfs = true;
 
   # Coffee Lake (Gen9) iGPU userspace drivers: VA-API via iHD and
   # OpenCL/Level Zero for OpenVINO inference.
@@ -33,6 +35,16 @@
       intel-compute-runtime-legacy1
     ];
   };
+
+  # Keep the general Intel firmware needed by the iGPU and AC 3165 Wi-Fi,
+  # without the unrelated firmware bundles for older wireless/audio devices.
+  hardware.enableRedistributableFirmware = false;
+  hardware.firmware = [ pkgs.linux-firmware ];
+  hardware.wirelessRegulatoryDatabase = true;
+  hardware.cpu.intel.updateMicrocode = true;
+
+  # This headless host does not need the manuals and documentation outputs.
+  documentation.enable = false;
 
   networking.hostName = "m920x"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -77,6 +89,13 @@
     fileSystems = [ "/" ];
     interval = "monthly";
   };
+
+  services.smartd = {
+    enable = true;
+    autodetect = true;
+  };
+
+  services.fwupd.enable = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -125,6 +144,10 @@
     isNormalUser = true;
     description = "kamov";
     extraGroups = [ "networkmanager" "wheel" ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIPeYt5Es7OB2z5EKC48XW/ziq2f8RtDhdODfSYISGJu kamov@aya"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEelrqEvoCTbgjdN5W6SnIMZ3HrsbfOg3PE2van+XlR4 kamov@momiji"
+    ];
   };
 
   # Run Syncthing as the kamov user at the system level.
@@ -147,7 +170,7 @@
     age
     curl
     dig
-    git
+    gitMinimal
     gnumake
     ncdu
     ripgrep
