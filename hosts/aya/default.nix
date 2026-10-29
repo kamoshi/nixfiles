@@ -34,6 +34,7 @@ in
     taps = [ ];
     brews = [
       "dosbox-x"
+      "gh"
       "gpg"
       "mpv"
       "pinentry-mac"

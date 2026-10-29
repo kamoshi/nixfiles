@@ -9,11 +9,16 @@ in
     host = "10.0.0.5";
     port = 2283;
     openFirewall = false;
+    accelerationDevices = [ "/dev/dri/renderD128" ];
 
     settings = {
       server.externalDomain = "https://photos.kamoshi.org";
 
-      ffmpeg.transcode = "disabled";
+      ffmpeg = {
+        transcode = "disabled";
+        accel = "vaapi";
+        accelDecode = true;
+      };
 
       machineLearning = {
         enabled = true;

@@ -24,8 +24,26 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Coffee Lake (Gen9) iGPU userspace drivers: VA-API via iHD and
+  # OpenCL/Level Zero for OpenVINO inference.
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      intel-compute-runtime-legacy1
+    ];
+  };
+
   networking.hostName = "m920x"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+  # Keep this headless server available instead of entering a sleep state.
+  systemd.sleep.settings.Sleep = {
+    AllowSuspend = "no";
+    AllowHibernation = "no";
+    AllowHybridSleep = "no";
+    AllowSuspendThenHibernate = "no";
+  };
 
   nix = {
     settings = {
@@ -66,6 +84,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.modemmanager.enable = false;
 
   # Set your time zone.
   time.timeZone = "Europe/Warsaw";
@@ -98,21 +117,6 @@
   # Configure console keymap
   console.keyMap = "pl2";
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    # jack.enable = true;
-  };
-
   # Enable touchpad support (enabled default in most desktopManager).
   # services.libinput.enable = true;
 
@@ -122,9 +126,6 @@
     description = "kamov";
     extraGroups = [ "networkmanager" "wheel" ];
   };
-
-  # Install firefox.
-  programs.firefox.enable = true;
 
   # Run Syncthing as the kamov user at the system level.
   services.syncthing = {
