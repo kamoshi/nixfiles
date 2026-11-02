@@ -21,6 +21,7 @@ in
     # http + dns
     ./nginx.nix
     ./unbound.nix
+    ./caddy.nix
 
     # api
     ./services/fukurou.nix

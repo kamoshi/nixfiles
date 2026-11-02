@@ -21,7 +21,10 @@
     };
   };
 
-  services.resolved.enable = true;
+  services = {
+    resolved.enable = true;
+    caddy.enable = true;
+  };
 
   networking = {
     hostName = "m920x";
@@ -30,7 +33,10 @@
     useDHCP = false;
     dhcpcd.enable = false;
 
-    firewall.allowedUDPPorts = [ 51820 ];
+    firewall.allowedUDPPorts = [
+      # wireguard
+      51820
+    ];
 
     wireless = {
       enable = true;
@@ -80,6 +86,10 @@
           {
             PublicKey = "n/W27VjB9H9ob7lSDdg4S24FolEO2Z+EHdmcxpIrdS0=";
             AllowedIPs = [ "10.1.0.2/32" ];
+          }
+          {
+            PublicKey = "xD5dmISm+sT18seGRR/i4O0dAQdveRY3Xje6PewK1lI=";
+            AllowedIPs = [ "10.1.0.3/32" ];
           }
         ];
       };

@@ -9,7 +9,8 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./network.nix
-      # ./wireguard.nix
+      ./dns.nix
+      ./caddy.nix
 
       ./services/immich.nix
       ./services/navidrome.nix

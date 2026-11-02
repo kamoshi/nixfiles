@@ -8,6 +8,7 @@
 !/README.md
 !/flake.lock
 !/flake.nix
+!/ca-root.crt
 
 !/assets/
 !/assets/**

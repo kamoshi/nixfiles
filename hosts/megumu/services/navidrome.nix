@@ -1,26 +1,40 @@
-{ device, inventory, ... }:
+{ ... }:
 let
-  endpoint = inventory.endpoints.navidrome;
-in {
+  port = 4533;
+in
+{
   services.caddy = {
     enable = true;
-    virtualHosts.${endpoint.domains.internal}.extraConfig = ''
-      bind ${device.vpn.ip}
-      tls internal
-      reverse_proxy ${endpoint.bind}:${toString endpoint.port}
-    '';
+    virtualHosts."music.internal" = {
+      extraConfig = ''
+        bind 10.0.0.1
+
+        log {
+            level INFO
+        }
+
+        tls {
+          issuer acme {
+            dir https://ca.internal/acme/local/directory
+            trusted_roots /etc/caddy/ca-root.crt
+          }
+        }
+
+        reverse_proxy 10.0.0.5:${toString port}
+      '';
+    };
   };
 
   services.blocky = {
-    settings.customDNS.mapping.${endpoint.domains.internal} = device.vpn.ip;
+    settings.customDNS.mapping."music.internal" = "10.0.0.1";
   };
 
-  services.nginx.virtualHosts.${endpoint.domains.external} = {
+  services.nginx.virtualHosts."music.kamoshi.org" = {
     enableACME = true;
     forceSSL = true;
 
     locations."/" = {
-      proxyPass = "http://${endpoint.bind}:${toString endpoint.port}";
+      proxyPass = "http://10.0.0.5:${toString port}";
     };
   };
 }

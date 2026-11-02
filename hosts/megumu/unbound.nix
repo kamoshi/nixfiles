@@ -9,11 +9,6 @@
     enable = true;
 
     settings = {
-      customDNS.mapping = {
-        "photos.m920x.internal" = "10.0.0.5";
-        "music.m920x.internal" = "10.0.0.5";
-      };
-
       ports.dns = 53; # Port for incoming DNS Queries.
       upstreams.groups.default = [
         "127.0.0.1:5353"
