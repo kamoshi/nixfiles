@@ -13,6 +13,12 @@
       mode = "0640";
       restartUnits = [ "systemd-networkd.service" ];
     };
+    wg-mesh = {
+      owner = "root";
+      group = "systemd-network";
+      mode = "0640";
+      restartUnits = [ "systemd-networkd.service" ];
+    };
   };
 
   services.resolved.enable = true;
@@ -23,6 +29,8 @@
     useNetworkd = true;
     useDHCP = false;
     dhcpcd.enable = false;
+
+    firewall.allowedUDPPorts = [ 51820 ];
 
     wireless = {
       enable = true;
@@ -59,6 +67,22 @@
           }
         ];
       };
+      "60-mesh" = {
+        netdevConfig = {
+          Name = "mesh";
+          Kind = "wireguard";
+        };
+        wireguardConfig = {
+          PrivateKeyFile = config.sops.secrets."wg-mesh".path;
+          ListenPort = 51820;
+        };
+        wireguardPeers = [
+          {
+            PublicKey = "n/W27VjB9H9ob7lSDdg4S24FolEO2Z+EHdmcxpIrdS0=";
+            AllowedIPs = [ "10.1.0.2/32" ];
+          }
+        ];
+      };
     };
 
     networks = {
@@ -72,6 +96,11 @@
         address = vpn.ips;
         dns = [ "10.0.0.1" ];
         domains = [ "~." ];
+        linkConfig.RequiredForOnline = "no";
+      };
+      "60-mesh" = {
+        matchConfig.Name = "mesh";
+        address = [ "10.1.0.1/24" ];
         linkConfig.RequiredForOnline = "no";
       };
     };
