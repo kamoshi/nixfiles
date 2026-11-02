@@ -159,6 +159,7 @@
   environment.systemPackages = with pkgs; [
     age
     curl
+    fd
     gcc
     git
     gnumake

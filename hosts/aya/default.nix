@@ -63,6 +63,7 @@ in
       "obsidian"
       "visual-studio-code"
       "zed"
+      "chatgpt"
 
       # Proton
       "proton-mail"

@@ -8,7 +8,8 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./wireguard.nix
+      ./network.nix
+      # ./wireguard.nix
 
       ./services/immich.nix
       ./services/navidrome.nix
@@ -45,9 +46,6 @@
 
   # This headless host does not need the manuals and documentation outputs.
   documentation.enable = false;
-
-  networking.hostName = "m920x"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Keep this headless server available instead of entering a sleep state.
   systemd.sleep.settings.Sleep = {
@@ -102,8 +100,8 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
-  networking.networkmanager.enable = true;
-  networking.modemmanager.enable = false;
+  # networking.networkmanager.enable = true;
+  # networking.modemmanager.enable = false;
 
   # Set your time zone.
   time.timeZone = "Europe/Warsaw";

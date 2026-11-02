@@ -17,6 +17,7 @@ let
     ffmpeg-full
     google-chrome
     lazygit
+    libjxl
     libreoffice
     nil
     nixd

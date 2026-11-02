@@ -15,32 +15,12 @@ let
   ];
 
   ssdRepository = "/data/Backups/restic-momiji";
-  cloudRepository = "sftp:u489674-sub1@u489674-sub1.your-storagebox.de:restic-momiji-kamov";
   ssdPasswordFile = config.sops.secrets.restic-repo-momiji-ssd.path;
-  cloudPasswordFile = config.sops.secrets.restic-repo-momiji-cloud.path;
   resticCacheDirectory = "${config.xdg.cacheHome}/restic";
 
   taskLock = "restic-backup-momiji.lock";
   taskStateDirectory = "restic-momiji";
   taskStatePath = "${config.xdg.stateHome}/${taskStateDirectory}";
-
-  storageboxSftp = pkgs.writeShellApplication {
-    name = "storagebox-backup-sftp";
-    runtimeInputs = [ pkgs.openssh ];
-    text = ''
-      exec ssh \
-        -F none \
-        -p 23 \
-        -i ${lib.escapeShellArg "${homeDirectory}/.ssh/kamov"} \
-        -o IdentitiesOnly=yes \
-        -o PasswordAuthentication=no \
-        -o KbdInteractiveAuthentication=no \
-        -o ServerAliveInterval=60 \
-        -o ServerAliveCountMax=240 \
-        u489674-sub1@u489674-sub1.your-storagebox.de \
-        -s sftp
-    '';
-  };
 
   mkResticWrapper =
     {
@@ -83,16 +63,6 @@ let
         exit 1
       fi
     '';
-  };
-
-  resticCloud = mkResticWrapper {
-    name = "restic-cloud";
-    repository = cloudRepository;
-    passwordFile = cloudPasswordFile;
-    extraOptions = [
-      "-o"
-      "sftp.command=${lib.getExe storageboxSftp}"
-    ];
   };
 
   parseCheckOption = usage: ''
@@ -187,21 +157,6 @@ let
     '';
   };
 
-  backupToCloud = pkgs.writeShellApplication {
-    name = "backup-to-cloud";
-    runtimeInputs = [ resticCloud ];
-    text = ''
-      ${parseCheckOption "backup-to-cloud [--check]"}
-
-      if ! restic-cloud cat config >/dev/null; then
-        echo "Cloud repository is unavailable; initialize it locally and sync it first" >&2
-        exit 1
-      fi
-
-      ${runBackup "restic-cloud"}
-    '';
-  };
-
   notifyTaskResult = pkgs.writeShellApplication {
     name = "notify-restic-result";
     runtimeInputs = [ pkgs.libnotify ];
@@ -218,14 +173,8 @@ let
         restic-backup-momiji.service)
           task="SSD backup"
           ;;
-        restic-backup-momiji-cloud.service)
-          task="Cloud backup"
-          ;;
         restic-check-momiji-ssd-*.service)
           task="SSD repository check"
-          ;;
-        restic-check-momiji-cloud-*.service)
-          task="Cloud repository check"
           ;;
         *)
           task="$unit"
@@ -273,15 +222,6 @@ let
       randomizedDelay = "2h";
     };
 
-    restic-backup-momiji-cloud = {
-      description = "Back up personal files to Storage Box";
-      command = [ (lib.getExe backupToCloud) ];
-      marker = "backup-cloud";
-      calendar = "Fri *-*-* 14:00:00";
-      randomizedDelay = "2h";
-      after = [ "restic-backup-momiji.service" ];
-    };
-
     restic-check-momiji-ssd-weekly = {
       description = "Check SSD repository metadata";
       command = [
@@ -290,17 +230,6 @@ let
       ];
       marker = "check-ssd-weekly";
       calendar = "Tue *-*-* 12:00:00";
-      randomizedDelay = "1h";
-    };
-
-    restic-check-momiji-cloud-weekly = {
-      description = "Check Storage Box repository metadata";
-      command = [
-        (lib.getExe resticCloud)
-        "check"
-      ];
-      marker = "check-cloud-weekly";
-      calendar = "Tue *-*-* 14:00:00";
       randomizedDelay = "1h";
     };
 
@@ -316,17 +245,6 @@ let
       randomizedDelay = "1h";
     };
 
-    restic-check-momiji-cloud-monthly = {
-      description = "Verify a data subset in the Storage Box repository";
-      command = [
-        (lib.getExe resticCloud)
-        "check"
-        "--read-data-subset=10%"
-      ];
-      marker = "check-cloud-monthly";
-      calendar = "Wed *-*-01..07 14:00:00";
-      randomizedDelay = "1h";
-    };
   };
 
   mkTaskRunner =
@@ -430,7 +348,6 @@ in
 {
   sops.secrets = {
     restic-repo-momiji-ssd.mode = "0400";
-    restic-repo-momiji-cloud.mode = "0400";
   };
 
   xdg.desktopEntries.restic-backups = {
@@ -444,10 +361,8 @@ in
   home.packages = [
     rolling.restic
     resticSsd
-    resticCloud
     backupToPath
     backupToSsd
-    backupToCloud
   ];
 
   systemd.user.services =
