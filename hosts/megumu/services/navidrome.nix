@@ -1,32 +1,7 @@
 { ... }:
-let
-  port = 4533;
-in
 {
-  services.caddy = {
-    enable = true;
-    virtualHosts."music.internal" = {
-      extraConfig = ''
-        bind 10.0.0.1
-
-        log {
-            level INFO
-        }
-
-        tls {
-          issuer acme {
-            dir https://ca.internal/acme/local/directory
-            trusted_roots /etc/caddy/ca-root.crt
-          }
-        }
-
-        reverse_proxy 10.0.0.5:${toString port}
-      '';
-    };
-  };
-
   services.blocky = {
-    settings.customDNS.mapping."music.internal" = "10.0.0.1";
+    settings.customDNS.mapping."music.internal" = "10.0.0.5";
   };
 
   services.nginx.virtualHosts."music.kamoshi.org" = {
@@ -34,7 +9,25 @@ in
     forceSSL = true;
 
     locations."/" = {
-      proxyPass = "http://10.0.0.5:${toString port}";
+      proxyPass = "https://music.internal";
+      proxyWebsockets = true;
+
+      # Prevent NixOS from adding its own proxy_set_header directives.
+      recommendedProxySettings = false;
+
+      extraConfig = ''
+        proxy_ssl_trusted_certificate /etc/caddy/ca-root.crt;
+        proxy_ssl_verify on;
+        proxy_ssl_server_name on;
+        proxy_ssl_name music.internal;
+
+        proxy_set_header Host music.internal;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $hostname;
+      '';
     };
   };
 }

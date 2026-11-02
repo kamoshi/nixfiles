@@ -1,6 +1,5 @@
 { ... }:
 let
-  port = 4533;
   music = "/data/music";
 in
 {
@@ -23,6 +22,8 @@ in
     navidrome.serviceConfig = {
       NoNewPrivileges = true;
       RestrictSUIDSGID = true;
+      PrivateNetwork = true;
+      RestrictAddressFamilies = [ "AF_UNIX" ];
     };
     # Allow caddy to communicate with navidrome socket
     caddy.serviceConfig.SupplementaryGroups = [ "navidrome" ];
@@ -35,28 +36,17 @@ in
     "z ${music} 2770 kamov navidrome -"
   ];
 
-  networking.firewall.interfaces = {
-    gensokyo.allowedTCPPorts = [ port ];
-    mesh.allowedTCPPorts = [ port ];
+  services.blocky = {
+    settings.customDNS.mapping."music.internal" = "10.1.0.1";
   };
 
   services.caddy = {
     enable = true;
 
-    virtualHosts = {
-      ":4533" = {
-        extraConfig = ''
-          bind 10.0.0.5
-          reverse_proxy unix//run/navidrome/server.socket
-        '';
-      };
-      "music.internal" = {
-        extraConfig = ''
-          bind 10.1.0.1
-          tls internal
-          reverse_proxy unix//run/navidrome/server.socket
-        '';
-      };
-    };
+    virtualHosts."music.internal".extraConfig = ''
+      bind 10.1.0.1 10.0.0.5
+      tls internal
+      reverse_proxy unix//run/navidrome/server.socket
+    '';
   };
 }

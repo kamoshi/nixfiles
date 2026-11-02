@@ -24,7 +24,6 @@
         customTTL = "1h";
         mapping = {
           "ca.internal" = "10.1.0.1";
-          "music.internal" = "10.1.0.1";
         };
       };
     };
