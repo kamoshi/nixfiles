@@ -26,7 +26,9 @@ in
       RestrictAddressFamilies = [ "AF_UNIX" ];
     };
     # Allow caddy to communicate with navidrome socket
-    caddy.serviceConfig.SupplementaryGroups = [ "navidrome" ];
+    caddy.serviceConfig = {
+      SupplementaryGroups = [ "navidrome" ];
+    };
   };
 
   # Syncthing runs as kamov; setgid gives synced files Navidrome's group.

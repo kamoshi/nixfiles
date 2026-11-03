@@ -16,11 +16,6 @@
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
-  systemd.services.nginx = {
-    after = [ "blocky.service" ];
-    wants = [ "blocky.service" ];
-  };
-
   services = {
     nginx = {
       enable = true;

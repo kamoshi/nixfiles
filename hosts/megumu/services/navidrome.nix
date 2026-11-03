@@ -1,5 +1,7 @@
 { ... }:
 {
+  networking.hosts."10.0.0.5" = [ "music.internal" ];
+
   services.blocky = {
     settings.customDNS.mapping."music.internal" = "10.0.0.5";
   };

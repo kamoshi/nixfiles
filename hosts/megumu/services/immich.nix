@@ -1,22 +1,16 @@
-{ device, inventory, rolling, ... }:
-let
-  endpoint = inventory.endpoints.immich;
-  proxyBind = "127.0.0.1";
-in
+{ rolling, ... }:
 {
-  services.caddy.virtualHosts.${endpoint.domains.internal}.extraConfig = ''
-    bind ${device.vpn.ip}
-    tls internal
-    reverse_proxy ${endpoint.bind}:${toString endpoint.port}
-  '';
+  networking.hosts."10.0.0.5" = [ "photos.internal" ];
 
-  services.blocky.settings.customDNS.mapping.${endpoint.domains.internal} = device.vpn.ip;
+  services.blocky = {
+    settings.customDNS.mapping."photos.internal" = "10.0.0.5";
+  };
 
   services.immich-public-proxy = {
     enable = true;
     package = rolling.immich-public-proxy;
-    immichUrl = "http://${endpoint.bind}:${toString endpoint.port}";
-    port = endpoint.proxyPort;
+    immichUrl = "https://photos.internal";
+    port = 9988;
     openFirewall = false;
 
     settings.ipp = {
@@ -68,21 +62,56 @@ in
     };
   };
 
-  systemd.services.immich-public-proxy = {
+  systemd.services = {
     # The public proxy needs loopback for its listener and the m920x WireGuard
     # address for Immich. Keep all other network access blocked.
-    serviceConfig = {
+    immich-public-proxy.serviceConfig = {
+      # Nginx on loopback and Immich over WireGuard only.
       IPAddressDeny = "any";
-      IPAddressAllow = [ "localhost" endpoint.bind ];
+      IPAddressAllow = [
+        "localhost"
+        "10.0.0.5/32"
+      ];
+
+      # Privilege restrictions
+      NoNewPrivileges = true;
+      CapabilityBoundingSet = "";
+
+      # Filesystem and process isolation
+      ProtectSystem = "strict";
+      ProtectHome = true;
+      ProtectProc = "invisible";
+      ProcSubset = "pid";
+      PrivateTmp = true;
+      PrivateDevices = true;
+      PrivateUsers = true;
+
+      # Kernel and execution restrictions
+      RestrictSUIDSGID = true;
+      RestrictNamespaces = true;
+      RestrictRealtime = true;
+      LockPersonality = true;
+      SystemCallArchitectures = "native";
+      SystemCallFilter = [
+        "@system-service"
+        "~@privileged"
+      ];
+
+      # Restrict socket types
+      RestrictAddressFamilies = [
+        "AF_UNIX"
+        "AF_INET"
+        "AF_INET6"
+      ];
     };
   };
 
-  services.nginx.virtualHosts.${endpoint.domains.external} = {
+  services.nginx.virtualHosts."photos.kamoshi.org" = {
     enableACME = true;
     forceSSL = true;
 
     locations."/" = {
-      proxyPass = "http://${proxyBind}:${toString endpoint.proxyPort}";
+      proxyPass = "http://127.0.0.1:9988";
     };
   };
 }
