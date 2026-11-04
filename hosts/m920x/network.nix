@@ -108,14 +108,15 @@
       "50-gensokyo" = {
         matchConfig.Name = "gensokyo";
         address = vpn.ips;
-        dns = [ "10.0.0.1" ];
-        domains = [ "~." ];
         linkConfig.RequiredForOnline = "no";
       };
       "60-mesh" = {
         matchConfig.Name = "mesh";
         address = [ "10.1.0.1/24" ];
         linkConfig.RequiredForOnline = "no";
+        # dns
+        dns = [ "10.1.0.1" ];
+        domains = [ "~internal" ];
       };
     };
   };
