@@ -15,7 +15,7 @@
 
     config = {
       LISTEN_ADDR = "/run/miniflux/server.sock";
-      BASE_URL = "https://rss.internal";
+      BASE_URL = "https://rss.kamoshi.org";
     };
   };
 
