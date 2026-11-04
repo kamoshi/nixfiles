@@ -1,4 +1,7 @@
 { ... }:
+let
+  sock = "/run/anubis/anubis-forgejo/anubis.sock";
+in
 {
   networking.hosts."10.0.0.5" = [ "git.internal" ];
 
@@ -6,12 +9,25 @@
     settings.customDNS.mapping."git.internal" = "10.0.0.5";
   };
 
+  services.anubis.instances = {
+   forgejo = {
+     enable = true;
+     group = "nginx";
+     settings = {
+       DIFFICULTY = 6;
+       TARGET = "https://git.internal";
+       BIND = sock;
+       SERVE_ROBOTS_TXT = true;
+     };
+   };
+ };
+
   services.nginx.virtualHosts."git.kamoshi.org" = {
     enableACME = true;
     forceSSL = true;
 
     locations."/" = {
-      proxyPass = "https://git.internal";
+      proxyPass = "http://unix:${sock}";
 
       # Prevent NixOS from adding its own proxy_set_header directives.
       recommendedProxySettings = false;
