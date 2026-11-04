@@ -91,6 +91,10 @@
             PublicKey = "xD5dmISm+sT18seGRR/i4O0dAQdveRY3Xje6PewK1lI=";
             AllowedIPs = [ "10.1.0.3/32" ];
           }
+          {
+            PublicKey = "bJx1OJDnDCC7kEhiLtBUbrz11ZXMfpn/7mE+JFAL2WY=";
+            AllowedIPs = [ "10.1.0.4/32" ];
+          }
         ];
       };
     };

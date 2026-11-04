@@ -35,6 +35,8 @@
     dates = [ "weekly" ];
   };
 
+  security.pki.certificateFiles = [ ../../ca-root.crt ];
+
   # Enable networking
   networking = {
     hostName = "momiji"; # Define your hostname.
@@ -159,6 +161,7 @@
   environment.systemPackages = with pkgs; [
     age
     curl
+    dig
     fd
     gcc
     git
@@ -170,6 +173,7 @@
     uv
     vim
     wget
+    parallel-full
   ];
 
   services.ratbagd.enable = true;

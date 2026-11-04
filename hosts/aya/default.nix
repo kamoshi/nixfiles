@@ -58,6 +58,7 @@ in
       "ghostty"
       "the-unarchiver"
       "transmission"
+      "localsend"
 
       # IDE
       "obsidian"

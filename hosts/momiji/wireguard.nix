@@ -17,7 +17,10 @@
   # NetworkManager manages the physical links; NixOS manages this interface.
   networking.networkmanager = {
     dns = "systemd-resolved";
-    unmanaged = [ "interface-name:gensokyo" ];
+    unmanaged = [
+      "interface-name:gensokyo"
+      "interface-name:mesh"
+    ];
   };
 
   services.resolved.enable = true;
@@ -37,6 +40,34 @@
       postShutdown = ''
         ${pkgs.systemd}/bin/resolvectl revert gensokyo
       '';
+    };
+
+    interfaces.mesh = {
+      ips = [ "10.1.0.4/32" ];
+
+      listenPort = 51820;
+
+      privateKeyFile = config.sops.secrets.wireguard.path;
+
+      postSetup = ''
+        ${pkgs.systemd}/bin/resolvectl dns mesh 10.1.0.1
+        ${pkgs.systemd}/bin/resolvectl domain mesh '~photos.internal' '~music.internal'
+      '';
+
+      postShutdown = ''
+        ${pkgs.systemd}/bin/resolvectl revert mesh
+      '';
+
+      peers = [
+        {
+          publicKey = "y3aDNpKwVEq6+nXd7mmybZjuPIsOhhAMXxwb91w6mx0=";
+          allowedIPs = [
+            "10.1.0.1/32"
+          ];
+          endpoint = "192.168.0.100:51820";
+          persistentKeepalive = 25;
+        }
+      ];
     };
   };
 }

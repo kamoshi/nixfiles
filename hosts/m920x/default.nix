@@ -14,6 +14,7 @@
 
       ./services/immich.nix
       ./services/navidrome.nix
+      ./services/miniflux.nix
       ./services/fukurou.nix
     ];
 
