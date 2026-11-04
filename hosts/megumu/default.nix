@@ -29,9 +29,9 @@ in
     # services @ internal
     # ./services/jellyfin.nix
     # ./services/calibre.nix
+    # ./services/kanidm.nix
     ./services/immich.nix
     ./services/forgejo.nix
-    ./services/kanidm.nix
     ./services/miniflux.nix
     ./services/navidrome.nix
     ./services/syncthing.nix

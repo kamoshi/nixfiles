@@ -16,5 +16,6 @@ for syncing with Syncthing.
 | Host     | Type           | Description                                                    | Build Command                           |
 | -------- | -------------- | -------------------------------------------------------------- | --------------------------------------- |
 | `aya`    | macOS (Darwin) | Uses `nix-darwin` and `home-manager`.                          | `darwin-rebuild switch --flake .#aya`   |
-| `momiji` | Arch Linux     | Home environment configuration via `home-manager`.             | `home-manager switch --flake .#momiji`  |
+| `momiji` | NixOS          | Full NixOS + `home-manager` + `sops-nix`.                      | `home-manager switch --flake .#momiji`  |
 | `megumu` | NixOS          | Full NixOS system configuration; includes `sops-nix` module.   | `nixos-rebuild switch --flake .#megumu` |
+| `m920x`  | NixOS          | Full NixOS system configuration; includes `sops-nix` module.   | `nixos-rebuild switch --flake .#m920x`  |
