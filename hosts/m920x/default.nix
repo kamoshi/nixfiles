@@ -16,6 +16,7 @@
       ./services/navidrome.nix
       ./services/miniflux.nix
       ./services/fukurou.nix
+      ./services/forgejo.nix
     ];
 
   sops = {
