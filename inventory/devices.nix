@@ -5,7 +5,7 @@
 let
   inherit (inputs)
     fukurou
-    nix-flatpak
+    suzume
     sops-nix
     ;
 in
@@ -63,6 +63,7 @@ in
     modules = [
       inputs.sops-nix.nixosModules.sops
       fukurou.nixosModules.default
+      suzume.nixosModules.default
       ../hosts/m920x
     ];
     vpn = {

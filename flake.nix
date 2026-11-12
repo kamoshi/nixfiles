@@ -35,6 +35,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    suzume = {
+      url = "github:/kamoshi/suzume";
+      inputs.nixpkgs.follows = "rolling";
+    };
   };
 
   outputs =

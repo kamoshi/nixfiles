@@ -13,6 +13,7 @@
     # Include the results of the hardware scan.
     ./hardware.nix
     ./wireguard.nix
+    ./postgres.nix
 
     ./programs/firefox.nix
     ./programs/kdeconnect.nix
@@ -174,6 +175,10 @@
     vim
     wget
     parallel-full
+
+    # Java
+    jdk
+    jdt-language-server
   ];
 
   services.ratbagd.enable = true;

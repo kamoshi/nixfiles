@@ -15,8 +15,11 @@
       ./services/immich.nix
       ./services/navidrome.nix
       ./services/miniflux.nix
-      ./services/fukurou.nix
       ./services/forgejo.nix
+      ./services/jellyfin.nix
+
+      ./services/fukurou.nix
+      ./services/suzume.nix
     ];
 
   sops = {

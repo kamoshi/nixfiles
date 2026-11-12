@@ -72,42 +72,38 @@
 
   services.unbound = {
     enable = true;
+
+    enableRootTrustAnchor = true;
+
     settings = {
       server = {
+        port = 5353;
+
         interface = [
           "127.0.0.1"
           "::1"
         ];
-        port = 5353;
+
         access-control = [
           "127.0.0.1/32 allow"
           "::1/128 allow"
         ];
-        # Based on recommended settings in
-        # https://docs.pi-hole.net/guides/dns/unbound/#configure-unbound
-        harden-glue = true;
-        harden-dnssec-stripped = true;
-        use-caps-for-id = false;
-        prefetch = true;
-        edns-buffer-size = 1232;
 
-        # Custom settings
+        # Hide identity and version for security
         hide-identity = true;
         hide-version = true;
+
+        # Hardening options
+        harden-glue = true;
+        harden-dnssec-stripped = true;
+        harden-below-nxdomain = true;
+        qname-minimisation = true;
+
+        # Performance and cache options
+        prefetch = true;
+        prefetch-key = true;
+        serve-expired = true;
       };
-      forward-zone = [
-        # Example config with quad9
-        {
-          name = ".";
-          forward-addr = [
-            "9.9.9.9#dns.quad9.net"
-            "149.112.112.112#dns.quad9.net"
-            "2620:fe::fe#dns.quad9.net"
-            "2620:fe::9#dns.quad9.net"
-          ];
-          forward-tls-upstream = true; # Protected DNS
-        }
-      ];
     };
   };
 }

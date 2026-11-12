@@ -1,6 +1,5 @@
 {
   config,
-  rolling,
   pkgs,
   utils,
   ...
@@ -27,15 +26,11 @@ let
     vlc
     wl-clipboard
     zed-editor
-  ];
-
-  pkgsRolling = with rolling; [
     anki
-    antigravity-cli
     codex
     piper
-    slint-lsp
     wineWow64Packages.staging
+    jetbrains.idea
   ];
 in
 {
@@ -86,7 +81,7 @@ in
     defaultSopsFile = ./sops.yaml;
   };
 
-  home.packages = pkgsRelease ++ pkgsRolling;
+  home.packages = pkgsRelease;
 
   home.sessionVariables = {
     MOZ_ENABLE_WAYLAND = "1";

@@ -27,7 +27,6 @@ in
     ./services/fukurou.nix
 
     # services @ internal
-    # ./services/jellyfin.nix
     # ./services/calibre.nix
     # ./services/kanidm.nix
     ./services/immich.nix
@@ -35,6 +34,7 @@ in
     ./services/miniflux.nix
     ./services/navidrome.nix
     ./services/syncthing.nix
+    ./services/jellyfin.nix
 
     # ./services/xray.nix
 

@@ -52,6 +52,7 @@ in
       "vlc"
       "chatgpt"
       "codex"
+      "oracle-jdk"
 
       # Tools
       "db-browser-for-sqlite"

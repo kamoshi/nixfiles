@@ -8,10 +8,6 @@
     ../../../home/fish
     ../../../home/nvim.nix
     ../../../home/syncthing.nix
-    ../../../home/ocaml.nix
-    ../../../home/haskell.nix
-    ../../../home/lean.nix
-    ../../../home/opencode.nix
   ];
 
   # This value determines the Home Manager release that your configuration is
