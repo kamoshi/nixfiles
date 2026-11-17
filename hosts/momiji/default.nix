@@ -36,6 +36,14 @@
     dates = [ "weekly" ];
   };
 
+  # Fast compressed swap for memory spikes during gaming and development.
+  # Keep the disk-backed swap from hardware.nix as a lower-priority fallback.
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    priority = 100;
+  };
+
   security.pki.certificateFiles = [ ../../ca-root.crt ];
 
   # Enable networking

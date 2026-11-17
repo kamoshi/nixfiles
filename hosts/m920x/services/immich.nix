@@ -40,13 +40,18 @@ in
   systemd.services = {
     # This is an external library: Immich can index and read photos, but cannot
     # alter originals or write sidecars into the source directory.
-    immich-server.serviceConfig = {
-      BindReadOnlyPaths = [ photos ];
-      ProtectSystem = "strict";
-      ProtectProc = "invisible";
-      RemoveIPC = true;
-      LockPersonality = true;
-      SystemCallArchitectures = "native";
+    immich-server = {
+      requires = [ "data.mount" ];
+      after = [ "data.mount" ];
+
+      serviceConfig = {
+        BindReadOnlyPaths = [ photos ];
+        ProtectSystem = "strict";
+        ProtectProc = "invisible";
+        RemoveIPC = true;
+        LockPersonality = true;
+        SystemCallArchitectures = "native";
+      };
     };
   };
 

@@ -33,6 +33,16 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.tmp.useTmpfs = true;
 
+  fileSystems."/data" = {
+    device = "/dev/disk/by-uuid/0e526ce3-c1a0-4ee2-9051-e4af15634f1e";
+    fsType = "btrfs";
+    options = [
+      "noatime"
+      "compress=zstd"
+      "nofail"
+    ];
+  };
+
   # Coffee Lake (Gen9) iGPU userspace drivers: VA-API via iHD and
   # OpenCL/Level Zero for OpenVINO inference.
   hardware.graphics = {

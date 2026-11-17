@@ -19,11 +19,16 @@ in
   systemd.services = {
     # The NixOS module already confines Navidrome to its state and read-only
     # music paths; prevent privilege gains from any child process as well.
-    navidrome.serviceConfig = {
-      NoNewPrivileges = true;
-      RestrictSUIDSGID = true;
-      PrivateNetwork = true;
-      RestrictAddressFamilies = [ "AF_UNIX" ];
+    navidrome = {
+      requires = [ "data.mount" ];
+      after = [ "data.mount" ];
+
+      serviceConfig = {
+        NoNewPrivileges = true;
+        RestrictSUIDSGID = true;
+        PrivateNetwork = true;
+        RestrictAddressFamilies = [ "AF_UNIX" ];
+      };
     };
     # Allow caddy to communicate with navidrome socket
     caddy.serviceConfig = {

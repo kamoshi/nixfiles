@@ -6,6 +6,9 @@ default:
 	@test -n "$(HOSTNAME)" || { echo "Could not determine hostname" >&2; exit 1; }
 	@$(MAKE) --no-print-directory "$(HOSTNAME)"
 
+m920x:
+	sudo nixos-rebuild switch --flake .#m920x
+
 aya:
 	sudo darwin-rebuild switch --flake .#aya
 
