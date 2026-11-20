@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./rapl.nix
       ./network.nix
       ./dns.nix
       ./caddy.nix
@@ -32,6 +33,10 @@
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.tmp.useTmpfs = true;
+
+  boot.kernelParams = [
+    "pcie_aspm.policy=powersave"
+  ];
 
   fileSystems."/data" = {
     device = "/dev/disk/by-uuid/0e526ce3-c1a0-4ee2-9051-e4af15634f1e";
@@ -59,6 +64,16 @@
   hardware.firmware = [ pkgs.linux-firmware ];
   hardware.wirelessRegulatoryDatabase = true;
   hardware.cpu.intel.updateMicrocode = true;
+
+  # Intel thermal management
+  services.thermald.enable = true;
+
+  # CPU power management
+  powerManagement = {
+    enable = true;
+    cpuFreqGovernor = "powersave";
+    powertop.enable = false;
+  };
 
   # This headless host does not need the manuals and documentation outputs.
   documentation.enable = false;
@@ -181,6 +196,12 @@
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
+    # Hardware monitoring
+    lm_sensors
+    nvme-cli
+    smartmontools
+    pciutils
+
     age
     curl
     dig
