@@ -21,6 +21,7 @@
 
       ./services/fukurou.nix
       ./services/suzume.nix
+      ./services/filebrowser
     ];
 
   sops = {

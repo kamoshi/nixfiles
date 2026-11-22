@@ -55,4 +55,13 @@
       momiji = "~/DCIM";
     };
   };
+
+  files = {
+    id = "files";
+    label = "Files";
+    path = {
+      momiji = "~/Desktop/Files";
+      m920x = "/data/files";
+    };
+  };
 }

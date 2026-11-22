@@ -1,0 +1,9 @@
+http:
+  socket: /run/filebrowser-quantum/filebrowser.sock
+  trustProxyHeaders: true
+
+server:
+  sources:
+    - path: /data/files
+      config:
+        defaultEnabled: true
