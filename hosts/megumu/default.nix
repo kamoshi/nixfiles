@@ -35,6 +35,7 @@ in
     ./services/navidrome.nix
     ./services/syncthing.nix
     ./services/jellyfin.nix
+    ./services/filebrowser.nix
 
     # ./services/xray.nix
 
