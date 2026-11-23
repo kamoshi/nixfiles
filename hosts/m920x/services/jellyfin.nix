@@ -1,5 +1,9 @@
 { ... }:
 {
+  services.unbound.settings.server.local-data = [
+    ''"media.internal. 3600 IN CNAME m920x.internal."''
+  ];
+
   users.users.jellyfin.extraGroups = [ "render" "video" ];
 
   networking.firewall = {
@@ -23,10 +27,6 @@
       type = "vaapi";
       device = "/dev/dri/renderD128";
     };
-  };
-
-  services.blocky = {
-    settings.customDNS.mapping."media.internal" = "10.1.0.1";
   };
 
   services.caddy = {

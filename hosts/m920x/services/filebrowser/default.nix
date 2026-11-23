@@ -1,6 +1,10 @@
 { pkgs, rolling, ... }:
 
 {
+  services.unbound.settings.server.local-data = [
+    ''"files.internal. 3600 IN CNAME m920x.internal."''
+  ];
+
   systemd.services.filebrowser-quantum = {
     description = "FileBrowser Quantum";
     wantedBy = [ "multi-user.target" ];
@@ -37,10 +41,6 @@
 
       ReadOnlyPaths = [ "/data/files" ];
     };
-  };
-
-  services.blocky = {
-    settings.customDNS.mapping."files.internal" = "10.1.0.1";
   };
 
   services.caddy = {

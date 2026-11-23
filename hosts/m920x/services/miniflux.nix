@@ -1,5 +1,9 @@
 { config, ... }:
 {
+  services.unbound.settings.server.local-data = [
+    ''"rss.internal. 3600 IN CNAME m920x.internal."''
+  ];
+
   sops.secrets = {
     miniflux = {
       owner = "root";
@@ -24,10 +28,6 @@
     caddy.serviceConfig = {
       SupplementaryGroups = [ "miniflux" ];
     };
-  };
-
-  services.blocky = {
-    settings.customDNS.mapping."rss.internal" = "10.1.0.1";
   };
 
   services.caddy = {

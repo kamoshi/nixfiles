@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  services.unbound.settings.server.local-data = [
+    ''"git.internal. 3600 IN CNAME m920x.internal."''
+  ];
+
   users.groups."git" = {};
 
   users.users."git" = {
@@ -39,10 +43,6 @@
     caddy.serviceConfig = {
       SupplementaryGroups = [ "git" ];
     };
-  };
-
-  services.blocky = {
-    settings.customDNS.mapping."git.internal" = "10.1.0.1";
   };
 
   services.caddy = {

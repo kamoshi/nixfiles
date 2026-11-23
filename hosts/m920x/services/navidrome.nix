@@ -3,6 +3,10 @@ let
   music = "/data/music";
 in
 {
+  services.unbound.settings.server.local-data = [
+    ''"music.internal. 3600 IN CNAME m920x.internal."''
+  ];
+
   services.navidrome = {
     enable = true;
     settings = {
@@ -42,10 +46,6 @@ in
     "d ${music} 2770 kamov navidrome -"
     "z ${music} 2770 kamov navidrome -"
   ];
-
-  services.blocky = {
-    settings.customDNS.mapping."music.internal" = "10.1.0.1";
-  };
 
   services.caddy = {
     enable = true;

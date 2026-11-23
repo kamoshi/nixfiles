@@ -2,9 +2,9 @@
 let
   port = 5555;
 in {
-  services.blocky = {
-    settings.customDNS.mapping."suzume.internal" = "10.1.0.1";
-  };
+  services.unbound.settings.server.local-data = [
+    ''"suzume.internal. 3600 IN CNAME m920x.internal."''
+  ];
 
   services.caddy = {
     enable = true;

@@ -3,6 +3,10 @@ let
   photos = "/data/photo";
 in
 {
+  services.unbound.settings.server.local-data = [
+    ''"photos.internal. 3600 IN CNAME m920x.internal."''
+  ];
+
   services.immich = {
     enable = true;
     package = rolling.immich;
@@ -53,10 +57,6 @@ in
         SystemCallArchitectures = "native";
       };
     };
-  };
-
-  services.blocky = {
-    settings.customDNS.mapping."photos.internal" = "10.1.0.1";
   };
 
   services.caddy = {
