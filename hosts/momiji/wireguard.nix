@@ -18,7 +18,6 @@
   networking.networkmanager = {
     dns = "systemd-resolved";
     unmanaged = [
-      "interface-name:gensokyo"
       "interface-name:mesh"
     ];
   };
@@ -27,20 +26,6 @@
 
   networking.wireguard = {
     enable = true;
-
-    interfaces.gensokyo = {
-      privateKeyFile = config.sops.secrets.wireguard.path;
-      inherit (vpn) ips peers listenPort;
-
-      postSetup = ''
-        ${pkgs.systemd}/bin/resolvectl dns gensokyo 10.0.0.1
-        ${pkgs.systemd}/bin/resolvectl domain gensokyo '~.'
-      '';
-
-      postShutdown = ''
-        ${pkgs.systemd}/bin/resolvectl revert gensokyo
-      '';
-    };
 
     interfaces.mesh = {
       ips = [ "10.1.0.4/32" ];
@@ -51,7 +36,7 @@
 
       postSetup = ''
         ${pkgs.systemd}/bin/resolvectl dns mesh 10.1.0.1
-        ${pkgs.systemd}/bin/resolvectl domain mesh '~photos.internal' '~music.internal'
+        ${pkgs.systemd}/bin/resolvectl domain mesh '~.'
       '';
 
       postShutdown = ''
@@ -61,9 +46,7 @@
       peers = [
         {
           publicKey = "y3aDNpKwVEq6+nXd7mmybZjuPIsOhhAMXxwb91w6mx0=";
-          allowedIPs = [
-            "10.1.0.1/32"
-          ];
+          allowedIPs = [ "10.1.0.1/32" ];
           endpoint = "192.168.0.100:51820";
           persistentKeepalive = 25;
         }
