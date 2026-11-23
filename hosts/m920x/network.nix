@@ -73,6 +73,7 @@
           }
         ];
       };
+
       "60-mesh" = {
         netdevConfig = {
           Name = "mesh";
@@ -85,15 +86,24 @@
         wireguardPeers = [
           {
             PublicKey = "n/W27VjB9H9ob7lSDdg4S24FolEO2Z+EHdmcxpIrdS0=";
-            AllowedIPs = [ "10.1.0.2/32" ];
+            AllowedIPs = [
+              "10.1.0.2/32"
+              "fd00::2/128"
+            ];
           }
           {
             PublicKey = "xD5dmISm+sT18seGRR/i4O0dAQdveRY3Xje6PewK1lI=";
-            AllowedIPs = [ "10.1.0.3/32" ];
+            AllowedIPs = [
+              "10.1.0.3/32"
+              "fd00::3/128"
+            ];
           }
           {
             PublicKey = "bJx1OJDnDCC7kEhiLtBUbrz11ZXMfpn/7mE+JFAL2WY=";
-            AllowedIPs = [ "10.1.0.4/32" ];
+            AllowedIPs = [
+              "10.1.0.4/32"
+              "fd00::4/128"
+            ];
           }
         ];
       };
@@ -110,13 +120,21 @@
         address = vpn.ips;
         linkConfig.RequiredForOnline = "no";
       };
+
       "60-mesh" = {
         matchConfig.Name = "mesh";
-        address = [ "10.1.0.1/24" ];
         linkConfig.RequiredForOnline = "no";
-        # dns
-        dns = [ "10.1.0.1" ];
         domains = [ "~internal" ];
+
+        address = [
+          "10.1.0.1/24"
+          "fd00::1/64"
+        ];
+
+        dns = [
+          "10.1.0.1"
+          "fd00::1"
+        ];
       };
     };
   };

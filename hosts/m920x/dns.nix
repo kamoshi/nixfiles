@@ -11,17 +11,23 @@
 
     settings = {
       server = {
-        # Listen on the mesh IP
-        interface = [ "10.1.0.1" ];
         port = 53;
+        interface = [
+          "10.1.0.1"
+          "fd00::1"
+        ];
 
         # "respip" is required for RPZ to function
         module-config = ''"respip validator iterator"'';
 
         # Allow DNS requests from the mesh network
         access-control = [
+          # mesh
           "10.1.0.0/24 allow"
+          "fd00::/64 allow"
+          # localhost
           "127.0.0.0/8 allow"
+          "::1 allow"
         ];
 
         # Local DNS record
@@ -31,6 +37,7 @@
 
         local-data = [
           ''"m920x.internal. 3600 IN A 10.1.0.1"''
+          ''"m920x.internal. 3600 IN AAAA fd00::1"''
           ''"ca.internal. 3600 IN CNAME m920x.internal."''
         ];
 

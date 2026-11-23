@@ -22,7 +22,7 @@
       ./services/fukurou.nix
       ./services/suzume.nix
       ./services/filebrowser
-      ./services/llama.nix
+      # ./services/llama.nix
     ];
 
   sops = {
