@@ -19,7 +19,12 @@
   services = {
     nginx = {
       enable = true;
-      defaultListenAddresses = [ "94.130.182.219" ];
+
+      defaultListenAddresses = [
+        "94.130.182.219"
+        "[2a01:4f8:1c1b:dce8::1]"
+      ];
+
       recommendedTlsSettings = true;
       recommendedGzipSettings = true;
       recommendedOptimisation = true;

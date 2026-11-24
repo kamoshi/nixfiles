@@ -175,6 +175,20 @@ in
     };
   };
 
+  networking = {
+    interfaces.enp1s0.ipv6.addresses = [
+      {
+        address = "2a01:4f8:1c1b:dce8::1";
+        prefixLength = 64;
+      }
+    ];
+
+    defaultGateway6 = {
+      address = "fe80::1";
+      interface = "enp1s0";
+    };
+  };
+
   # enable NAT
   networking.nat.enable = true;
   networking.nat.externalInterface = "enp1s0";
