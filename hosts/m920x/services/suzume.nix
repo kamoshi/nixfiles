@@ -10,7 +10,7 @@ in {
     enable = true;
 
     virtualHosts."suzume.internal".extraConfig = ''
-      bind 10.1.0.1 10.0.0.5
+      bind 10.1.0.1 [fd00::1] 10.0.0.5
       tls internal
       reverse_proxy 127.0.0.1:${toString port}
     '';

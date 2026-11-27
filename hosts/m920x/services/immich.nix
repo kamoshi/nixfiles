@@ -63,7 +63,7 @@ in
     enable = true;
 
     virtualHosts."photos.internal".extraConfig = ''
-      bind 10.1.0.1 10.0.0.5
+      bind 10.1.0.1 [fd00::1] 10.0.0.5
       tls internal
       reverse_proxy localhost:2283
     '';

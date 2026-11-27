@@ -64,6 +64,7 @@ in
       inputs.sops-nix.nixosModules.sops
       fukurou.nixosModules.default
       suzume.nixosModules.default
+      inputs.laya.nixosModules.default
       ../hosts/m920x
     ];
     vpn = {

@@ -52,26 +52,12 @@
         root = "/var/www/kamoshi.org";
         forceSSL = true;
         enableACME = true;
-
-        listen = [
-          { addr = "[::]";    port = 80; ssl = false; }
-          { addr = "94.130.182.219"; port = 80; ssl = false; }
-          { addr = "[::]";    port = 443; ssl = true; }
-          { addr = "94.130.182.219"; port = 443; ssl = true; }
-        ];
       };
 
       virtualHosts."hauchiwa.kamoshi.org" = {
         root = "/var/www/hauchiwa";
         forceSSL = true;
         enableACME = true;
-
-        listen = [
-          { addr = "[::]";    port = 80; ssl = false; }
-          { addr = "94.130.182.219"; port = 80; ssl = false; }
-          { addr = "[::]";    port = 443; ssl = true; }
-          { addr = "94.130.182.219"; port = 443; ssl = true; }
-        ];
       };
 
       virtualHosts."rsvp.kamoshi.org" = {
@@ -82,13 +68,6 @@
         locations."/" = {
           tryFiles = "$uri $uri/ /index.html";
         };
-
-        listen = [
-          { addr = "[::]";    port = 80; ssl = false; }
-          { addr = "94.130.182.219"; port = 80; ssl = false; }
-          { addr = "[::]";    port = 443; ssl = true; }
-          { addr = "94.130.182.219"; port = 443; ssl = true; }
-        ];
       };
     };
   };

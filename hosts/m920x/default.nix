@@ -18,11 +18,11 @@
       ./services/miniflux.nix
       ./services/forgejo.nix
       ./services/jellyfin.nix
+      ./services/laya.nix
 
       ./services/fukurou.nix
       ./services/suzume.nix
       ./services/filebrowser
-      # ./services/llama.nix
     ];
 
   sops = {

@@ -261,6 +261,7 @@ in
         };
       specialArgs = mkExtraSpecialArgs ctx // {
         inherit self;
+        laya = inputs.laya;
       };
     };
 

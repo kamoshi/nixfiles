@@ -39,6 +39,11 @@
       url = "github:/kamoshi/suzume";
       inputs.nixpkgs.follows = "rolling";
     };
+
+    laya = {
+      url = "github:NandhaKishorM/laya";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

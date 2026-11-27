@@ -39,6 +39,7 @@
           ''"m920x.internal. 3600 IN A 10.1.0.1"''
           ''"m920x.internal. 3600 IN AAAA fd00::1"''
           ''"ca.internal. 3600 IN CNAME m920x.internal."''
+          ''"laya.internal. 3600 IN CNAME m920x.internal."''
         ];
 
         # DNSSEC validation
